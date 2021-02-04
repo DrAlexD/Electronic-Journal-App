@@ -8,20 +8,17 @@ public class LoginRepository {
 
     private static volatile LoginRepository instance;
 
-    private LoginDataSource dataSource;
-
     // If user credentials will be cached in local storage, it is recommended it be encrypted
     // @see https://developer.android.com/training/articles/keystore
     private LoggedInUser user = null;
 
     // private constructor : singleton access
-    private LoginRepository(LoginDataSource dataSource) {
-        this.dataSource = dataSource;
+    private LoginRepository() {
     }
 
-    public static LoginRepository getInstance(LoginDataSource dataSource) {
+    public static LoginRepository getInstance() {
         if (instance == null) {
-            instance = new LoginRepository(dataSource);
+            instance = new LoginRepository();
         }
         return instance;
     }
@@ -32,7 +29,7 @@ public class LoginRepository {
 
     public void logout() {
         user = null;
-        dataSource.logout();
+        // TODO выход из приложения
     }
 
     private void setLoggedInUser(LoggedInUser user) {
@@ -41,13 +38,23 @@ public class LoginRepository {
         // @see https://developer.android.com/training/articles/keystore
     }
 
-    public Result<LoggedInUser> login(String username, String password) {
-        // handle login
-        Result<LoggedInUser> result = dataSource.login(username, password);
-        if (result instanceof Result.Success) {
-            setLoggedInUser(((Result.Success<LoggedInUser>) result).getData());
+    public LoginResult<LoggedInUser> login(String username, String password) {
+        LoginResult<LoggedInUser> loginResult;
+        try {
+            //TODO шифрование пароля и сравнивание его с полученным из базы даннных
+            if ("xelagurd".equals(username) && "123456".equals(password)) {
+                LoggedInUser user =
+                        new LoggedInUser(
+                                java.util.UUID.randomUUID().toString(),
+                                username);
+                loginResult = new LoginResult.Success<>(user);
+                setLoggedInUser(((LoginResult.Success<LoggedInUser>) loginResult).getData());
+            } else
+                loginResult = new LoginResult.Error("Login failed");
+        } catch (Exception e) {
+            loginResult = new LoginResult.Error(e.getMessage());
         }
 
-        return result;
+        return loginResult;
     }
 }

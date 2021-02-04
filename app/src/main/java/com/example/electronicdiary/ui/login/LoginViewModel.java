@@ -9,12 +9,12 @@ import androidx.lifecycle.ViewModel;
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.data.login.LoggedInUser;
 import com.example.electronicdiary.data.login.LoginRepository;
-import com.example.electronicdiary.data.login.Result;
+import com.example.electronicdiary.data.login.LoginResult;
 
 public class LoginViewModel extends ViewModel {
 
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
-    private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
+    private MutableLiveData<LoginResult<LoggedInUser>> loginResult = new MutableLiveData<>();
     private LoginRepository loginRepository;
 
     LoginViewModel(LoginRepository loginRepository) {
@@ -25,20 +25,14 @@ public class LoginViewModel extends ViewModel {
         return loginFormState;
     }
 
-    LiveData<LoginResult> getLoginResult() {
+    LiveData<LoginResult<LoggedInUser>> getLoginResult() {
         return loginResult;
     }
 
     public void login(String username, String password) {
         // can be launched in a separate asynchronous job
-        Result<LoggedInUser> result = loginRepository.login(username, password);
-
-        if (result instanceof Result.Success) {
-            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
-        } else {
-            loginResult.setValue(new LoginResult(R.string.login_failed));
-        }
+        LoginResult<LoggedInUser> result = loginRepository.login(username, password);
+        loginResult.setValue(result);
     }
 
     public void loginDataChanged(String username, String password) {

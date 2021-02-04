@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
@@ -22,6 +21,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.electronicdiary.MainActivity;
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.data.login.LoggedInUser;
+import com.example.electronicdiary.data.login.LoginResult;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -59,23 +60,21 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
+        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult<LoggedInUser>>() {
             @Override
-            public void onChanged(@Nullable LoginResult loginResult) {
+            public void onChanged(@Nullable LoginResult<LoggedInUser> loginResult) {
                 if (loginResult == null) {
                     return;
                 }
                 loadingProgressBar.setVisibility(View.GONE);
-                if (loginResult.getError() != null) {
-                    showLoginFailed(loginResult.getError());
-                }
-                if (loginResult.getSuccess() != null) {
-                    finish();
-                    overridePendingTransition(0, 0);
-                    updateUiWithUser(loginResult.getSuccess());
+                if (loginResult instanceof LoginResult.Success) {
+                    LoggedInUser data = ((LoginResult.Success<LoggedInUser>) loginResult).getData();
+                    updateUiWithUser(data);
+                } else {
+                    String error = ((LoginResult.Error) loginResult).getError();
+                    showLoginFailed(error);
                 }
                 //setResult(Activity.RESULT_OK);
-
             }
         });
 
@@ -120,15 +119,17 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void updateUiWithUser(LoggedInUserView model) {
+    private void updateUiWithUser(LoggedInUser model) {
+        finish();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        overridePendingTransition(0, 0);
 
         String welcome = getString(R.string.welcome) + model.getDisplayName();
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }
 
-    private void showLoginFailed(@StringRes Integer errorString) {
+    private void showLoginFailed(String errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
 }
