@@ -1,12 +1,15 @@
 package com.example.electronicdiary.login;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -33,9 +36,31 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
+        PreferenceManager.setDefaultValues(this, R.xml.settings_screen, false);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        final CheckBox isRememberMe = findViewById(R.id.is_remember_me);
+        isRememberMe.setChecked(sharedPreferences.getBoolean(getString(R.string.is_remember_me), false));
+
+        if (isRememberMe.isChecked()) {
+            openMainActivity();
+        } else {
+            initLoginListeners(isRememberMe, sharedPreferences);
+        }
+    }
+
+    private void openMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        finish();
+        overridePendingTransition(0, 0);
+        startActivity(intent);
+        overridePendingTransition(0, 0);
+    }
+
+    private void initLoginListeners(CheckBox isRememberMe, SharedPreferences sharedPreferences) {
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
-        final Button loginButton = findViewById(R.id.login);
+        final Button loginButton = findViewById(R.id.login_button);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
         loginViewModel.getLoginFormState().observe(this, loginFormState -> {
@@ -57,11 +82,12 @@ public class LoginActivity extends AppCompatActivity {
             }
             loadingProgressBar.setVisibility(View.GONE);
             if (loginResult instanceof LoginResult.Success) {
-                LoggedInUser data = ((LoginResult.Success<LoggedInUser>) loginResult).getData();
-                updateUiWithUser(data);
+                sharedPreferences.edit().putBoolean(getString(R.string.is_remember_me), isRememberMe.isChecked()).apply();
+
+                openMainActivity();
             } else {
                 String error = ((LoginResult.Error) loginResult).getError();
-                showLoginFailed(error);
+                Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
             }
             //setResult(Activity.RESULT_OK);
         });
@@ -85,6 +111,7 @@ public class LoginActivity extends AppCompatActivity {
         };
         usernameEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.addTextChangedListener(afterTextChangedListener);
+
         passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 loginViewModel.login(usernameEditText.getText().toString(),
@@ -98,19 +125,5 @@ public class LoginActivity extends AppCompatActivity {
             loginViewModel.login(usernameEditText.getText().toString(),
                     passwordEditText.getText().toString());
         });
-    }
-
-    private void updateUiWithUser(LoggedInUser model) {
-        finish();
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        overridePendingTransition(0, 0);
-
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
-        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-    }
-
-    private void showLoginFailed(String errorString) {
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
 }

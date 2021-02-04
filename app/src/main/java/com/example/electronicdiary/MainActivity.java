@@ -15,6 +15,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.preference.Preference;
 
+import com.example.electronicdiary.login.LoginActivity;
 import com.example.electronicdiary.settings.SettingsActivity;
 import com.google.android.material.navigation.NavigationView;
 
@@ -29,9 +30,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         Toolbar toolbar = findViewById(R.id.mainToolbar);
         setSupportActionBar(toolbar);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_profile, R.id.nav_search, R.id.nav_preferences)
+                R.id.nav_profile, R.id.nav_search, R.id.nav_preferences, R.id.nav_logout)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -41,8 +45,17 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         NavigationUI.setupWithNavController(navigationView, navController);
         navigationView.setNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_preferences) {
-                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
+                overridePendingTransition(0, 0);
+                return true;
+            } else if (item.getItemId() == R.id.nav_logout) {
+                sharedPreferences.edit().putBoolean(getString(R.string.is_remember_me), false).apply();
+                Intent intent = new Intent(this, LoginActivity.class);
+                finish();
+                overridePendingTransition(0, 0);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
                 return true;
             } else {
                 boolean handled = NavigationUI.onNavDestinationSelected(item, navController);
@@ -53,15 +66,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             }
         });
 
-        /*Toolbar toolbar = findViewById(R.id.toolbar);
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_profile, R.id.nav_search, R.id.nav_preferences)
-                .setDrawerLayout(drawer)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupWithNavController(toolbar, navController, mAppBarConfiguration);*/
-
          /*FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,9 +74,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                         .setAction("Action", null).show();
             }
         });*/
-
-        PreferenceManager.setDefaultValues(this, R.xml.settings_screen, false);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     @Override
