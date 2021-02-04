@@ -1,4 +1,4 @@
-package com.example.electronicdiary.ui.login;
+package com.example.electronicdiary.login;
 
 import android.util.Patterns;
 
@@ -7,15 +7,12 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.electronicdiary.R;
-import com.example.electronicdiary.data.login.LoggedInUser;
-import com.example.electronicdiary.data.login.LoginRepository;
-import com.example.electronicdiary.data.login.LoginResult;
 
 public class LoginViewModel extends ViewModel {
 
-    private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
-    private MutableLiveData<LoginResult<LoggedInUser>> loginResult = new MutableLiveData<>();
-    private LoginRepository loginRepository;
+    private final MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
+    private final MutableLiveData<LoginResult<LoggedInUser>> loginResult = new MutableLiveData<>();
+    private final LoginRepository loginRepository;
 
     LoginViewModel(LoginRepository loginRepository) {
         this.loginRepository = loginRepository;

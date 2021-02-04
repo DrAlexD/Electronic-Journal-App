@@ -1,4 +1,4 @@
-package com.example.electronicdiary.ui.login;
+package com.example.electronicdiary.login;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,8 +17,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.electronicdiary.MainActivity;
 import com.example.electronicdiary.R;
-import com.example.electronicdiary.data.login.LoggedInUser;
-import com.example.electronicdiary.data.login.LoginResult;
 
 public class LoginActivity extends AppCompatActivity {
 

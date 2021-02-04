@@ -1,10 +1,8 @@
-package com.example.electronicdiary.ui.login;
+package com.example.electronicdiary.login;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-
-import com.example.electronicdiary.data.login.LoginRepository;
 
 /**
  * ViewModel provider factory to instantiate LoginViewModel.

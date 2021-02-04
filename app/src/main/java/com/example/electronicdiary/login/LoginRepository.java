@@ -1,4 +1,4 @@
-package com.example.electronicdiary.data.login;
+package com.example.electronicdiary.login;
 
 /**
  * Class that requests authentication and user information from the remote data source and

@@ -1,4 +1,4 @@
-package com.example.electronicdiary.data.login;
+package com.example.electronicdiary.login;
 
 import org.jetbrains.annotations.NotNull;
 

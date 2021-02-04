@@ -1,4 +1,4 @@
-package com.example.electronicdiary.ui.settings;
+package com.example.electronicdiary.settings;
 
 import android.os.Bundle;
 
