@@ -1,5 +1,7 @@
 package com.example.electronicdiary.data.login;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * A generic class that holds a result success w/ data or an error exception.
  */
@@ -8,21 +10,22 @@ public class LoginResult<T> {
     private LoginResult() {
     }
 
+    @NotNull
     @Override
     public String toString() {
         if (this instanceof LoginResult.Success) {
-            LoginResult.Success success = (LoginResult.Success) this;
+            LoginResult.Success<T> success = (LoginResult.Success<T>) this;
             return "Success[data=" + success.getData().toString() + "]";
         } else if (this instanceof LoginResult.Error) {
             LoginResult.Error error = (LoginResult.Error) this;
-            return "Error[exception=" + error.getError().toString() + "]";
+            return "Error[exception=" + error.getError() + "]";
         }
         return "";
     }
 
     // Success sub-class
-    public final static class Success<T> extends LoginResult {
-        private T data;
+    public final static class Success<T> extends LoginResult<T> {
+        private final T data;
 
         public Success(T data) {
             this.data = data;
@@ -35,7 +38,7 @@ public class LoginResult<T> {
 
     // Error sub-class
     public final static class Error extends LoginResult {
-        private String error;
+        private final String error;
 
         public Error(String error) {
             this.error = error;
