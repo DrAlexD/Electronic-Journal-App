@@ -16,7 +16,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.preference.Preference;
 
 import com.example.electronicdiary.login.LoginActivity;
-import com.example.electronicdiary.settings.SettingsActivity;
+import com.example.electronicdiary.search.SearchActivity;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener {
@@ -28,14 +28,14 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = findViewById(R.id.mainToolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_profile, R.id.nav_search, R.id.nav_preferences, R.id.nav_logout)
+                R.id.nav_profile, R.id.nav_search, R.id.nav_settings, R.id.nav_logout)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -44,16 +44,17 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
         navigationView.setNavigationItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.nav_preferences) {
-                Intent intent = new Intent(this, SettingsActivity.class);
+            if (item.getItemId() == R.id.nav_logout) {
+                sharedPreferences.edit().putBoolean(getString(R.string.is_remember_me), false).apply();
+                Intent intent = new Intent(this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                finish();
+                overridePendingTransition(0, 0);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
                 return true;
-            } else if (item.getItemId() == R.id.nav_logout) {
-                sharedPreferences.edit().putBoolean(getString(R.string.is_remember_me), false).apply();
-                Intent intent = new Intent(this, LoginActivity.class);
-                finish();
-                overridePendingTransition(0, 0);
+            } else if (item.getItemId() == R.id.nav_search) {
+                Intent intent = new Intent(this, SearchActivity.class);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
                 return true;

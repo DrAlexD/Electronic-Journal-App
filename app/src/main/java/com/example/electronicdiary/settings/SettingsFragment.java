@@ -10,7 +10,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        setPreferencesFromResource(R.xml.settings_screen, rootKey);
+        setPreferencesFromResource(R.xml.fragment_settings, rootKey);
 
         /*EditTextPreference numberPreference = findPreference("number");
 

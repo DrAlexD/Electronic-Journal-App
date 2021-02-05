@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
-        PreferenceManager.setDefaultValues(this, R.xml.settings_screen, false);
+        PreferenceManager.setDefaultValues(this, R.xml.fragment_settings, false);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         final CheckBox isRememberMe = findViewById(R.id.is_remember_me);

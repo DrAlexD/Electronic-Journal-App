@@ -15,8 +15,10 @@
     <!-- Strings related to menu -->
     <string name="menu_profile">Профиль</string>
     <string name="menu_search">Поиск</string>
-    <string name="menu_preferences">Настройки</string>
+    <string name="menu_settings">Настройки</string>
     <string name="menu_logout">Выйти</string>
     <!-- Strings related to preferences -->
     <string name="general_header">Общие</string>
+    <!-- Strings related to search -->
+    <string name="search_hint">Поиск студентов…</string>
 </resources>
