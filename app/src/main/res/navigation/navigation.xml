@@ -13,4 +13,9 @@
         android:id="@+id/nav_settings"
         android:name="com.example.electronicdiary.settings.SettingsFragment"
         android:label="@string/menu_settings" />
+
+    <fragment
+        android:id="@+id/nav_search"
+        android:name="com.example.electronicdiary.search.SearchFragment"
+        android:label="@string/menu_search" />
 </navigation>

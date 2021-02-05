@@ -29,7 +29,6 @@ public class LoginRepository {
 
     public void logout() {
         user = null;
-        // TODO выход из приложения
     }
 
     private void setLoggedInUser(LoggedInUser user) {

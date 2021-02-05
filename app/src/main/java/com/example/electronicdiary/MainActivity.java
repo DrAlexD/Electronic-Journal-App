@@ -16,7 +16,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.preference.Preference;
 
 import com.example.electronicdiary.login.LoginActivity;
-import com.example.electronicdiary.search.SearchActivity;
+import com.example.electronicdiary.login.LoginRepository;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener {
@@ -46,15 +46,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         navigationView.setNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_logout) {
                 sharedPreferences.edit().putBoolean(getString(R.string.is_remember_me), false).apply();
+                LoginRepository.getInstance().logout();
+
                 Intent intent = new Intent(this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 finish();
                 overridePendingTransition(0, 0);
-                startActivity(intent);
-                overridePendingTransition(0, 0);
-                return true;
-            } else if (item.getItemId() == R.id.nav_search) {
-                Intent intent = new Intent(this, SearchActivity.class);
                 startActivity(intent);
                 overridePendingTransition(0, 0);
                 return true;
@@ -91,8 +88,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        //getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
