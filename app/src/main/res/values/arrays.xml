@@ -1,12 +1,17 @@
 <resources>
-    <!-- Reply Preference -->
-    <string-array name="reply_entries">
-        <item>Reply</item>
-        <item>Reply to all</item>
+    <string-array name="semester_entries">
+        <item>1 половина 2019</item>
+        <item>2 половина 2019</item>
+        <item>1 половина 2020</item>
+        <item>2 половина 2020</item>
+        <item>1 половина 2021</item>
     </string-array>
 
-    <string-array name="reply_values">
-        <item>reply</item>
-        <item>reply_all</item>
+    <string-array name="semester_values">
+        <item>1_half_2019</item>
+        <item>2_half_2019</item>
+        <item>1_half_2020</item>
+        <item>2_half_2020</item>
+        <item>1_half_2021</item>
     </string-array>
 </resources>

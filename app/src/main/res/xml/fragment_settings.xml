@@ -1,9 +1,20 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory app:title="@string/general_header">
+        <ListPreference
+            app:key="@string/semester_choose"
+            app:title="@string/semester_choose"
+            app:entries="@array/semester_entries"
+            app:entryValues="@array/semester_values"
+            app:useSimpleSummaryProvider="true" />
         <SwitchPreferenceCompat
             app:defaultValue="false"
             app:key="@string/is_remember_me"
             app:title="@string/is_remember_me"
+            app:useSimpleSummaryProvider="true" />
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="@string/is_admin_rules"
+            app:title="@string/is_admin_rules"
             app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
 </PreferenceScreen>

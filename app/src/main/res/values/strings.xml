@@ -4,7 +4,6 @@
     <string name="prompt_login">Логин</string>
     <string name="prompt_password">Пароль</string>
     <string name="action_sign_in">Войти</string>
-    <string name="is_remember_me">Запомнить меня при входе</string>
     <string name="welcome">Добро пожаловать, </string>
     <string name="invalid_username">Неверный логин</string>
     <string name="invalid_password">Пароль должен содежать >5 символов</string>
@@ -19,6 +18,9 @@
     <string name="menu_logout">Выйти</string>
     <!-- Strings related to preferences -->
     <string name="general_header">Общие</string>
+    <string name="is_remember_me">Запомнить меня при входе</string>
+    <string name="is_admin_rules">Права админа</string>
+    <string name="semester_choose">Выберите семестер</string>
     <!-- Strings related to search -->
     <string name="search_hint">Поиск студентов…</string>
 </resources>
