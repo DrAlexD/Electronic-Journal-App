@@ -33,8 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.loginToolbar);
         setSupportActionBar(toolbar);
 
-        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
+        loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
         //PreferenceManager.setDefaultValues(this, R.xml.fragment_settings, false);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);

@@ -4,9 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ExpandableListView
-        android:id="@+id/subjectsWithGroupsList"
+    <TextView
+        android:id="@+id/group_performance_text"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null" />
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="20sp" />
 </LinearLayout>

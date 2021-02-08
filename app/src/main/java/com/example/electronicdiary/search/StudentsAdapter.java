@@ -1,4 +1,3 @@
-/*
 package com.example.electronicdiary.search;
 
 import android.content.Context;
@@ -7,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.ViewHolder> implements Filterable {
-    private LayoutInflater inflater;
+    private final LayoutInflater inflater;
     private ArrayList<Student> students;
 
     private ArrayList<Student> originalStudents;
@@ -40,32 +38,8 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.ViewHo
     public void onBindViewHolder(@NotNull StudentsAdapter.ViewHolder holder, int position) {
         Student student = students.get(position);
 
-        holder.studentImageView.setImageResource(student.getImage());
         holder.studentNameView.setText(student.getName());
-        holder.studentWinRateDiffView.setText(textForWinRateDiffView(student));
-        holder.studentNewWinRateView.setText(student.getNewWinRate() + "%");
-    }
-
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        final ImageView studentImageView;
-        final TextView studentNameView;
-        final TextView studentWinRateDiffView;
-        final TextView studentNewWinRateView;
-
-        ViewHolder(View view) {
-            super(view);
-            studentImageView = view.findViewById(R.id.studentImage);
-            studentNameView = view.findViewById(R.id.studentName);
-            studentWinRateDiffView = view.findViewById(R.id.studentWinRateDiff);
-            studentNewWinRateView = view.findViewById(R.id.studentNewWinRate);
-        }
-    }
-
-    private String textForWinRateDiffView(Student student) {
-        String frontSign = "";
-        if (student.getWinRateDiff() > 0.0)
-            frontSign = "+";
-        return frontSign + student.getWinRateDiff() + "%";
+        holder.studentGroupView.setText(student.getGroup());
     }
 
     @Override
@@ -106,5 +80,15 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.ViewHo
             }
         };
     }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        final TextView studentNameView;
+        final TextView studentGroupView;
+
+        ViewHolder(View view) {
+            super(view);
+            studentNameView = view.findViewById(R.id.studentName);
+            studentGroupView = view.findViewById(R.id.studentGroup);
+        }
+    }
 }
-*/
