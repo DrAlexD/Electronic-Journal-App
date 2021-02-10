@@ -23,7 +23,7 @@ public class ProfileFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        //TODO запуск поиска
+        //TODO поиск предметов и групп у преподавателя
         HashMap<String, ArrayList<String>> subjectsWithGroups = new HashMap<>();
         ArrayList<String> subjects = new ArrayList<>();
         subjects.add("Матан");
@@ -48,7 +48,7 @@ public class ProfileFragment extends Fragment {
         subjectsWithGroups.put("Матан", groups1);
         subjectsWithGroups.put("Мобилки", groups2);
         subjectsWithGroups.put("Алгебра", groups3);
-        subjectsWithGroupsAdapter = new SubjectsWithGroupsAdapter(getActivity().getApplicationContext(), subjects, subjectsWithGroups);
+        subjectsWithGroupsAdapter = new SubjectsWithGroupsAdapter(getContext(), subjects, subjectsWithGroups);
 
         final ExpandableListView expandableListView = root.findViewById(R.id.subjectsWithGroupsList);
         expandableListView.setAdapter(subjectsWithGroupsAdapter);

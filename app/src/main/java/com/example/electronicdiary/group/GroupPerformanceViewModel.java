@@ -5,15 +5,19 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class GroupPerformanceViewModel extends ViewModel {
+    private final MutableLiveData<String> mGroup = new MutableLiveData<>();
+    private final MutableLiveData<String> mSubject = new MutableLiveData<>();
 
-    private final MutableLiveData<String> mText;
-
-    public GroupPerformanceViewModel(String group, String subject) {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is groupPerformance fragment: " + group + " with " + subject);
+    public LiveData<String> getSubject() {
+        return mSubject;
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public LiveData<String> getGroup() {
+        return mGroup;
+    }
+
+    public void setGroupAndSubject(String group, String subject) {
+        mGroup.setValue(group);
+        mSubject.setValue(subject);
     }
 }
