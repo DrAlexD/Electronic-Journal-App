@@ -8,9 +8,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.electronicdiary.R;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 public class GroupPerformanceFragment extends Fragment {
     private GroupPerformanceViewModel groupPerformanceViewModel;
@@ -21,11 +23,15 @@ public class GroupPerformanceFragment extends Fragment {
         groupPerformanceViewModel = new ViewModelProvider(this).get(GroupPerformanceViewModel.class);
         groupPerformanceViewModel.setGroupAndSubject(getArguments().getString("group"), getArguments().getString("subject"));
 
-        ModulesPagerAdapter sectionsPagerAdapter = new ModulesPagerAdapter(getActivity().getSupportFragmentManager(), groupPerformanceViewModel);
-        ViewPager viewPager = root.findViewById(R.id.modules_pager);
+        ModulesPagerAdapter sectionsPagerAdapter = new ModulesPagerAdapter(this, groupPerformanceViewModel);
+        ViewPager2 viewPager = root.findViewById(R.id.modules_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         viewPager.setCurrentItem(0);
         viewPager.setOffscreenPageLimit(2);
+
+        TabLayout tabLayout = root.findViewById(R.id.modules_tab_layout);
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) ->
+                tab.setText("Модуль " + (position + 1))).attach();
 
         return root;
     }

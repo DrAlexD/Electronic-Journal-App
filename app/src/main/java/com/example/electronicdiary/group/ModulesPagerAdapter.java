@@ -1,32 +1,26 @@
 package com.example.electronicdiary.group;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 
-public class ModulesPagerAdapter extends FragmentPagerAdapter {
+public class ModulesPagerAdapter extends FragmentStateAdapter {
     private final GroupPerformanceViewModel groupPerformanceViewModel;
 
-    public ModulesPagerAdapter(FragmentManager fm, GroupPerformanceViewModel groupPerformanceViewModel) {
-        super(fm);
+    public ModulesPagerAdapter(Fragment groupPerformanceFragment, GroupPerformanceViewModel groupPerformanceViewModel) {
+        super(groupPerformanceFragment);
         this.groupPerformanceViewModel = groupPerformanceViewModel;
     }
 
+    @NonNull
     @Override
-    public Fragment getItem(int position) {
-        return ModuleFragment.newInstance(position + 1, groupPerformanceViewModel);
-    }
-
-    @Nullable
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return (ModuleFragment.getTitle(position + 1));
+    public Fragment createFragment(int position) {
+        return new ModuleFragment(position + 1, groupPerformanceViewModel);
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return 3;
     }
 }

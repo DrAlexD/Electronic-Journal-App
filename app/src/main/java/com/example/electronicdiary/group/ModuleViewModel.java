@@ -7,14 +7,14 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 public class ModuleViewModel extends ViewModel {
-    private final MutableLiveData<Integer> mIndex = new MutableLiveData<>();
+    private final MutableLiveData<Integer> position = new MutableLiveData<>();
     private GroupPerformanceViewModel groupPerformanceViewModel;
-    private final LiveData<String> mText = Transformations.map(mIndex, new Function<Integer, String>() {
+    private final LiveData<String> mText = Transformations.map(position, new Function<Integer, String>() {
         @Override
         public String apply(Integer input) {
             return "Предмет: " + groupPerformanceViewModel.getSubject().getValue() +
                     ", группа: " + groupPerformanceViewModel.getGroup().getValue() +
-                    ", модуль: " + mIndex.getValue();
+                    ", модуль: " + position.getValue();
         }
     });
 
@@ -22,11 +22,11 @@ public class ModuleViewModel extends ViewModel {
         this.groupPerformanceViewModel = groupPerformanceViewModel;
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public void setPosition(int position) {
+        this.position.setValue(position);
     }
 
-    public void setIndex(int index) {
-        mIndex.setValue(index);
+    public LiveData<String> getText() {
+        return mText;
     }
 }
