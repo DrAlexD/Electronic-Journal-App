@@ -25,44 +25,43 @@ public class ProfileFragment extends Fragment {
 
         //TODO поиск предметов и групп у преподавателя
         HashMap<String, ArrayList<String>> subjectsWithGroups = new HashMap<>();
+
         ArrayList<String> subjects = new ArrayList<>();
         subjects.add("Матан");
         subjects.add("Мобилки");
         subjects.add("Алгебра");
 
+        ArrayList<ArrayList<String>> groups = new ArrayList<>();
         ArrayList<String> groups1 = new ArrayList<>();
         groups1.add("ИУ9-11");
         groups1.add("ИУ9-21");
         groups1.add("ИУ9-31");
-
         ArrayList<String> groups2 = new ArrayList<>();
         groups2.add("ИУ9-41");
         groups2.add("ИУ9-51");
         groups2.add("ИУ9-61");
-
         ArrayList<String> groups3 = new ArrayList<>();
         groups3.add("ИУ9-11");
         groups3.add("ИУ9-31");
         groups3.add("ИУ9-51");
+        groups.add(groups1);
+        groups.add(groups2);
+        groups.add(groups3);
 
-        subjectsWithGroups.put("Матан", groups1);
-        subjectsWithGroups.put("Мобилки", groups2);
-        subjectsWithGroups.put("Алгебра", groups3);
+        for (int i = 0; i < subjects.size(); i++) {
+            subjectsWithGroups.put(subjects.get(i), groups.get(i));
+        }
+
         subjectsWithGroupsAdapter = new SubjectsWithGroupsAdapter(getContext(), subjects, subjectsWithGroups);
 
         final ExpandableListView expandableListView = root.findViewById(R.id.subjectsWithGroupsList);
         expandableListView.setAdapter(subjectsWithGroupsAdapter);
-        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v,
-                                        int groupPosition, int childPosition, long id) {
-                Bundle bundle = new Bundle();
-                bundle.putString("subject", subjects.get(groupPosition));
-                bundle.putString("group", subjectsWithGroups.get(subjects.get(groupPosition)).get(childPosition));
-                Navigation.findNavController(v).navigate(R.id.action_profile_to_group_performance, bundle);
-                return false;
-            }
+        expandableListView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("subject", subjects.get(groupPosition));
+            bundle.putString("group", subjectsWithGroups.get(subjects.get(groupPosition)).get(childPosition));
+            Navigation.findNavController(v).navigate(R.id.action_profile_to_group_performance, bundle);
+            return false;
         });
 
         /*profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);

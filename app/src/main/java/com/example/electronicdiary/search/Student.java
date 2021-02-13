@@ -7,7 +7,7 @@ public class Student {
     private final String firstName;
     private final String secondName;
 
-    Student(String group, String firstName, String secondName) {
+    public Student(String group, String firstName, String secondName) {
         this.group = group;
         this.firstName = firstName;
         this.secondName = secondName;
