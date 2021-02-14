@@ -1,13 +1,13 @@
 package com.example.electronicdiary.group;
 
-import com.example.electronicdiary.search.Student;
+import com.example.electronicdiary.student.Student;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 import java.util.Map;
 
-public class StudentInModule {
+class StudentInModule {
     private final Student student;
     private final Map<String, Integer> eventsWithPoints;
     private final Map<Date, Integer> visitsWithPoints;

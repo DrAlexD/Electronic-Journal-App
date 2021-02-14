@@ -15,10 +15,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.electronicdiary.R;
-import com.example.electronicdiary.search.Student;
+import com.example.electronicdiary.student.Student;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -43,6 +44,7 @@ public class GroupPerformanceFragment extends Fragment {
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             generateEventsTable(root);
         } else {
+            //TODO фрагменты-дети не удаляются, при этом создаются лишние
             ModulesPagerAdapter sectionsPagerAdapter = new ModulesPagerAdapter(this);
             ViewPager2 viewPager = root.findViewById(R.id.modules_pager);
             viewPager.setAdapter(sectionsPagerAdapter);
@@ -156,6 +158,13 @@ public class GroupPerformanceFragment extends Fragment {
             studentView.setTextSize(20);
             studentView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
             studentView.setGravity(Gravity.CENTER);
+            studentView.setOnClickListener(view -> {
+                Bundle bundle = new Bundle();
+                bundle.putString("student", ((TextView) view).getText().toString());
+                bundle.putString("group", groupPerformanceViewModel.getGroup().getValue());
+                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_student_profile, bundle);
+            });
+
             pointsRow.addView(studentView);
 
             for (String event : events) {

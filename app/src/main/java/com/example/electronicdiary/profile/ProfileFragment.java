@@ -1,10 +1,13 @@
 package com.example.electronicdiary.profile;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -22,6 +25,10 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        TextView userName = (TextView) root.findViewById(R.id.user_name_text);
+        userName.setText(sharedPreferences.getString("username", ""));
 
         //TODO поиск предметов и групп у преподавателя
         HashMap<String, ArrayList<String>> subjectsWithGroups = new HashMap<>();
@@ -61,7 +68,7 @@ public class ProfileFragment extends Fragment {
             bundle.putString("subject", subjects.get(groupPosition));
             bundle.putString("group", subjectsWithGroups.get(subjects.get(groupPosition)).get(childPosition));
             Navigation.findNavController(v).navigate(R.id.action_profile_to_group_performance, bundle);
-            return false;
+            return true;
         });
 
         /*profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);

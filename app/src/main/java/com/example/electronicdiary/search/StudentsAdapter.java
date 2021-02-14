@@ -11,12 +11,13 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.student.Student;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.ViewHolder> implements Filterable {
+class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.ViewHolder> implements Filterable {
     private final LayoutInflater inflater;
     private ArrayList<Student> students;
 

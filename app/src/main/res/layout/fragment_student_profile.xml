@@ -6,8 +6,8 @@
 
     <include layout="@layout/nav_header" />
 
-    <ExpandableListView
-        android:id="@+id/subjectsWithGroupsList"
+    <ListView
+        android:id="@+id/studentSubjectsList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@null" />

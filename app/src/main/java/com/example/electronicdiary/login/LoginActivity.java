@@ -57,8 +57,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initLoginListeners(CheckBox isRememberMe, SharedPreferences sharedPreferences) {
-        final EditText usernameEditText = findViewById(R.id.username);
-        final EditText passwordEditText = findViewById(R.id.password);
+        final EditText usernameEditText = findViewById(R.id.user_name_edit);
+        final EditText passwordEditText = findViewById(R.id.password_edit);
         final Button loginButton = findViewById(R.id.login_button);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
@@ -82,6 +82,8 @@ public class LoginActivity extends AppCompatActivity {
             loadingProgressBar.setVisibility(View.GONE);
             if (loginResult instanceof LoginResult.Success) {
                 sharedPreferences.edit().putBoolean(getString(R.string.is_remember_me), isRememberMe.isChecked()).apply();
+                sharedPreferences.edit().putString("username",
+                        ((LoginResult.Success<LoggedInUser>) loginResult).getData().getDisplayName()).apply();
 
                 openMainActivity();
             } else {

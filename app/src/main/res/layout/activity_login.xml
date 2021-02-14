@@ -15,7 +15,7 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <EditText
-        android:id="@+id/username"
+        android:id="@+id/user_name_edit"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -25,7 +25,7 @@
         android:selectAllOnFocus="true" />
 
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/password_edit"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

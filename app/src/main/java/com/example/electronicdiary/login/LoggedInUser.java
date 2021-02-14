@@ -1,9 +1,6 @@
 package com.example.electronicdiary.login;
 
-/**
- * Data class that captures user information for logged in users retrieved from LoginRepository
- */
-public class LoggedInUser {
+class LoggedInUser {
 
     private final String userId;
     private final String displayName;

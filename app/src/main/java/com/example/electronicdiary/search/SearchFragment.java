@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.student.Student;
 
 import java.util.ArrayList;
 

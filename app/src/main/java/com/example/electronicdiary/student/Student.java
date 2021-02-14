@@ -1,4 +1,4 @@
-package com.example.electronicdiary.search;
+package com.example.electronicdiary.student;
 
 import org.jetbrains.annotations.NotNull;
 

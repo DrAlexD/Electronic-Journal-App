@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -63,6 +65,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 return handled;
             }
         });
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView userName = (TextView) headerView.findViewById(R.id.user_name_text);
+        userName.setText(sharedPreferences.getString("username", ""));
 
          /*FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

@@ -12,7 +12,7 @@ import com.example.electronicdiary.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SubjectsWithGroupsAdapter extends BaseExpandableListAdapter {
+class SubjectsWithGroupsAdapter extends BaseExpandableListAdapter {
     private final LayoutInflater inflater;
     private final ArrayList<String> subjects;
     private final HashMap<String, ArrayList<String>> subjectsWithGroups;

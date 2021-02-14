@@ -9,8 +9,6 @@
     <string name="invalid_password">Пароль должен содежать >5 символов</string>
     <string name="login_failed">Вход не выполнен</string>
     <!-- Strings related to menu and navigation -->
-    <string name="nav_header_title">Пользователь</string>
-    <string name="nav_header_subtitle">почта.пользователя@gmail.com</string>
     <string name="menu_profile">Мой Профиль</string>
     <string name="menu_search">Поиск студента</string>
     <string name="menu_settings">Настройки</string>

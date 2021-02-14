@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.electronicdiary.search.Student;
+import com.example.electronicdiary.student.Student;
 
 import java.util.ArrayList;
 import java.util.Date;

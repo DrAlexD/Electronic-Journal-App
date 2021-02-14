@@ -14,9 +14,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.example.electronicdiary.R;
-import com.example.electronicdiary.search.Student;
+import com.example.electronicdiary.student.Student;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -83,6 +84,12 @@ public class ModuleFragment extends Fragment {
             studentView.setTextSize(20);
             studentView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
             studentView.setGravity(Gravity.CENTER);
+            studentView.setOnClickListener(view -> {
+                Bundle bundle = new Bundle();
+                bundle.putString("student", ((TextView) view).getText().toString());
+                bundle.putString("group", groupPerformanceViewModel.getGroup().getValue());
+                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_student_profile, bundle);
+            });
             pointsRow.addView(studentView);
 
             for (Date visit : visits) {

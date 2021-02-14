@@ -2,11 +2,7 @@ package com.example.electronicdiary.login;
 
 import org.jetbrains.annotations.NotNull;
 
-/**
- * A generic class that holds a result success w/ data or an error exception.
- */
-public class LoginResult<T> {
-    // hide the private constructor to limit subclass types (Success, Error)
+class LoginResult<T> {
     private LoginResult() {
     }
 
@@ -23,7 +19,6 @@ public class LoginResult<T> {
         return "";
     }
 
-    // Success sub-class
     public final static class Success<T> extends LoginResult<T> {
         private final T data;
 
@@ -36,7 +31,6 @@ public class LoginResult<T> {
         }
     }
 
-    // Error sub-class
     public final static class Error extends LoginResult {
         private final String error;
 

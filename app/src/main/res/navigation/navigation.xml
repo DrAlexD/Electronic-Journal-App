@@ -21,6 +21,19 @@
             android:id="@+id/action_pop_out_to_profile"
             app:popUpTo="@id/nav_profile"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_group_performance_to_student_profile"
+            app:destination="@id/nav_student_profile" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_student_profile"
+        android:name="com.example.electronicdiary.student.StudentProfileFragment"
+        android:label="Профиль студента">
+        <action
+            android:id="@+id/action_pop_out_to_group_performance"
+            app:popUpTo="@id/nav_group_performance"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
