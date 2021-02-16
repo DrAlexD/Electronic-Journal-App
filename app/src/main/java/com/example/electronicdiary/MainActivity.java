@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
+        //TODO разобраться как оставлять иконку Drawer постоянно
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_profile, R.id.nav_search, R.id.nav_settings, R.id.nav_logout)

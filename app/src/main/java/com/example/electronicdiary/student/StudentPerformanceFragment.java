@@ -1,4 +1,5 @@
-package com.example.electronicdiary.group;
+/*
+package com.example.electronicdiary.student;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -28,35 +29,30 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GroupPerformanceFragment extends Fragment {
-    private GroupPerformanceViewModel groupPerformanceViewModel;
+public class StudentPerformanceFragment extends Fragment {
+    //private GroupPerformanceViewModel groupPerformanceViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_group_performance, container, false);
 
-        groupPerformanceViewModel = new ViewModelProvider(this).get(GroupPerformanceViewModel.class);
+*/
+/*        groupPerformanceViewModel = new ViewModelProvider(this).get(GroupPerformanceViewModel.class);
         groupPerformanceViewModel.setGroup(getArguments().getString("group"));
-        groupPerformanceViewModel.setSubject(getArguments().getString("subject"));
+        groupPerformanceViewModel.setSubject(getArguments().getString("subject"));*//*
+
 
         downloadData();
 
-        int orientation = getResources().getConfiguration().orientation;
-        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            generateEventsTable(root);
-        } else {
-            //TODO фрагменты-дети не удаляются, при этом создаются лишние
-            ModulesPagerAdapter modulesPagerAdapter = new ModulesPagerAdapter(this);
-            ViewPager2 viewPager = root.findViewById(R.id.modules_pager);
-            viewPager.setAdapter(modulesPagerAdapter);
-            viewPager.setCurrentItem(0);
-            viewPager.setOffscreenPageLimit(2);
-            viewPager.setUserInputEnabled(false);
+        ViewPager2 viewPager = root.findViewById(R.id.modules_pager);
+        viewPager.setAdapter(sectionsPagerAdapter);
+        viewPager.setCurrentItem(0);
+        viewPager.setOffscreenPageLimit(2);
+        viewPager.setUserInputEnabled(false);
 
-            //TODO добавить вторую панель перелистывания для семинара/лекции
-            TabLayout tabLayout = root.findViewById(R.id.modules_tab_layout);
-            new TabLayoutMediator(tabLayout, viewPager, (tab, position) ->
-                    tab.setText("Модуль " + (position + 1))).attach();
-        }
+        //TODO добавить вторую панель перелистывания для семинара/лекции
+        TabLayout tabLayout = root.findViewById(R.id.modules_tab_layout);
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) ->
+                tab.setText("Модуль " + (position + 1))).attach();
 
         return root;
     }
@@ -182,4 +178,4 @@ public class GroupPerformanceFragment extends Fragment {
             studentsInModuleEventsTable.addView(pointsRow);
         }
     }
-}
+}*/

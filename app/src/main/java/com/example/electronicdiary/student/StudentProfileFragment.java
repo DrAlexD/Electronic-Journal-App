@@ -32,12 +32,14 @@ public class StudentProfileFragment extends Fragment {
         String studentGroup = getArguments().getString("group");
 
         final ListView listView = root.findViewById(R.id.studentSubjectsList);
-        ArrayAdapter<String> subjectsAdapter = new ArrayAdapter<>(getContext(), R.layout.subject_holder, R.id.subjectTitle, subjects);
+        ArrayAdapter<String> subjectsAdapter = new ArrayAdapter<>(getContext(), R.layout.holder_subject, R.id.subjectTitle, subjects);
         listView.setAdapter(subjectsAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
             /*Bundle bundle = new Bundle();
             bundle.putString("subject", subjects.get(position));
-            Navigation.findNavController(view).navigate(R.id.action_profile_to_group_performance, bundle);*/
+            bundle.putString("student", studentName);
+            bundle.putString("group", studentGroup);
+            Navigation.findNavController(view).navigate(R.id.action_student_profile_to_student_performance, bundle);*/
         });
 
         TextView userName = root.findViewById(R.id.user_name_text);

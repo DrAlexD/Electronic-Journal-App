@@ -31,7 +31,7 @@ class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.ViewHolder> i
     @Override
     @NotNull
     public StudentsAdapter.ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.student_holder, parent, false);
+        View view = inflater.inflate(R.layout.holder_student, parent, false);
         return new ViewHolder(view);
     }
 
@@ -63,7 +63,8 @@ class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.ViewHolder> i
                 String findTextChange = constraint.toString();
                 if (!findTextChange.equals("")) {
                     for (Student student : originalStudents) {
-                        if ((student.getName().toLowerCase()).contains(findTextChange.toLowerCase()))
+                        if ((student.getName().toLowerCase()).contains(findTextChange.toLowerCase()) ||
+                                (student.getGroup().toLowerCase()).contains(findTextChange.toLowerCase()))
                             filterResults.add(student);
                     }
                 } else {

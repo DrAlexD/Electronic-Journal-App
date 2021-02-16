@@ -13,6 +13,8 @@
     <string name="menu_search">Поиск студента</string>
     <string name="menu_settings">Настройки</string>
     <string name="menu_group_performance">Успеваемость группы</string>
+    <string name="menu_student_profile">Профиль студента</string>
+    <string name="menu_student_performance">Успеваемость студента</string>
     <string name="menu_logout">Выйти</string>
     <!-- Strings related to preferences -->
     <string name="general_header">Общие</string>
