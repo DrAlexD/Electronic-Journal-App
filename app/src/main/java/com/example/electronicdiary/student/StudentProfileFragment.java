@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.example.electronicdiary.R;
 
@@ -35,11 +36,11 @@ public class StudentProfileFragment extends Fragment {
         ArrayAdapter<String> subjectsAdapter = new ArrayAdapter<>(getContext(), R.layout.holder_subject, R.id.subjectTitle, subjects);
         listView.setAdapter(subjectsAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
-            /*Bundle bundle = new Bundle();
+            Bundle bundle = new Bundle();
             bundle.putString("subject", subjects.get(position));
             bundle.putString("student", studentName);
             bundle.putString("group", studentGroup);
-            Navigation.findNavController(view).navigate(R.id.action_student_profile_to_student_performance, bundle);*/
+            Navigation.findNavController(view).navigate(R.id.action_student_profile_to_student_performance, bundle);
         });
 
         TextView userName = root.findViewById(R.id.user_name_text);

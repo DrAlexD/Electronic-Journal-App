@@ -34,12 +34,12 @@
             android:id="@+id/action_pop_out_to_group_performance"
             app:popUpTo="@id/nav_group_performance"
             app:popUpToInclusive="true" />
-        <!--<action
+        <action
             android:id="@+id/action_student_profile_to_student_performance"
-            app:destination="@id/nav_student_performance" />-->
+            app:destination="@id/nav_student_performance" />
     </fragment>
 
-    <!--<fragment
+    <fragment
         android:id="@+id/nav_student_performance"
         android:name="com.example.electronicdiary.student.StudentPerformanceFragment"
         android:label="@string/menu_student_performance">
@@ -47,7 +47,7 @@
             android:id="@+id/action_pop_out_to_student_profile"
             app:popUpTo="@id/nav_student_profile"
             app:popUpToInclusive="true" />
-    </fragment>-->
+    </fragment>
 
     <fragment
         android:id="@+id/nav_settings"
