@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
 
-public class Visit {
+class Visit {
     private final Date date;
     private final int points;
 

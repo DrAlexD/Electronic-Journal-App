@@ -23,17 +23,26 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class ModuleFragment extends Fragment {
-    private GroupPerformanceViewModel groupPerformanceViewModel;
     private int position;
-    private ModuleViewModel moduleViewModel;
+
+    private String group;
+    private ArrayList<Student> students;
+    private ArrayList<Date> visits;
+    private ArrayList<StudentInModule> studentsInModule;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_module, container, false);
 
         position = getArguments().getInt("position");
-        groupPerformanceViewModel = new ViewModelProvider(getParentFragment()).get(GroupPerformanceViewModel.class);
-        moduleViewModel = new ViewModelProvider(this).get(ModuleViewModel.class);
+
+        GroupPerformanceViewModel groupPerformanceViewModel = new ViewModelProvider(getParentFragment()).get(GroupPerformanceViewModel.class);
+        studentsInModule = groupPerformanceViewModel.getStudentsInModule().getValue();
+        students = groupPerformanceViewModel.getStudents().getValue();
+        visits = groupPerformanceViewModel.getVisits().getValue();
+        group = groupPerformanceViewModel.getGroup().getValue();
+
+        ModuleViewModel moduleViewModel = new ViewModelProvider(this).get(ModuleViewModel.class);
         moduleViewModel.setPosition(position);
 
         generateVisitsTable(root);
@@ -42,24 +51,32 @@ public class ModuleFragment extends Fragment {
     }
 
     private void generateVisitsTable(View root) {
-        ArrayList<StudentInModule> studentsInModule = groupPerformanceViewModel.getStudentsInModule().getValue();
-        ArrayList<Student> students = groupPerformanceViewModel.getStudents().getValue();
-        ArrayList<Date> visits = groupPerformanceViewModel.getVisits().getValue();
-
         TableLayout studentsInModuleVisitsTable = root.findViewById(R.id.studentsInModuleVisitsTable);
-        int padding5inDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
         int padding2inDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics());
+        int padding5inDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
 
+        TableRow visitsRow = generateVisitsRow(padding2inDp, padding5inDp);
+        studentsInModuleVisitsTable.addView(visitsRow);
+
+        for (int i = 0; i < studentsInModule.size(); i++) {
+            TableRow pointsRow = generatePointsRow(i, padding2inDp, padding5inDp);
+            studentsInModuleVisitsTable.addView(pointsRow);
+        }
+    }
+
+    private TableRow generateVisitsRow(int padding2inDp, int padding5inDp) {
         TableRow visitsRow = new TableRow(getContext());
         visitsRow.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE |
                 LinearLayout.SHOW_DIVIDER_BEGINNING | LinearLayout.SHOW_DIVIDER_END);
         visitsRow.setDividerDrawable(getResources().getDrawable(R.drawable.divider));
+
         TextView infoView = new TextView(getContext());
         infoView.setTextSize(20);
         infoView.setText("Студент\\Занятие");
         infoView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
         infoView.setGravity(Gravity.CENTER);
         visitsRow.addView(infoView);
+
         for (Date visit : visits) {
             TextView visitView = new TextView(getContext());
             visitView.setTextSize(20);
@@ -69,41 +86,43 @@ public class ModuleFragment extends Fragment {
             //visitView.setRotation(90);
             visitsRow.addView(visitView);
         }
-        studentsInModuleVisitsTable.addView(visitsRow);
 
-        for (int i = 0; i < studentsInModule.size(); i++) {
-            StudentInModule studentInModule = studentsInModule.get(i);
+        return visitsRow;
+    }
 
-            TableRow pointsRow = new TableRow(getContext());
-            pointsRow.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE |
-                    LinearLayout.SHOW_DIVIDER_BEGINNING | LinearLayout.SHOW_DIVIDER_END);
-            pointsRow.setDividerDrawable(getResources().getDrawable(R.drawable.divider));
+    private TableRow generatePointsRow(int i, int padding2inDp, int padding5inDp) {
+        StudentInModule studentInModule = studentsInModule.get(i);
 
-            TextView studentView = new TextView(getContext());
-            studentView.setText(students.get(i).getName());
-            studentView.setTextSize(20);
-            studentView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
-            studentView.setGravity(Gravity.CENTER);
-            studentView.setOnClickListener(view -> {
-                Bundle bundle = new Bundle();
-                bundle.putString("student", ((TextView) view).getText().toString());
-                bundle.putString("group", groupPerformanceViewModel.getGroup().getValue());
-                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_student_profile, bundle);
-            });
-            pointsRow.addView(studentView);
+        TableRow pointsRow = new TableRow(getContext());
+        pointsRow.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE |
+                LinearLayout.SHOW_DIVIDER_BEGINNING | LinearLayout.SHOW_DIVIDER_END);
+        pointsRow.setDividerDrawable(getResources().getDrawable(R.drawable.divider));
 
-            for (Date visit : visits) {
-                TextView pointsView = new TextView(getContext());
-                pointsView.setTextSize(20);
-                pointsView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
-                if (studentInModule.getVisitsWithPoints().containsKey(visit))
-                    pointsView.setText(studentInModule.getVisitsWithPoints().get(visit).toString());
-                else
-                    pointsView.setText("");
-                pointsView.setGravity(Gravity.CENTER);
-                pointsRow.addView(pointsView);
-            }
-            studentsInModuleVisitsTable.addView(pointsRow);
+        TextView studentView = new TextView(getContext());
+        studentView.setText(students.get(i).getName());
+        studentView.setTextSize(20);
+        studentView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
+        studentView.setGravity(Gravity.CENTER);
+        studentView.setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("student", ((TextView) view).getText().toString());
+            bundle.putString("group", group);
+            Navigation.findNavController(view).navigate(R.id.action_group_performance_to_student_profile, bundle);
+        });
+        pointsRow.addView(studentView);
+
+        for (Date visit : visits) {
+            TextView pointsView = new TextView(getContext());
+            pointsView.setTextSize(20);
+            pointsView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
+            if (studentInModule.getVisitsWithPoints().containsKey(visit))
+                pointsView.setText(studentInModule.getVisitsWithPoints().get(visit).toString());
+            else
+                pointsView.setText("");
+            pointsView.setGravity(Gravity.CENTER);
+            pointsRow.addView(pointsView);
         }
+
+        return pointsRow;
     }
 }

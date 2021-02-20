@@ -18,9 +18,13 @@
     <string name="menu_logout">Выйти</string>
     <!-- Strings related to preferences -->
     <string name="general_header">Общие</string>
-    <string name="is_remember_me">Запомнить меня при входе</string>
+    <string name="is_remember_me">Запомнить меня</string>
     <string name="is_admin_rules">Права админа</string>
     <string name="semester_choose">Выберите семестер</string>
+    <string name="event_min_points_text">Мин. баллов</string>
     <!-- Strings related to search -->
     <string name="search_hint">Поиск студента…</string>
+    <!--    &lt;!&ndash; Strings related to admin actions &ndash;&gt;
+        <string name="add_subject_button">Добавить предмет</string>
+        <string name="add_group_button">Добавить группу</string>-->
 </resources>
