@@ -1,8 +1,11 @@
-package com.example.electronicdiary.student;
+package com.example.electronicdiary.student.performance;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.example.electronicdiary.student.Event;
+import com.example.electronicdiary.student.Visit;
 
 import java.util.ArrayList;
 import java.util.HashMap;

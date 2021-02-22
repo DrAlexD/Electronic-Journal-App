@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
@@ -51,14 +52,15 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setPreferences(View root) {
+        //TODO добавить отображение выбранного семестра в профиле преподавателя
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         String username = sharedPreferences.getString("username", "");
-        /*boolean isAdminRules = sharedPreferences.getBoolean(getString(R.string.is_admin_rules), false);*/
+        boolean isAdminRules = sharedPreferences.getBoolean(getString(R.string.is_admin_rules), false);
 
         TextView usernameView = root.findViewById(R.id.user_name_text);
         usernameView.setText(username);
 
-        /*Button addSubjectButton = root.findViewById(R.id.add_subject);
+        Button addSubjectButton = root.findViewById(R.id.add_subject);
         addSubjectButton.setVisibility(isAdminRules ? View.VISIBLE : View.GONE);
         addSubjectButton.setOnClickListener(view -> {
 
@@ -68,7 +70,7 @@ public class ProfileFragment extends Fragment {
         addGroupButton.setVisibility(isAdminRules ? View.VISIBLE : View.GONE);
         addGroupButton.setOnClickListener(view -> {
 
-        });*/
+        });
     }
 
     private void downloadData() {

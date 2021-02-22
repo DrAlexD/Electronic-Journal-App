@@ -99,7 +99,7 @@ public class ModuleFragment extends Fragment {
         pointsRow.setDividerDrawable(getResources().getDrawable(R.drawable.divider));
 
         TextView studentView = new TextView(getContext());
-        studentView.setText(students.get(i).getName());
+        studentView.setText(students.get(i).getFullName());
         studentView.setTextSize(20);
         studentView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
         studentView.setGravity(Gravity.CENTER);

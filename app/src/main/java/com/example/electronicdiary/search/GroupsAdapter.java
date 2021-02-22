@@ -11,44 +11,42 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.electronicdiary.R;
-import com.example.electronicdiary.student.Student;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.ViewHolder> implements Filterable {
+class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.ViewHolder> implements Filterable {
     private final LayoutInflater inflater;
     private final View.OnClickListener onItemClickListener;
 
-    private ArrayList<Student> students;
+    private ArrayList<String> groups;
 
-    private ArrayList<Student> originalStudents;
+    private ArrayList<String> originalGroups;
 
-    StudentsAdapter(Context context, ArrayList<Student> students, View.OnClickListener onItemClickListener) {
+    GroupsAdapter(Context context, ArrayList<String> groups, View.OnClickListener onItemClickListener) {
         this.inflater = LayoutInflater.from(context);
         this.onItemClickListener = onItemClickListener;
-        this.students = students;
+        this.groups = groups;
     }
 
     @Override
     @NotNull
-    public StudentsAdapter.ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.holder_student, parent, false);
+    public GroupsAdapter.ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
+        View view = inflater.inflate(R.layout.holder_group, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NotNull StudentsAdapter.ViewHolder holder, int position) {
-        Student student = students.get(position);
+    public void onBindViewHolder(@NotNull GroupsAdapter.ViewHolder holder, int position) {
+        String group = groups.get(position);
 
-        holder.studentNameView.setText(student.getFullName());
-        holder.studentGroupView.setText(student.getGroup());
+        holder.groupTitleView.setText(group);
     }
 
     @Override
     public int getItemCount() {
-        return students.size();
+        return groups.size();
     }
 
     public Filter getFilter() {
@@ -57,21 +55,20 @@ class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.ViewHolder> i
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults oReturn = new FilterResults();
-                ArrayList<Student> filterResults = new ArrayList<>();
+                ArrayList<String> filterResults = new ArrayList<>();
 
-                if (originalStudents == null) {
-                    originalStudents = students;
+                if (originalGroups == null) {
+                    originalGroups = groups;
                 }
 
                 String findTextChange = constraint.toString();
                 if (!findTextChange.equals("")) {
-                    for (Student student : originalStudents) {
-                        if ((student.getFullName().toLowerCase()).contains(findTextChange.toLowerCase()) ||
-                                (student.getGroup().toLowerCase()).contains(findTextChange.toLowerCase()))
-                            filterResults.add(student);
+                    for (String group : originalGroups) {
+                        if ((group.toLowerCase()).contains(findTextChange.toLowerCase()))
+                            filterResults.add(group);
                     }
                 } else {
-                    filterResults = originalStudents;
+                    filterResults = originalGroups;
                 }
 
                 oReturn.values = filterResults;
@@ -80,20 +77,18 @@ class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.ViewHolder> i
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                students = (ArrayList<Student>) results.values;
+                groups = (ArrayList<String>) results.values;
                 notifyDataSetChanged();
             }
         };
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        final TextView studentNameView;
-        final TextView studentGroupView;
+        final TextView groupTitleView;
 
         ViewHolder(View view) {
             super(view);
-            studentNameView = view.findViewById(R.id.studentName);
-            studentGroupView = view.findViewById(R.id.studentGroup);
+            groupTitleView = view.findViewById(R.id.groupTitle);
 
             view.setTag(this);
             itemView.setOnClickListener(onItemClickListener);

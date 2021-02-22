@@ -15,13 +15,12 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.preference.Preference;
 
 import com.example.electronicdiary.login.LoginActivity;
 import com.example.electronicdiary.login.LoginRepository;
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener {
+public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -38,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         //TODO разобраться как оставлять иконку Drawer постоянно
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_profile, R.id.nav_search, R.id.nav_settings, R.id.nav_logout)
+                R.id.nav_profile, R.id.nav_search_available_students, R.id.nav_admin_actions, R.id.nav_settings, R.id.nav_logout)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -68,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         });
 
         View headerView = navigationView.getHeaderView(0);
-        TextView userName = (TextView) headerView.findViewById(R.id.user_name_text);
+        TextView userName = headerView.findViewById(R.id.user_name_text);
         userName.setText(sharedPreferences.getString("username", ""));
 
          /*FloatingActionButton fab = findViewById(R.id.fab);
@@ -94,12 +93,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
@@ -108,11 +101,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-
-    }
-
-    @Override
-    public boolean onPreferenceChange(Preference preference, Object newValue) {
-        return false;
+        if ("Права админа".equals(s)) {
+            NavigationView navigationView = findViewById(R.id.nav_view);
+            Menu navMenu = navigationView.getMenu();
+            navMenu.findItem(R.id.nav_admin_actions).setVisible(
+                    sharedPreferences.getBoolean(getString(R.string.is_admin_rules), false));
+        }
     }
 }

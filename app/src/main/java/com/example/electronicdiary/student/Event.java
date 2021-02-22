@@ -2,7 +2,7 @@ package com.example.electronicdiary.student;
 
 import org.jetbrains.annotations.NotNull;
 
-class Event {
+public class Event {
     private final String title;
     private final int points;
 

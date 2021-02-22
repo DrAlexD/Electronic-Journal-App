@@ -7,7 +7,7 @@ import com.example.electronicdiary.student.Student;
 
 import java.util.ArrayList;
 
-public class SearchViewModel extends ViewModel {
+public class SearchAvailableStudentsViewModel extends ViewModel {
     private final MutableLiveData<ArrayList<Student>> students = new MutableLiveData<>();
 
     public MutableLiveData<ArrayList<Student>> getStudents() {

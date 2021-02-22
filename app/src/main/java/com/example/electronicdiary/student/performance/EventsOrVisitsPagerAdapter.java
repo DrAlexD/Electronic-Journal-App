@@ -1,10 +1,12 @@
-package com.example.electronicdiary.student;
+package com.example.electronicdiary.student.performance;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+
+import com.example.electronicdiary.student.profile.EventsOrVisitsFragment;
 
 class EventsOrVisitsPagerAdapter extends FragmentStateAdapter {
 

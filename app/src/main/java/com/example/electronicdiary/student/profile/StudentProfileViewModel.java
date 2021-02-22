@@ -1,4 +1,4 @@
-package com.example.electronicdiary.student;
+package com.example.electronicdiary.student.profile;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

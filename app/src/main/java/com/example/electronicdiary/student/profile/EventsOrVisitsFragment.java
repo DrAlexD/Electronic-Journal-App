@@ -1,4 +1,4 @@
-package com.example.electronicdiary.student;
+package com.example.electronicdiary.student.profile;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +12,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.student.Event;
+import com.example.electronicdiary.student.Visit;
+import com.example.electronicdiary.student.performance.StudentPerformanceViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;

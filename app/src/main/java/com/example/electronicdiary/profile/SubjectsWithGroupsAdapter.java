@@ -75,7 +75,7 @@ class SubjectsWithGroupsAdapter extends BaseExpandableListAdapter {
     public View getChildView(int groupPosition, int childPosition, boolean isExpanded, View view, ViewGroup parent) {
         String groupTitle = subjectsWithGroups.get(subjects.get(groupPosition)).get(childPosition);
         if (view == null) {
-            view = inflater.inflate(R.layout.holder_group, null);
+            view = inflater.inflate(R.layout.holder_group_in_subject, null);
         }
 
         TextView groupTitleView = view.findViewById(R.id.groupTitle);

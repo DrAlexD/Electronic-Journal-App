@@ -1,4 +1,4 @@
-package com.example.electronicdiary.student;
+package com.example.electronicdiary.student.profile;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -64,6 +64,7 @@ public class StudentProfileFragment extends Fragment {
     }
 
     private void setPreferences(View root) {
+        //TODO добавить отображение выбранного семестра в профиле студента
         TextView username = root.findViewById(R.id.user_name_text);
         username.setText(studentName);
 

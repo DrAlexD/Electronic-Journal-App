@@ -1,4 +1,4 @@
-package com.example.electronicdiary.student;
+package com.example.electronicdiary.student.performance;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +11,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.student.Event;
+import com.example.electronicdiary.student.Visit;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 

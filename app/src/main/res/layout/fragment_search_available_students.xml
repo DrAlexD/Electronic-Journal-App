@@ -6,16 +6,16 @@
     android:orientation="vertical">
 
     <SearchView
-        android:id="@+id/studentsSearch"
+        android:id="@+id/availableStudentsSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:completionThreshold="1"
         android:iconifiedByDefault="false"
         android:inputType="textPersonName"
-        android:queryHint="@string/search_hint" />
+        android:queryHint="@string/student_search_hint" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/searchedStudentsList"
+        android:id="@+id/searchedAvailableStudentsList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="LinearLayoutManager" />

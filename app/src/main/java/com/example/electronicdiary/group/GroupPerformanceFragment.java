@@ -19,7 +19,6 @@ import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.electronicdiary.R;
-import com.example.electronicdiary.student.EventInfoFragment;
 import com.example.electronicdiary.student.Student;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -55,6 +54,7 @@ public class GroupPerformanceFragment extends Fragment {
         groupPerformanceViewModel.setEvents(events);
         groupPerformanceViewModel.setVisits(visits);
 
+        //TODO подумать как оставлять первую строку и первый столбец на месте при скроллинге
         int orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             generateEventsTable(root);
@@ -161,11 +161,11 @@ public class GroupPerformanceFragment extends Fragment {
             eventView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
             eventView.setGravity(Gravity.CENTER);
             eventView.setOnClickListener(view -> {
-                EventInfoFragment eventInfoFragment = new EventInfoFragment();
+                EventInfoDialogFragment eventInfoDialogFragment = new EventInfoDialogFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("eventTitle", eventTitle);
-                eventInfoFragment.setArguments(bundle);
-                eventInfoFragment.show(getChildFragmentManager(), "eventInfo");
+                eventInfoDialogFragment.setArguments(bundle);
+                eventInfoDialogFragment.show(getChildFragmentManager(), "eventInfo");
             });
             eventsRow.addView(eventView);
         }
@@ -182,7 +182,7 @@ public class GroupPerformanceFragment extends Fragment {
         pointsRow.setDividerDrawable(getResources().getDrawable(R.drawable.divider));
 
         TextView studentView = new TextView(getContext());
-        studentView.setText(students.get(i).getName());
+        studentView.setText(students.get(i).getFullName());
         studentView.setTextSize(20);
         studentView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
         studentView.setGravity(Gravity.CENTER);

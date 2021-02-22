@@ -1,4 +1,4 @@
-package com.example.electronicdiary.student;
+package com.example.electronicdiary.student.profile;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.student.Visit;
 
 import java.util.ArrayList;
 import java.util.HashMap;
