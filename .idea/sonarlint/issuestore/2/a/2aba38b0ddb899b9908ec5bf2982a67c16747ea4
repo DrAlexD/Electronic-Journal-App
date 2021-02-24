@@ -1,0 +1,9 @@
+
+Œ
+java:S13193"qThe type of the "events" object should be an interface such as "List" rather than the implementation "ArrayList".(Š’¢Êşÿÿÿÿ
+’
+java:S1319;"wThe type of the "visitsByModules" object should be an interface such as "Map" rather than the implementation "HashMap".(¬´åĞÿÿÿÿÿ
+
+java:S1319C"rThe type of the "modules" object should be an interface such as "List" rather than the implementation "ArrayList".(Å›š²ûÿÿÿÿ
+Œ
+java:S1319K"qThe type of the "visits" object should be an interface such as "List" rather than the implementation "ArrayList".(ºêüúÿÿÿÿ

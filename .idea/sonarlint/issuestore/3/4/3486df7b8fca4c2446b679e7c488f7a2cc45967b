@@ -1,0 +1,7 @@
+
+
+java:S1319"zThe type of the "subjectsWithGroups" object should be an interface such as "Map" rather than the implementation "HashMap".(Û¸ïç
+
+java:S1319"sThe type of the "subjects" object should be an interface such as "List" rather than the implementation "ArrayList".(Ã³¿âûÿÿÿÿ
+Œ
+java:S1319""qThe type of the "groups" object should be an interface such as "List" rather than the implementation "ArrayList".(¿ÃÄèûÿÿÿÿ

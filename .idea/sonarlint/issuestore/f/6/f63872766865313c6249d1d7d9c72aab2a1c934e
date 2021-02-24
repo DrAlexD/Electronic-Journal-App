@@ -1,37 +1,41 @@
 
-U
-java:S1161)":Add the "@Override" annotation above this method signature(ÿ£º¡ÿÿÿÿÿ
-M
-java:S1135>"2Complete the task associated to this TODO comment.(›¬ß±şÿÿÿÿ
-M
-java:S1135F"2Complete the task associated to this TODO comment.(…èœêùÿÿÿÿ
-M
-java:S1135P"2Complete the task associated to this TODO comment.(©Í–Ğûÿÿÿÿ
-G
-java:S1874a",Remove this use of "Date"; it is deprecated.(¬ÏÍıÿÿÿÿ
-G
-java:S1874b",Remove this use of "Date"; it is deprecated.(‡·œ±ÿÿÿÿÿ
-G
-java:S1874c",Remove this use of "Date"; it is deprecated.(ë™«áşÿÿÿÿ
 B
 java:S1874d",Remove this use of "Date"; it is deprecated.(‰”È
 G
-java:S1874e",Remove this use of "Date"; it is deprecated.(Á”Èöùÿÿÿÿ
-B
-java:S1874f",Remove this use of "Date"; it is deprecated.(€ß¡†
-B
-java:S1874g",Remove this use of "Date"; it is deprecated.(¹ŸÕã
+java:S1874j",Remove this use of "Date"; it is deprecated.(Ì·‹‰ıÿÿÿÿ
+G
+java:S1874c",Remove this use of "Date"; it is deprecated.(ë™«áşÿÿÿÿ
 G
 java:S1874h",Remove this use of "Date"; it is deprecated.(ë¨ï¾ÿÿÿÿÿ
+M
+java:S1135>"2Complete the task associated to this TODO comment.(›¬ß±şÿÿÿÿ
+G
+java:S1874b",Remove this use of "Date"; it is deprecated.(‡·œ±ÿÿÿÿÿ
+G
+java:S1874e",Remove this use of "Date"; it is deprecated.(Á”Èöùÿÿÿÿ
+M
+java:S1135F"2Complete the task associated to this TODO comment.(…èœêùÿÿÿÿ
 G
 java:S1874i",Remove this use of "Date"; it is deprecated.(…ÿ¤«ÿÿÿÿÿ
-G
-java:S1874j",Remove this use of "Date"; it is deprecated.(Ì·‹‰ıÿÿÿÿ
+O
+java:S1874¶"3Remove this use of "getDrawable"; it is deprecated.(›Óƒòøÿÿÿÿ
+M
+java:S1135P"2Complete the task associated to this TODO comment.(©Í–Ğûÿÿÿÿ
+B
+java:S1874f",Remove this use of "Date"; it is deprecated.(€ß¡†
 G
 java:S1874k",Remove this use of "Date"; it is deprecated.(¯Ñ²Êùÿÿÿÿ
 G
 java:S1874l",Remove this use of "Date"; it is deprecated.(Ş­…Œÿÿÿÿÿ
-L
-java:S1874"3Remove this use of "getDrawable"; it is deprecated.(°ÏÄœÿÿÿÿÿ
-L
-java:S1874"3Remove this use of "getDrawable"; it is deprecated.(›Óƒòøÿÿÿÿ
+G
+java:S1874a",Remove this use of "Date"; it is deprecated.(¬ÏÍıÿÿÿÿ
+B
+java:S1874g",Remove this use of "Date"; it is deprecated.(¹ŸÕã
+O
+java:S1874”"3Remove this use of "getDrawable"; it is deprecated.(°ÏÄœÿÿÿÿÿ
+U
+java:S1161(":Add the "@Override" annotation above this method signature(ÿ£º¡ÿÿÿÿÿ
+s
+java:S1450!"VRemove the "subject" field and declare it as a local variable in the relevant methods.(­¬í8•´ñÛü.
+T
+java:S11359"2Complete the task associated to this TODO comment.(ë½‘çøÿÿÿÿ8•´ñÛü.

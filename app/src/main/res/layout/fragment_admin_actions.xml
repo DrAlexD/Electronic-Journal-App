@@ -4,9 +4,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/adminActionsList"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/admin_one_type_actions_tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null" />
+        android:layout_height="wrap_content" />
+    <!--app:tabTextColor="@color/primaryColor"
+    app:tabIndicatorColor="@color/secondaryColor"
+    app:tabSelectedTextColor="@color/secondaryDarkColor" />-->
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/admin_one_type_actions_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

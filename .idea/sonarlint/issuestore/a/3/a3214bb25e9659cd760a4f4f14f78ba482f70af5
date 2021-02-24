@@ -1,0 +1,31 @@
+
+j
+java:S1450"TRemove the "group" field and declare it as a local variable in the relevant methods.(ÆÀ
+p
+java:S1450"ZRemove the "studentName" field and declare it as a local variable in the relevant methods.(‚ı³“
+l
+java:S1450"VRemove the "subject" field and declare it as a local variable in the relevant methods.(­¬í
+U
+java:S1161"":Add the "@Override" annotation above this method signature(ÿ£º¡ÿÿÿÿÿ
+G
+java:S1135J"2Complete the task associated to this TODO comment.(¡ÆÛ-
+H
+java:S1135S"2Complete the task associated to this TODO comment.(õÕ–¼
+B
+java:S1874]",Remove this use of "Date"; it is deprecated.(²œô
+B
+java:S1874^",Remove this use of "Date"; it is deprecated.(°£ÃÇ
+B
+java:S1874_",Remove this use of "Date"; it is deprecated.(…ğ
+G
+java:S1874a",Remove this use of "Date"; it is deprecated.(Ó›şÓıÿÿÿÿ
+B
+java:S1874b",Remove this use of "Date"; it is deprecated.(Æ¥û®
+B
+java:S1874c",Remove this use of "Date"; it is deprecated.(õäÃ·
+G
+java:S1874e",Remove this use of "Date"; it is deprecated.(´ØÕ¡øÿÿÿÿ
+G
+java:S1874f",Remove this use of "Date"; it is deprecated.(×Ğğïûÿÿÿÿ
+B
+java:S1874g",Remove this use of "Date"; it is deprecated.(Œàõì

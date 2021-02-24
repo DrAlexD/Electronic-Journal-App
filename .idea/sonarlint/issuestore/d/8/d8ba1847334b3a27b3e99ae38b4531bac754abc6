@@ -1,8 +1,13 @@
 
+V	java:S110"<This class has 9 parents which is greater than 5 authorized.(·¡ïõøÿÿÿÿ
+V	java:S125["<This block of commented-out lines of code should be removed.(‹ëÎúÿÿÿÿ
+Q	java:S125$"<This block of commented-out lines of code should be removed.(İøı
 T
-java:S1874("9Remove this use of "PreferenceManager"; it is deprecated.(ğíÕ€úÿÿÿÿ
-V	java:S125\"<This block of commented-out lines of code should be removed.(‹ëÎúÿÿÿÿ
+java:S1874%"9Remove this use of "PreferenceManager"; it is deprecated.(ğíÕ€úÿÿÿÿ
 ^
-java:S1874("CRemove this use of "getDefaultSharedPreferences"; it is deprecated.(ğíÕ€úÿÿÿÿ
-V	java:S110"<This class has 9 parents which is greater than 5 authorized.(·¡ïõøÿÿÿÿ
-Q	java:S125'"<This block of commented-out lines of code should be removed.(İøı
+java:S1874%"CRemove this use of "getDefaultSharedPreferences"; it is deprecated.(ğíÕ€úÿÿÿÿ
+]	java:S125="<This block of commented-out lines of code should be removed.(·„²´ùÿÿÿÿ8—´ñÛü.
+]	java:S125P"<This block of commented-out lines of code should be removed.(ÔÒ×ïøÿÿÿÿ8—´ñÛü.
+I
+java:S1602z",Remove useless curly braces around statement(÷Ì»Â8—´ñÛü.
+X	java:S125{"<This block of commented-out lines of code should be removed.(£ÉÎ8—´ñÛü.

@@ -6,8 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.electronicdiary.student.profile.EventsOrVisitsFragment;
-
 class EventsOrVisitsPagerAdapter extends FragmentStateAdapter {
 
     public EventsOrVisitsPagerAdapter(Fragment studentPerformanceFragment) {

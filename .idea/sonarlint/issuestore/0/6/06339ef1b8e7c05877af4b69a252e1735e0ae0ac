@@ -1,0 +1,9 @@
+
+–
+java:S1319)"{The type of the "studentsInModule" object should be an interface such as "List" rather than the implementation "ArrayList".(ÏåÄäüÿÿÿÿ
+Ž
+java:S13191"sThe type of the "students" object should be an interface such as "List" rather than the implementation "ArrayList".(è­Ì¹ýÿÿÿÿ
+Œ
+java:S13199"qThe type of the "events" object should be an interface such as "List" rather than the implementation "ArrayList".(âá—Âþÿÿÿÿ
+Œ
+java:S1319A"qThe type of the "visits" object should be an interface such as "List" rather than the implementation "ArrayList".(ÁÑ’ƒÿÿÿÿÿ

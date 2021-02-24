@@ -55,7 +55,6 @@ public class StudentPerformanceFragment extends Fragment {
         viewPager.setAdapter(eventsOrVisitsPagerAdapter);
         viewPager.setCurrentItem(0);
         viewPager.setOffscreenPageLimit(2);
-        viewPager.setUserInputEnabled(false);
 
         TabLayout tabLayout = root.findViewById(R.id.events_or_visits_tab_layout);
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {

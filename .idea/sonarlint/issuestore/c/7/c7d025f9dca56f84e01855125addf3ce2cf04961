@@ -1,0 +1,12 @@
+
+l
+java:S1450"WRemove the "position" field and declare it as a local variable in the relevant methods.(•ศ?
+I
+java:S1874G"3Remove this use of "getDrawable"; it is deprecated.(๕Ý๒
+J
+java:S1874S"/Remove this use of "getDate"; it is deprecated.(ธฆธิýÿÿÿÿ
+K
+java:S1874S"0Remove this use of "getMonth"; it is deprecated.(ธฆธิýÿÿÿÿ
+Q	java:S125V"<This block of commented-out lines of code should be removed.(ฤฅแ
+N
+java:S1874c"3Remove this use of "getDrawable"; it is deprecated.(ำ๒๘ÿÿÿÿ

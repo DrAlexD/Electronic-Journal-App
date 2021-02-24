@@ -29,13 +29,15 @@ public class SearchAllGroupsFragment extends Fragment {
 
         View.OnClickListener onItemClickListener = view -> {
             RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
-            /*int position = viewHolder.getAdapterPosition();
+            int position = viewHolder.getAdapterPosition();
 
-            Bundle bundle = new Bundle();
-            bundle.putString("student", getArguments().getString("student"));
-            bundle.putString("group", groups.get(position));*/
+            if (getArguments().getInt("codeAction") == 0) {
+                //TODO добавление студента в базу
+                /*getArguments().getString("student")*/
 
-            //TODO добавление студента в базу
+            } else if (getArguments().getInt("codeAction") == 2) {
+                //TODO удаление группы из базы
+            }
 
             Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_admin_actions);
         };
