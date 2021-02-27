@@ -1,4 +1,4 @@
-package com.example.electronicdiary.admin.adding;
+package com.example.electronicdiary.admin.editing;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
-public class StudentAddingDialogFragment extends DialogFragment {
+public class StudentEditingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
     private CheckBox generateCheckBox;
     private EditText studentLogin;
@@ -38,30 +38,31 @@ public class StudentAddingDialogFragment extends DialogFragment {
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_student_adding, null);
+        View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_student_editing, null);
 
         downloadData();
 
-        generateCheckBox = root.findViewById(R.id.studentAddingGenerate);
-        studentName = root.findViewById(R.id.studentNameAdding);
-        studentSecondName = root.findViewById(R.id.studentSecondNameAdding);
-        studentLogin = root.findViewById(R.id.studentLoginAdding);
-        studentPassword = root.findViewById(R.id.studentPasswordAdding);
+        generateCheckBox = root.findViewById(R.id.studentEditingGenerate);
+        studentName = root.findViewById(R.id.studentNameEditing);
+        studentSecondName = root.findViewById(R.id.studentSecondNameEditing);
+        studentLogin = root.findViewById(R.id.studentLoginEditing);
+        studentPassword = root.findViewById(R.id.studentPasswordEditing);
 
-        //TODO добавить viewModel, чтобы после возвращения из фрагмента поиска всех групп отображать заполненные поля
+        studentName.setText(getArguments().getString("student").split(" ")[0]);
+        studentSecondName.setText(getArguments().getString("student").split(" ")[1]);
 
         setupAutoGenerate();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
-                .setTitle("Введите данные студента")
+                .setTitle("Измените данные студента")
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("actionCode", 0);
-                    bundle.putString("student", studentName.getText().toString() + " " + studentSecondName.getText().toString());
+                    //TODO изменение студента в базе
                     //dismiss();
 
-                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_admin_actions_to_search_groups, bundle);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("openPage", 1);
+                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_search_all_students_to_admin_actions, bundle);
                 }).create();
 
         dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE)
@@ -71,7 +72,7 @@ public class StudentAddingDialogFragment extends DialogFragment {
     }
 
     private void downloadData() {
-        //TODO получить первый доступный для добавления id студента
+        //TODO загрузить по id информацию о студенте
         studentId = new Random().nextInt(1000);
     }
 

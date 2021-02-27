@@ -7,13 +7,11 @@
     android:paddingRight="32dp">
 
     <EditText
-        android:id="@+id/groupTitleAdding"
+        android:id="@+id/subjectTitleEditing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:hint="@string/group_title_form"
+        android:hint="@string/subject_title_form"
         android:inputType="text"
-        android:maxLength="10"
         android:textSize="20sp" />
-
 </LinearLayout>

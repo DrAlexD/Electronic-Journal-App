@@ -12,6 +12,9 @@
     <string name="menu_profile">Мой Профиль</string>
     <string name="menu_search_students">Поиск студента</string>
     <string name="menu_search_groups">Поиск группы</string>
+    <string name="menu_search_subjects">Поиск предмета</string>
+    <string name="menu_search_professors">Поиск преподавателя</string>
+    <string name="menu_search_semesters">Поиск семестра</string>
     <string name="menu_settings">Настройки</string>
     <string name="menu_group_performance">Успеваемость группы</string>
     <string name="menu_student_profile">Профиль студента</string>
@@ -26,17 +29,20 @@
     <!-- Strings related to search -->
     <string name="student_search_hint">Поиск студента…</string>
     <string name="group_search_hint">Поиск группы…</string>
+    <string name="subject_search_hint">Поиск предмета…</string>
+    <string name="professor_search_hint">Поиск преподавателя…</string>
+    <string name="semester_search_hint">Поиск семестра…</string>
     <!-- Strings related to admin actions -->
     <string name="admin_actions">Действия админа</string>
-    <string name="name_adding_form">Имя</string>
-    <string name="second_name_adding_form">Фамилия</string>
-    <string name="login_adding_form">Логин</string>
-    <string name="password_adding_form">Пароль</string>
-    <string name="adding_login_and_password_generate">Сгенерировать логин и пароль</string>
-    <string name="group_title_adding_form">Группа</string>
-    <string name="subject_title_adding_form">Предмет</string>
-    <string name="semester_year_adding_form">Год</string>
-    <string name="semester_half_adding_form">Первая половина года</string>
+    <string name="name_form">Имя</string>
+    <string name="second_name_form">Фамилия</string>
+    <string name="login_form">Логин</string>
+    <string name="password_form">Пароль</string>
+    <string name="login_and_password_generate">Сгенерировать логин и пароль</string>
+    <string name="group_title_form">Группа</string>
+    <string name="subject_title_form">Предмет</string>
+    <string name="semester_year_form">Год</string>
+    <string name="semester_half_form">Первая половина года</string>
     <!-- Strings related to professor actions -->
     <string name="add_subject_button">Добавить предмет</string>
     <string name="add_group_button">Добавить группу</string>

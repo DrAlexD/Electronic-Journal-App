@@ -1,14 +1,12 @@
-package com.example.electronicdiary.student;
+package com.example.electronicdiary.search;
 
 import org.jetbrains.annotations.NotNull;
 
-public class Student {
+public class Professor {
     private final String firstName;
     private final String secondName;
-    private final String group;
 
-    public Student(String group, String firstName, String secondName) {
-        this.group = group;
+    public Professor(String firstName, String secondName) {
         this.firstName = firstName;
         this.secondName = secondName;
     }
@@ -16,10 +14,7 @@ public class Student {
     @NotNull
     @Override
     public String toString() {
-        return "Student{" +
-                "group='" + group + '\'' +
-                ", name='" + firstName + secondName + '\'' +
-                '}';
+        return "Professor{" + "name='" + firstName + secondName + '\'' + '}';
     }
 
     public String getFirstName() {
@@ -32,9 +27,5 @@ public class Student {
 
     public String getFullName() {
         return firstName + " " + secondName;
-    }
-
-    public String getGroup() {
-        return group;
     }
 }

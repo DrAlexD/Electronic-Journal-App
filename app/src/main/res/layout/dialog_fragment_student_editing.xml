@@ -7,7 +7,7 @@
     android:paddingRight="32dp">
 
     <EditText
-        android:id="@+id/professorNameAdding"
+        android:id="@+id/studentNameEditing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -16,7 +16,7 @@
         android:textSize="20sp" />
 
     <EditText
-        android:id="@+id/professorSecondNameAdding"
+        android:id="@+id/studentSecondNameEditing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -26,7 +26,7 @@
         android:textSize="20sp" />
 
     <EditText
-        android:id="@+id/professorLoginAdding"
+        android:id="@+id/studentLoginEditing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -36,16 +36,17 @@
         android:textSize="20sp" />
 
     <EditText
-        android:id="@+id/professorPasswordAdding"
+        android:id="@+id/studentPasswordEditing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:gravity="center"
         android:hint="@string/password_form"
-        android:inputType="text" />
+        android:inputType="text"
+        android:textSize="20sp" />
 
     <CheckBox
-        android:id="@+id/professorAddingGenerate"
+        android:id="@+id/studentEditingGenerate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"

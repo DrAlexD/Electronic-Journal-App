@@ -9,9 +9,11 @@ import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.admin.editing.StudentEditingDialogFragment;
 import com.example.electronicdiary.student.Student;
 
 import java.util.ArrayList;
@@ -27,13 +29,33 @@ public class SearchAllStudentsFragment extends Fragment {
 
         downloadData();
 
+        int actionCode = getArguments().getInt("actionCode");
+
         View.OnClickListener onItemClickListener = view -> {
             RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
             int position = viewHolder.getAdapterPosition();
 
-            /*Bundle bundle = new Bundle();
-            bundle.putString("student", students.get(position).getFullName());
-            Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_student_profile, bundle);*/
+            if (actionCode == 2) {
+                //TODO удаление студента из базы
+
+                Bundle bundle = new Bundle();
+                bundle.putInt("openPage", actionCode);
+                Navigation.findNavController(view).navigate(R.id.action_search_all_students_to_admin_actions, bundle);
+            } else if (actionCode == -1) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("actionCode", actionCode);
+                bundle.putString("student", students.get(position).getFullName());
+                bundle.putString("group", students.get(position).getGroup());
+
+                Navigation.findNavController(view).navigate(R.id.action_search_all_students_to_search_groups, bundle);
+            } else if (actionCode == 1) {
+                StudentEditingDialogFragment studentEditingDialogFragment = new StudentEditingDialogFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("student", students.get(position).getFullName());
+
+                studentEditingDialogFragment.setArguments(bundle);
+                studentEditingDialogFragment.show(getChildFragmentManager(), "studentEditing");
+            }
         };
         studentsAdapter = new StudentsAdapter(getContext(), students, onItemClickListener);
 
@@ -50,15 +72,15 @@ public class SearchAllStudentsFragment extends Fragment {
     private void downloadData() {
         //TODO поиск всех студентов
         students = new ArrayList<>();
-        students.add(new Student("1Александр", "1Другаков"));
-        students.add(new Student("2Александр", "2Другаков"));
-        students.add(new Student("3Александр", "3Другаков"));
-        students.add(new Student("4Александр", "4Другаков"));
-        students.add(new Student("5Александр", "5Другаков"));
-        students.add(new Student("6ИУ9-11", "6Александр", "6Другаков"));
-        students.add(new Student("7ИУ9-21", "7Александр", "7Другаков"));
-        students.add(new Student("8ИУ9-31", "8Александр", "8Другаков"));
-        students.add(new Student("9ИУ9-41", "9Александр", "9Другаков"));
+        students.add(new Student("1ИУ9-11", "1Александр", "1Другаков"));
+        students.add(new Student("2ИУ9-21", "2Александр", "2Другаков"));
+        students.add(new Student("3ИУ9-31", "3Александр", "3Другаков"));
+        students.add(new Student("4ИУ9-41", "4Александр", "4Другаков"));
+        students.add(new Student("5ИУ9-51", "5Александр", "5Другаков"));
+        students.add(new Student("6ИУ9-61", "6Александр", "6Другаков"));
+        students.add(new Student("7ИУ9-71", "7Александр", "7Другаков"));
+        students.add(new Student("8ИУ9-81", "8Александр", "8Другаков"));
+        students.add(new Student("9ИУ9-91", "9Александр", "9Другаков"));
     }
 
     private SearchView.OnQueryTextListener getSearchTextUpdateListener() {

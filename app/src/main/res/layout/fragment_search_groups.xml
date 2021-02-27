@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <SearchView
-        android:id="@+id/allGroupsSearch"
+        android:id="@+id/groupsSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:completionThreshold="1"
@@ -15,7 +15,7 @@
         android:queryHint="@string/group_search_hint" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/searchedAllGroupsList"
+        android:id="@+id/searchedGroupsList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="LinearLayoutManager" />

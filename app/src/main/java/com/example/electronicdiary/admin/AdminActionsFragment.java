@@ -21,10 +21,12 @@ public class AdminActionsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_admin_actions, container, false);
 
+        int page = getArguments() != null ? getArguments().getInt("openPage") : 0;
+
         AdminOneTypeActionsPagerAdapter adminOneTypeActionsPagerAdapter = new AdminOneTypeActionsPagerAdapter(this);
         ViewPager2 viewPager = root.findViewById(R.id.admin_one_type_actions_pager);
         viewPager.setAdapter(adminOneTypeActionsPagerAdapter);
-        viewPager.setCurrentItem(0);
+        viewPager.setCurrentItem(page);
         viewPager.setOffscreenPageLimit(2);
 
         TabLayout tabLayout = root.findViewById(R.id.admin_one_type_actions_tab_layout);

@@ -7,7 +7,7 @@
     android:paddingRight="32dp">
 
     <EditText
-        android:id="@+id/groupTitleAdding"
+        android:id="@+id/groupTitleEditing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"

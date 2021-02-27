@@ -41,7 +41,7 @@ public class StudentProfileFragment extends Fragment {
         studentProfileViewModel.setGroup(group);
         studentProfileViewModel.setSubjects(subjects);
 
-        ArrayAdapter<String> subjectsAdapter = new ArrayAdapter<>(getContext(), R.layout.holder_subject, R.id.subjectTitle, subjects);
+        ArrayAdapter<String> subjectsAdapter = new ArrayAdapter<>(getContext(), R.layout.holder_subject_with_group, R.id.subjectTitle, subjects);
         final ListView listView = root.findViewById(R.id.studentSubjectsList);
         listView.setAdapter(subjectsAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {

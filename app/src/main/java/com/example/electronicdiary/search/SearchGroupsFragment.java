@@ -13,48 +13,74 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.admin.editing.GroupEditingDialogFragment;
 
 import java.util.ArrayList;
 
-public class SearchAllGroupsFragment extends Fragment {
+public class SearchGroupsFragment extends Fragment {
     private GroupsAdapter groupsAdapter;
     private ArrayList<String> groups;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_search_all_groups, container, false);
+        View root = inflater.inflate(R.layout.fragment_search_groups, container, false);
 
         downloadData();
+
+        int actionCode = getArguments().getInt("actionCode");
+
+        if (actionCode == -1) {
+            groups.remove(getArguments().getString("group"));
+        }
 
         View.OnClickListener onItemClickListener = view -> {
             RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
             int position = viewHolder.getAdapterPosition();
 
-            if (getArguments().getInt("codeAction") == 0) {
+            if (actionCode == 0) {
                 //TODO добавление студента в базу
                 /*getArguments().getString("student")*/
 
-            } else if (getArguments().getInt("codeAction") == 2) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("openPage", actionCode);
+                Navigation.findNavController(view).navigate(R.id.action_search_groups_to_admin_actions, bundle);
+            } else if (actionCode == 2) {
                 //TODO удаление группы из базы
-            }
 
-            Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_admin_actions);
+                Bundle bundle = new Bundle();
+                bundle.putInt("openPage", actionCode);
+                Navigation.findNavController(view).navigate(R.id.action_search_groups_to_admin_actions, bundle);
+            } else if (actionCode == -1) {
+                //TODO изменить группу у студента в базе
+
+                Bundle bundle = new Bundle();
+                bundle.putInt("openPage", 1);
+                Navigation.findNavController(view).navigate(R.id.action_search_groups_to_admin_actions, bundle);
+            } else if (actionCode == 1) {
+                GroupEditingDialogFragment groupEditingDialogFragment = new GroupEditingDialogFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("groupTitle", groups.get(position));
+
+                groupEditingDialogFragment.setArguments(bundle);
+                groupEditingDialogFragment.show(getChildFragmentManager(), "groupEditing");
+            }
         };
+
         groupsAdapter = new GroupsAdapter(getContext(), groups, onItemClickListener);
 
-        final RecyclerView recyclerView = root.findViewById(R.id.searchedAllGroupsList);
+        final RecyclerView recyclerView = root.findViewById(R.id.searchedGroupsList);
         recyclerView.setAdapter(groupsAdapter);
         recyclerView.setHasFixedSize(false);
 
-        final SearchView searchView = root.findViewById(R.id.allGroupsSearch);
+        final SearchView searchView = root.findViewById(R.id.groupsSearch);
         searchView.setSubmitButtonEnabled(true);
         searchView.setOnQueryTextListener(getSearchTextUpdateListener());
         return root;
     }
 
     private void downloadData() {
-        //TODO поиск всех студентов
+        //TODO поиск всех групп
         groups = new ArrayList<>();
         groups.add("1ИУ9-11");
         groups.add("2ИУ9-21");

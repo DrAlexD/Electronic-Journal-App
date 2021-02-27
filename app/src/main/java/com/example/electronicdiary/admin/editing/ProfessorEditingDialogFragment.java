@@ -1,4 +1,4 @@
-package com.example.electronicdiary.admin.adding;
+package com.example.electronicdiary.admin.editing;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -20,15 +20,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
-public class StudentAddingDialogFragment extends DialogFragment {
+public class ProfessorEditingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
     private CheckBox generateCheckBox;
-    private EditText studentLogin;
-    private EditText studentPassword;
-    private EditText studentName;
-    private EditText studentSecondName;
+    private EditText professorLogin;
+    private EditText professorPassword;
+    private EditText professorName;
+    private EditText professorSecondName;
 
-    private int studentId;
+    private int professorId;
 
     private boolean nameIsEmptyFlag = true;
     private boolean secondNameIsEmptyFlag = true;
@@ -38,30 +38,31 @@ public class StudentAddingDialogFragment extends DialogFragment {
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_student_adding, null);
+        View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_professor_editing, null);
 
         downloadData();
 
-        generateCheckBox = root.findViewById(R.id.studentAddingGenerate);
-        studentName = root.findViewById(R.id.studentNameAdding);
-        studentSecondName = root.findViewById(R.id.studentSecondNameAdding);
-        studentLogin = root.findViewById(R.id.studentLoginAdding);
-        studentPassword = root.findViewById(R.id.studentPasswordAdding);
+        generateCheckBox = root.findViewById(R.id.professorEditingGenerate);
+        professorLogin = root.findViewById(R.id.professorLoginEditing);
+        professorPassword = root.findViewById(R.id.professorPasswordEditing);
+        professorName = root.findViewById(R.id.professorNameEditing);
+        professorSecondName = root.findViewById(R.id.professorSecondNameEditing);
 
-        //TODO добавить viewModel, чтобы после возвращения из фрагмента поиска всех групп отображать заполненные поля
+        professorName.setText(getArguments().getString("professor").split(" ")[0]);
+        professorSecondName.setText(getArguments().getString("professor").split(" ")[1]);
 
         setupAutoGenerate();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
-                .setTitle("Введите данные студента")
+                .setTitle("Введите данные преподавателя")
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("actionCode", 0);
-                    bundle.putString("student", studentName.getText().toString() + " " + studentSecondName.getText().toString());
+                    //TODO изменение преподавателя в базе
                     //dismiss();
 
-                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_admin_actions_to_search_groups, bundle);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("openPage", 1);
+                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_search_professors_to_admin_actions, bundle);
                 }).create();
 
         dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE)
@@ -71,19 +72,19 @@ public class StudentAddingDialogFragment extends DialogFragment {
     }
 
     private void downloadData() {
-        //TODO получить первый доступный для добавления id студента
-        studentId = new Random().nextInt(1000);
+        //TODO загрузить по id информацию о преподавателе
+        professorId = new Random().nextInt(1000);
     }
 
     private void setupAutoGenerate() {
-        studentName.addTextChangedListener(new TextWatcher() {
+        professorName.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 nameIsEmptyFlag = s.toString().trim().isEmpty();
                 if (nameIsEmptyFlag)
-                    studentName.setError("Пустое поле");
+                    professorName.setError("Пустое поле");
                 else
-                    studentName.setError(null);
+                    professorName.setError(null);
                 afterNameAndSecondNameChanges();
             }
 
@@ -98,14 +99,14 @@ public class StudentAddingDialogFragment extends DialogFragment {
             }
         });
 
-        studentSecondName.addTextChangedListener(new TextWatcher() {
+        professorSecondName.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 secondNameIsEmptyFlag = s.toString().trim().isEmpty();
                 if (secondNameIsEmptyFlag)
-                    studentSecondName.setError("Пустое поле");
+                    professorSecondName.setError("Пустое поле");
                 else
-                    studentSecondName.setError(null);
+                    professorSecondName.setError(null);
                 afterNameAndSecondNameChanges();
             }
 
@@ -120,14 +121,14 @@ public class StudentAddingDialogFragment extends DialogFragment {
             }
         });
 
-        studentLogin.addTextChangedListener(new TextWatcher() {
+        professorLogin.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 loginIsEmptyFlag = s.toString().trim().isEmpty();
                 if (loginIsEmptyFlag)
-                    studentLogin.setError("Пустое поле");
+                    professorLogin.setError("Пустое поле");
                 else
-                    studentLogin.setError(null);
+                    professorLogin.setError(null);
                 dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(!nameIsEmptyFlag &&
                         !secondNameIsEmptyFlag && !loginIsEmptyFlag && !passwordIsEmptyFlag);
             }
@@ -143,14 +144,14 @@ public class StudentAddingDialogFragment extends DialogFragment {
             }
         });
 
-        studentPassword.addTextChangedListener(new TextWatcher() {
+        professorPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 passwordIsEmptyFlag = s.toString().trim().isEmpty();
                 if (passwordIsEmptyFlag)
-                    studentPassword.setError("Пустое поле");
+                    professorPassword.setError("Пустое поле");
                 else
-                    studentPassword.setError(null);
+                    professorPassword.setError(null);
                 dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(!nameIsEmptyFlag &&
                         !secondNameIsEmptyFlag && !loginIsEmptyFlag && !passwordIsEmptyFlag);
             }
@@ -192,15 +193,15 @@ public class StudentAddingDialogFragment extends DialogFragment {
     }
 
     private void setGeneratedLoginAndPassword() {
-        studentLogin.setText(studentName.getText().toString().toLowerCase() +
-                studentSecondName.getText().toString().toLowerCase() + studentId);
-        studentPassword.setText("123456" + studentId);
+        professorLogin.setText(professorName.getText().toString().toLowerCase() +
+                professorSecondName.getText().toString().toLowerCase() + professorId);
+        professorPassword.setText("123456" + professorId);
     }
 
     private void setEmptyLoginAndPassword() {
-        if (!studentLogin.getText().toString().isEmpty())
-            studentLogin.setText("");
-        if (!studentPassword.getText().toString().isEmpty())
-            studentPassword.setText("");
+        if (!professorLogin.getText().toString().isEmpty())
+            professorLogin.setText("");
+        if (!professorPassword.getText().toString().isEmpty())
+            professorPassword.setText("");
     }
 }

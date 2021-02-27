@@ -21,7 +21,7 @@
             android:paddingEnd="8dp">
 
             <TextView
-                android:id="@+id/subjectTitle"
+                android:id="@+id/semesterYearAndHalf"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:textSize="20sp" />

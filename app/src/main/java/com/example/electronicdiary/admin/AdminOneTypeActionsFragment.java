@@ -29,11 +29,6 @@ public class AdminOneTypeActionsFragment extends Fragment {
 
         position = getArguments().getInt("position");
 
-         /*TODO Админ действия
-            1. Изменение всего сверху
-            2. Удаление всего сверху
-         */
-
         /*TODO Действия преподавателя
             1. Добавление к себе предмета
             2. Добавление группы к своему предмету
@@ -47,7 +42,7 @@ public class AdminOneTypeActionsFragment extends Fragment {
         if (position == 1) {
             addActions(root);
         } else if (position == 2) {
-
+            editActions(root);
         } else {
             deleteActions(root);
         }
@@ -81,10 +76,46 @@ public class AdminOneTypeActionsFragment extends Fragment {
         });
     }
 
+    private void editActions(View root) {
+        ArrayList<String> actions = new ArrayList<>();
+        actions.add("Изменить название группы");
+        actions.add("Изменить информацию студента");
+        actions.add("Поменять группу у студента");
+        actions.add("Изменить название предмета");
+        actions.add("Изменить информацию преподавателя");
+        actions.add("Изменить семестр");
+
+        ArrayAdapter<String> actionsAdapter = new ArrayAdapter<>(getContext(), R.layout.holder_admin_action, R.id.adminActionTitle, actions);
+        final ListView listView = root.findViewById(R.id.adminActionsList);
+        listView.setAdapter(actionsAdapter);
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            Bundle bundle = new Bundle();
+            if (position == 0) {
+                bundle.putInt("actionCode", 1);
+                Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_groups, bundle);
+            } else if (position == 1) {
+                bundle.putInt("actionCode", 1);
+                Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_all_students, bundle);
+            } else if (position == 2) {
+                bundle.putInt("actionCode", -1);
+                Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_all_students, bundle);
+            } else if (position == 3) {
+                bundle.putInt("actionCode", 1);
+                Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_subjects, bundle);
+            } else if (position == 4) {
+                bundle.putInt("actionCode", 1);
+                Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_professors, bundle);
+            } else if (position == 5) {
+                bundle.putInt("actionCode", 1);
+                Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_semesters, bundle);
+            }
+        });
+    }
+
     private void deleteActions(View root) {
         ArrayList<String> actions = new ArrayList<>();
         actions.add("Удалить группу");
-        actions.add("Удалить студента из группы");
+        actions.add("Удалить студента");
         actions.add("Удалить предмет");
         actions.add("Удалить преподавателя");
         actions.add("Удалить семестр");
@@ -93,20 +124,18 @@ public class AdminOneTypeActionsFragment extends Fragment {
         final ListView listView = root.findViewById(R.id.adminActionsList);
         listView.setAdapter(actionsAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
+            Bundle bundle = new Bundle();
+            bundle.putInt("actionCode", 2);
             if (position == 0) {
-                Bundle bundle = new Bundle();
-                bundle.putInt("actionCode", 2);
-                Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_all_groups, bundle);
+                Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_groups, bundle);
             } else if (position == 1) {
-                Bundle bundle = new Bundle();
-                bundle.putInt("actionCode", 2);
-                Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_all_groups, bundle);
+                Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_all_students, bundle);
             } else if (position == 2) {
-                new SubjectAddingDialogFragment().show(getChildFragmentManager(), "subjectAdding");
+                Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_subjects, bundle);
             } else if (position == 3) {
-                new ProfessorAddingDialogFragment().show(getChildFragmentManager(), "professorAdding");
+                Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_professors, bundle);
             } else if (position == 4) {
-                new SemesterAddingDialogFragment().show(getChildFragmentManager(), "semesterAdding");
+                Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_semesters, bundle);
             }
         });
     }
