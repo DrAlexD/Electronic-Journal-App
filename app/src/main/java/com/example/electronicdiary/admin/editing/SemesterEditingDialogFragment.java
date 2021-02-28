@@ -29,6 +29,7 @@ public class SemesterEditingDialogFragment extends DialogFragment {
 
         EditText semesterYear = root.findViewById(R.id.semesterYearEditing);
         semesterYear.setText(getArguments().getString("semesterYear"));
+        yearIsLessFlag = false;
         semesterYear.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -60,7 +61,7 @@ public class SemesterEditingDialogFragment extends DialogFragment {
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", 1);
-                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_search_semesters_to_admin_actions, bundle);
+                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_semester_editing_to_admin_actions, bundle);
                 }).create();
 
         dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE)

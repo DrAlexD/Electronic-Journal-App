@@ -13,6 +13,11 @@
             app:useSimpleSummaryProvider="true" />
         <SwitchPreferenceCompat
             app:defaultValue="false"
+            app:key="@string/is_professor_rules"
+            app:title="@string/is_professor_rules"
+            app:useSimpleSummaryProvider="true" />
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
             app:key="@string/is_admin_rules"
             app:title="@string/is_admin_rules"
             app:useSimpleSummaryProvider="true" />

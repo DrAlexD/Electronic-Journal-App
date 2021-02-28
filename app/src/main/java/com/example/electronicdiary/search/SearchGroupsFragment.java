@@ -13,7 +13,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.electronicdiary.R;
-import com.example.electronicdiary.admin.editing.GroupEditingDialogFragment;
 
 import java.util.ArrayList;
 
@@ -58,12 +57,9 @@ public class SearchGroupsFragment extends Fragment {
                 bundle.putInt("openPage", 1);
                 Navigation.findNavController(view).navigate(R.id.action_search_groups_to_admin_actions, bundle);
             } else if (actionCode == 1) {
-                GroupEditingDialogFragment groupEditingDialogFragment = new GroupEditingDialogFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("groupTitle", groups.get(position));
-
-                groupEditingDialogFragment.setArguments(bundle);
-                groupEditingDialogFragment.show(getChildFragmentManager(), "groupEditing");
+                Navigation.findNavController(root).navigate(R.id.action_search_groups_to_dialog_group_editing, bundle);
             }
         };
 

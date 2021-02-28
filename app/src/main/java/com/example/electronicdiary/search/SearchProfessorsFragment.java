@@ -13,7 +13,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.electronicdiary.R;
-import com.example.electronicdiary.admin.editing.ProfessorEditingDialogFragment;
 
 import java.util.ArrayList;
 
@@ -41,12 +40,9 @@ public class SearchProfessorsFragment extends Fragment {
                 bundle.putInt("openPage", 2);
                 Navigation.findNavController(view).navigate(R.id.action_search_professors_to_admin_actions, bundle);
             } else if (actionCode == 1) {
-                ProfessorEditingDialogFragment professorEditingDialogFragment = new ProfessorEditingDialogFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("professor", professors.get(position).getFullName());
-
-                professorEditingDialogFragment.setArguments(bundle);
-                professorEditingDialogFragment.show(getChildFragmentManager(), "professorEditing");
+                Navigation.findNavController(view).navigate(R.id.action_search_professors_to_dialog_professor_editing, bundle);
             }
         };
         professorsAdapter = new ProfessorsAdapter(getContext(), professors, onItemClickListener);

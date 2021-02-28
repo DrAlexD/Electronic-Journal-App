@@ -12,11 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.electronicdiary.R;
-import com.example.electronicdiary.admin.adding.GroupAddingDialogFragment;
-import com.example.electronicdiary.admin.adding.ProfessorAddingDialogFragment;
-import com.example.electronicdiary.admin.adding.SemesterAddingDialogFragment;
-import com.example.electronicdiary.admin.adding.StudentAddingDialogFragment;
-import com.example.electronicdiary.admin.adding.SubjectAddingDialogFragment;
 
 import java.util.ArrayList;
 
@@ -28,16 +23,6 @@ public class AdminOneTypeActionsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_admin_one_type_actions, container, false);
 
         position = getArguments().getInt("position");
-
-        /*TODO Действия преподавателя
-            1. Добавление к себе предмета
-            2. Добавление группы к своему предмету
-            3. Выбор семестра в настройках из доступных
-            4. Добавление/удаление/изменение контрольных мероприятий
-            5. Добавление/удаление/изменение оценок по контрольным мероприятиям
-            6. Добавление/удаление/изменение пар
-            7. Добавление/удаление/изменение посещаемости пар
-         */
 
         if (position == 1) {
             addActions(root);
@@ -63,15 +48,15 @@ public class AdminOneTypeActionsFragment extends Fragment {
         listView.setAdapter(actionsAdapter);
         listView.setOnItemClickListener((parent, view, position, id) -> {
             if (position == 0) {
-                new GroupAddingDialogFragment().show(getChildFragmentManager(), "groupAdding");
+                Navigation.findNavController(view).navigate(R.id.action_admin_actions_to_dialog_group_adding);
             } else if (position == 1) {
-                new StudentAddingDialogFragment().show(getChildFragmentManager(), "studentAdding");
+                Navigation.findNavController(view).navigate(R.id.action_admin_actions_to_dialog_student_adding);
             } else if (position == 2) {
-                new SubjectAddingDialogFragment().show(getChildFragmentManager(), "subjectAdding");
+                Navigation.findNavController(view).navigate(R.id.action_admin_actions_to_dialog_subject_adding);
             } else if (position == 3) {
-                new ProfessorAddingDialogFragment().show(getChildFragmentManager(), "professorAdding");
+                Navigation.findNavController(view).navigate(R.id.action_admin_actions_to_dialog_professor_adding);
             } else if (position == 4) {
-                new SemesterAddingDialogFragment().show(getChildFragmentManager(), "semesterAdding");
+                Navigation.findNavController(view).navigate(R.id.action_admin_actions_to_dialog_semester_adding);
             }
         });
     }

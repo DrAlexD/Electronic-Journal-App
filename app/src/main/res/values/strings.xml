@@ -23,7 +23,8 @@
     <!-- Strings related to preferences -->
     <string name="general_header">Общие</string>
     <string name="is_remember_me">Запомнить меня</string>
-    <string name="is_admin_rules">Права админа</string>
+    <string name="is_professor_rules">Режим преподавателя</string>
+    <string name="is_admin_rules">Режим админа</string>
     <string name="semester_choose">Выберите семестер</string>
     <string name="event_min_points_text">Мин. баллов</string>
     <!-- Strings related to search -->

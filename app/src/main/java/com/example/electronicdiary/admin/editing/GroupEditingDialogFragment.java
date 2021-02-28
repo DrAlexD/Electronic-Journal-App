@@ -29,6 +29,7 @@ public class GroupEditingDialogFragment extends DialogFragment {
 
         EditText groupTitle = root.findViewById(R.id.groupTitleEditing);
         groupTitle.setText(getArguments().getString("groupTitle"));
+        titleIsLessFlag = false;
         groupTitle.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -60,7 +61,7 @@ public class GroupEditingDialogFragment extends DialogFragment {
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", 1);
-                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_search_groups_to_admin_actions, bundle);
+                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_group_editing_to_admin_actions, bundle);
                 }).create();
 
         dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE)

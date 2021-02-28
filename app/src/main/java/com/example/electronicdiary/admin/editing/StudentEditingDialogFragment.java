@@ -50,6 +50,9 @@ public class StudentEditingDialogFragment extends DialogFragment {
 
         studentName.setText(getArguments().getString("student").split(" ")[0]);
         studentSecondName.setText(getArguments().getString("student").split(" ")[1]);
+        nameIsEmptyFlag = false;
+        secondNameIsEmptyFlag = false;
+        generateCheckBox.setEnabled(true);
 
         setupAutoGenerate();
 
@@ -62,7 +65,7 @@ public class StudentEditingDialogFragment extends DialogFragment {
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", 1);
-                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_search_all_students_to_admin_actions, bundle);
+                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_editing_to_admin_actions, bundle);
                 }).create();
 
         dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE)

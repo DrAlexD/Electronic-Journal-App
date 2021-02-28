@@ -161,11 +161,9 @@ public class GroupPerformanceFragment extends Fragment {
             eventView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
             eventView.setGravity(Gravity.CENTER);
             eventView.setOnClickListener(view -> {
-                EventInfoDialogFragment eventInfoDialogFragment = new EventInfoDialogFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("eventTitle", eventTitle);
-                eventInfoDialogFragment.setArguments(bundle);
-                eventInfoDialogFragment.show(getChildFragmentManager(), "eventInfo");
+                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_event_info, bundle);
             });
             eventsRow.addView(eventView);
         }

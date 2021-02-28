@@ -13,7 +13,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.electronicdiary.R;
-import com.example.electronicdiary.admin.editing.SubjectEditingDialogFragment;
 
 import java.util.ArrayList;
 
@@ -41,12 +40,9 @@ public class SearchSubjectsFragment extends Fragment {
                 bundle.putInt("openPage", 2);
                 Navigation.findNavController(view).navigate(R.id.action_search_subjects_to_admin_actions, bundle);
             } else if (actionCode == 1) {
-                SubjectEditingDialogFragment subjectEditingDialogFragment = new SubjectEditingDialogFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("subjectTitle", subjects.get(position));
-
-                subjectEditingDialogFragment.setArguments(bundle);
-                subjectEditingDialogFragment.show(getChildFragmentManager(), "subjectEditing");
+                Navigation.findNavController(view).navigate(R.id.action_search_subjects_to_dialog_subject_editing, bundle);
             }
         };
         subjectsAdapter = new SubjectsAdapter(getContext(), subjects, onItemClickListener);

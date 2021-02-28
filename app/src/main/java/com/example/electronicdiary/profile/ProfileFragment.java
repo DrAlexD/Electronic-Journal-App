@@ -28,6 +28,16 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        /*TODO Действия преподавателя
+            1. Добавление к себе предмета
+            2. Добавление группы к своему предмету
+            3. Выбор семестра в настройках из доступных
+            4. Добавление/удаление/изменение контрольных мероприятий
+            5. Добавление/удаление/изменение оценок по контрольным мероприятиям
+            6. Добавление/удаление/изменение пар
+            7. Добавление/удаление/изменение посещаемости пар
+         */
+
         downloadData();
 
         setPreferences(root);
@@ -55,19 +65,21 @@ public class ProfileFragment extends Fragment {
         //TODO добавить отображение выбранного семестра в профиле преподавателя
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         String username = sharedPreferences.getString("username", "");
-        boolean isAdminRules = sharedPreferences.getBoolean(getString(R.string.is_admin_rules), false);
+        boolean isProfessorRules = sharedPreferences.getBoolean(getString(R.string.is_professor_rules), false);
 
         TextView usernameView = root.findViewById(R.id.user_name_text);
         usernameView.setText(username);
 
         Button addSubjectButton = root.findViewById(R.id.add_subject);
-        addSubjectButton.setVisibility(isAdminRules ? View.VISIBLE : View.GONE);
+        addSubjectButton.setVisibility(isProfessorRules ? View.VISIBLE : View.GONE);
         addSubjectButton.setOnClickListener(view -> {
-
+            /*Bundle bundle = new Bundle();
+            bundle.putInt("actionCode", 1);
+            Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_subjects, bundle);*/
         });
 
         Button addGroupButton = root.findViewById(R.id.add_group);
-        addGroupButton.setVisibility(isAdminRules ? View.VISIBLE : View.GONE);
+        addGroupButton.setVisibility(isProfessorRules ? View.VISIBLE : View.GONE);
         addGroupButton.setOnClickListener(view -> {
 
         });

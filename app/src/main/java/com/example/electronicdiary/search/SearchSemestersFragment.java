@@ -13,7 +13,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.electronicdiary.R;
-import com.example.electronicdiary.admin.editing.SemesterEditingDialogFragment;
 
 import java.util.ArrayList;
 
@@ -41,12 +40,9 @@ public class SearchSemestersFragment extends Fragment {
                 bundle.putInt("openPage", 2);
                 Navigation.findNavController(view).navigate(R.id.action_search_semesters_to_admin_actions, bundle);
             } else if (actionCode == 1) {
-                SemesterEditingDialogFragment semesterEditingDialogFragment = new SemesterEditingDialogFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("semesterYear", String.valueOf(semesters.get(position).getYear()));
-
-                semesterEditingDialogFragment.setArguments(bundle);
-                semesterEditingDialogFragment.show(getChildFragmentManager(), "semesterEditing");
+                Navigation.findNavController(view).navigate(R.id.action_search_semesters_to_dialog_semester_editing, bundle);
             }
         };
         semestersAdapter = new SemestersAdapter(getContext(), semesters, onItemClickListener);

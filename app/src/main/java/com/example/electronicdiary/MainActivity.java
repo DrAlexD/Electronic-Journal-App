@@ -42,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationView navigationView = findViewById(R.id.nav_view);
+        Menu navMenu = navigationView.getMenu();
+        navMenu.findItem(R.id.nav_admin_actions).setVisible(
+                sharedPreferences.getBoolean(getString(R.string.is_admin_rules), false));
 
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
@@ -101,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        if ("Права админа".equals(s)) {
+        if (getString(R.string.is_admin_rules).equals(s)) {
             NavigationView navigationView = findViewById(R.id.nav_view);
             Menu navMenu = navigationView.getMenu();
             navMenu.findItem(R.id.nav_admin_actions).setVisible(

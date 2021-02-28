@@ -50,6 +50,9 @@ public class ProfessorEditingDialogFragment extends DialogFragment {
 
         professorName.setText(getArguments().getString("professor").split(" ")[0]);
         professorSecondName.setText(getArguments().getString("professor").split(" ")[1]);
+        nameIsEmptyFlag = false;
+        secondNameIsEmptyFlag = false;
+        generateCheckBox.setEnabled(true);
 
         setupAutoGenerate();
 
@@ -62,7 +65,7 @@ public class ProfessorEditingDialogFragment extends DialogFragment {
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", 1);
-                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_search_professors_to_admin_actions, bundle);
+                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_professor_editing_to_admin_actions, bundle);
                 }).create();
 
         dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE)

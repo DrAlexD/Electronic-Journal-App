@@ -29,6 +29,7 @@ public class SubjectEditingDialogFragment extends DialogFragment {
 
         EditText subjectTitle = root.findViewById(R.id.subjectTitleEditing);
         subjectTitle.setText(getArguments().getString("subjectTitle"));
+        titleIsEmptyFlag = false;
         subjectTitle.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -60,7 +61,7 @@ public class SubjectEditingDialogFragment extends DialogFragment {
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", 1);
-                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_search_subjects_to_admin_actions, bundle);
+                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_subject_editing_to_admin_actions, bundle);
                 }).create();
 
         dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE)

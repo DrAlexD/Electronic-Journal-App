@@ -13,7 +13,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.electronicdiary.R;
-import com.example.electronicdiary.admin.editing.StudentEditingDialogFragment;
 import com.example.electronicdiary.student.Student;
 
 import java.util.ArrayList;
@@ -49,12 +48,9 @@ public class SearchAllStudentsFragment extends Fragment {
 
                 Navigation.findNavController(view).navigate(R.id.action_search_all_students_to_search_groups, bundle);
             } else if (actionCode == 1) {
-                StudentEditingDialogFragment studentEditingDialogFragment = new StudentEditingDialogFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("student", students.get(position).getFullName());
-
-                studentEditingDialogFragment.setArguments(bundle);
-                studentEditingDialogFragment.show(getChildFragmentManager(), "studentEditing");
+                Navigation.findNavController(view).navigate(R.id.action_search_all_students_to_dialog_student_editing, bundle);
             }
         };
         studentsAdapter = new StudentsAdapter(getContext(), students, onItemClickListener);

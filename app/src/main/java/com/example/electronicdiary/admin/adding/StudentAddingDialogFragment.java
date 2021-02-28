@@ -61,7 +61,7 @@ public class StudentAddingDialogFragment extends DialogFragment {
                     bundle.putString("student", studentName.getText().toString() + " " + studentSecondName.getText().toString());
                     //dismiss();
 
-                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_admin_actions_to_search_groups, bundle);
+                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_adding_to_search_groups, bundle);
                 }).create();
 
         dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE)
