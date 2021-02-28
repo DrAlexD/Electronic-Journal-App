@@ -33,16 +33,16 @@ public class SearchProfessorsFragment extends Fragment {
             RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
             int position = viewHolder.getAdapterPosition();
 
-            if (actionCode == 2) {
+            if (actionCode == 1) {
+                Bundle bundle = new Bundle();
+                bundle.putString("professor", professors.get(position).getFullName());
+                Navigation.findNavController(view).navigate(R.id.action_search_professors_to_dialog_professor_editing, bundle);
+            } else if (actionCode == 2) {
                 //TODO удаление преподавателя из базы
 
                 Bundle bundle = new Bundle();
                 bundle.putInt("openPage", 2);
                 Navigation.findNavController(view).navigate(R.id.action_search_professors_to_admin_actions, bundle);
-            } else if (actionCode == 1) {
-                Bundle bundle = new Bundle();
-                bundle.putString("professor", professors.get(position).getFullName());
-                Navigation.findNavController(view).navigate(R.id.action_search_professors_to_dialog_professor_editing, bundle);
             }
         };
         professorsAdapter = new ProfessorsAdapter(getContext(), professors, onItemClickListener);

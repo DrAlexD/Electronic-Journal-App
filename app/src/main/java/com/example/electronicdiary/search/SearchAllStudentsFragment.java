@@ -34,23 +34,23 @@ public class SearchAllStudentsFragment extends Fragment {
             RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
             int position = viewHolder.getAdapterPosition();
 
-            if (actionCode == 2) {
+            if (actionCode == 1) {
+                Bundle bundle = new Bundle();
+                bundle.putString("student", students.get(position).getFullName());
+                Navigation.findNavController(view).navigate(R.id.action_search_all_students_to_dialog_student_editing, bundle);
+            } else if (actionCode == 2) {
                 //TODO удаление студента из базы
 
                 Bundle bundle = new Bundle();
                 bundle.putInt("openPage", actionCode);
                 Navigation.findNavController(view).navigate(R.id.action_search_all_students_to_admin_actions, bundle);
-            } else if (actionCode == -1) {
+            } else if (actionCode == 3) {
                 Bundle bundle = new Bundle();
                 bundle.putInt("actionCode", actionCode);
                 bundle.putString("student", students.get(position).getFullName());
                 bundle.putString("group", students.get(position).getGroup());
 
                 Navigation.findNavController(view).navigate(R.id.action_search_all_students_to_search_groups, bundle);
-            } else if (actionCode == 1) {
-                Bundle bundle = new Bundle();
-                bundle.putString("student", students.get(position).getFullName());
-                Navigation.findNavController(view).navigate(R.id.action_search_all_students_to_dialog_student_editing, bundle);
             }
         };
         studentsAdapter = new StudentsAdapter(getContext(), students, onItemClickListener);

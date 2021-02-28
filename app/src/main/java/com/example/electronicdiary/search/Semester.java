@@ -11,10 +11,7 @@ public class Semester {
 
     @Override
     public String toString() {
-        return "Semester{" +
-                "year=" + year +
-                ", isFirstHalf=" + isFirstHalf +
-                '}';
+        return (isFirstHalf ? "1" : "2") + " половина " + year;
     }
 
     public boolean isFirstHalf() {

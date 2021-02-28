@@ -82,7 +82,7 @@ public class AdminOneTypeActionsFragment extends Fragment {
                 bundle.putInt("actionCode", 1);
                 Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_all_students, bundle);
             } else if (position == 2) {
-                bundle.putInt("actionCode", -1);
+                bundle.putInt("actionCode", 3);
                 Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_all_students, bundle);
             } else if (position == 3) {
                 bundle.putInt("actionCode", 1);

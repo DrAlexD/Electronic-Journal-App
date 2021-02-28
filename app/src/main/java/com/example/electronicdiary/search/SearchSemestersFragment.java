@@ -33,16 +33,16 @@ public class SearchSemestersFragment extends Fragment {
             RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
             int position = viewHolder.getAdapterPosition();
 
-            if (actionCode == 2) {
+            if (actionCode == 1) {
+                Bundle bundle = new Bundle();
+                bundle.putString("semesterYear", String.valueOf(semesters.get(position).getYear()));
+                Navigation.findNavController(view).navigate(R.id.action_search_semesters_to_dialog_semester_editing, bundle);
+            } else if (actionCode == 2) {
                 //TODO удаление семестра из базы
 
                 Bundle bundle = new Bundle();
                 bundle.putInt("openPage", 2);
                 Navigation.findNavController(view).navigate(R.id.action_search_semesters_to_admin_actions, bundle);
-            } else if (actionCode == 1) {
-                Bundle bundle = new Bundle();
-                bundle.putString("semesterYear", String.valueOf(semesters.get(position).getYear()));
-                Navigation.findNavController(view).navigate(R.id.action_search_semesters_to_dialog_semester_editing, bundle);
             }
         };
         semestersAdapter = new SemestersAdapter(getContext(), semesters, onItemClickListener);

@@ -29,7 +29,7 @@ public class SearchGroupsFragment extends Fragment {
 
         int actionCode = getArguments().getInt("actionCode");
 
-        if (actionCode == -1) {
+        if (actionCode == 3) {
             groups.remove(getArguments().getString("group"));
         }
 
@@ -44,22 +44,22 @@ public class SearchGroupsFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putInt("openPage", actionCode);
                 Navigation.findNavController(view).navigate(R.id.action_search_groups_to_admin_actions, bundle);
+            } else if (actionCode == 1) {
+                Bundle bundle = new Bundle();
+                bundle.putString("groupTitle", groups.get(position));
+                Navigation.findNavController(root).navigate(R.id.action_search_groups_to_dialog_group_editing, bundle);
             } else if (actionCode == 2) {
                 //TODO удаление группы из базы
 
                 Bundle bundle = new Bundle();
                 bundle.putInt("openPage", actionCode);
                 Navigation.findNavController(view).navigate(R.id.action_search_groups_to_admin_actions, bundle);
-            } else if (actionCode == -1) {
+            } else if (actionCode == 3) {
                 //TODO изменить группу у студента в базе
 
                 Bundle bundle = new Bundle();
                 bundle.putInt("openPage", 1);
                 Navigation.findNavController(view).navigate(R.id.action_search_groups_to_admin_actions, bundle);
-            } else if (actionCode == 1) {
-                Bundle bundle = new Bundle();
-                bundle.putString("groupTitle", groups.get(position));
-                Navigation.findNavController(root).navigate(R.id.action_search_groups_to_dialog_group_editing, bundle);
             }
         };
 

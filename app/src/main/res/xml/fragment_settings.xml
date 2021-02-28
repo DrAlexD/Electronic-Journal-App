@@ -3,8 +3,6 @@
         <ListPreference
             app:key="@string/semester_choose"
             app:title="@string/semester_choose"
-            app:entries="@array/semester_entries"
-            app:entryValues="@array/semester_values"
             app:useSimpleSummaryProvider="true" />
         <SwitchPreferenceCompat
             app:defaultValue="false"

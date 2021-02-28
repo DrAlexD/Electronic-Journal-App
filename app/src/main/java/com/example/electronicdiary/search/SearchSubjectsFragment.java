@@ -33,16 +33,16 @@ public class SearchSubjectsFragment extends Fragment {
             RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
             int position = viewHolder.getAdapterPosition();
 
-            if (actionCode == 2) {
+            if (actionCode == 1) {
+                Bundle bundle = new Bundle();
+                bundle.putString("subjectTitle", subjects.get(position));
+                Navigation.findNavController(view).navigate(R.id.action_search_subjects_to_dialog_subject_editing, bundle);
+            } else if (actionCode == 2) {
                 //TODO удаление предмета из базы
 
                 Bundle bundle = new Bundle();
                 bundle.putInt("openPage", 2);
                 Navigation.findNavController(view).navigate(R.id.action_search_subjects_to_admin_actions, bundle);
-            } else if (actionCode == 1) {
-                Bundle bundle = new Bundle();
-                bundle.putString("subjectTitle", subjects.get(position));
-                Navigation.findNavController(view).navigate(R.id.action_search_subjects_to_dialog_subject_editing, bundle);
             }
         };
         subjectsAdapter = new SubjectsAdapter(getContext(), subjects, onItemClickListener);
