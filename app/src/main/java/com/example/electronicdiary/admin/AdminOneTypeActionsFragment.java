@@ -77,7 +77,7 @@ public class AdminOneTypeActionsFragment extends Fragment {
             Bundle bundle = new Bundle();
             if (position == 0) {
                 bundle.putInt("actionCode", 1);
-                Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_groups, bundle);
+                Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_all_groups, bundle);
             } else if (position == 1) {
                 bundle.putInt("actionCode", 1);
                 Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_all_students, bundle);
@@ -86,7 +86,7 @@ public class AdminOneTypeActionsFragment extends Fragment {
                 Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_all_students, bundle);
             } else if (position == 3) {
                 bundle.putInt("actionCode", 1);
-                Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_subjects, bundle);
+                Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_all_subjects, bundle);
             } else if (position == 4) {
                 bundle.putInt("actionCode", 1);
                 Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_professors, bundle);
@@ -112,11 +112,11 @@ public class AdminOneTypeActionsFragment extends Fragment {
             Bundle bundle = new Bundle();
             bundle.putInt("actionCode", 2);
             if (position == 0) {
-                Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_groups, bundle);
+                Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_all_groups, bundle);
             } else if (position == 1) {
                 Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_all_students, bundle);
             } else if (position == 2) {
-                Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_subjects, bundle);
+                Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_all_subjects, bundle);
             } else if (position == 3) {
                 Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_professors, bundle);
             } else if (position == 4) {

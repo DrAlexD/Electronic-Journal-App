@@ -11,13 +11,13 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.electronicdiary.R;
-import com.example.electronicdiary.student.Student;
+import com.example.electronicdiary.Student;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.ViewHolder> implements Filterable {
+public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.ViewHolder> implements Filterable {
     private final LayoutInflater inflater;
     private final View.OnClickListener onItemClickListener;
 
@@ -25,7 +25,7 @@ class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.ViewHolder> i
 
     private ArrayList<Student> originalStudents;
 
-    StudentsAdapter(Context context, ArrayList<Student> students, View.OnClickListener onItemClickListener) {
+    public StudentsAdapter(Context context, ArrayList<Student> students, View.OnClickListener onItemClickListener) {
         this.inflater = LayoutInflater.from(context);
         this.onItemClickListener = onItemClickListener;
         this.students = students;

@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.ViewHolder> implements Filterable {
+public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.ViewHolder> implements Filterable {
     private final LayoutInflater inflater;
     private final View.OnClickListener onItemClickListener;
 
@@ -24,7 +24,7 @@ class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.ViewHolder> imple
 
     private ArrayList<String> originalGroups;
 
-    GroupsAdapter(Context context, ArrayList<String> groups, View.OnClickListener onItemClickListener) {
+    public GroupsAdapter(Context context, ArrayList<String> groups, View.OnClickListener onItemClickListener) {
         this.inflater = LayoutInflater.from(context);
         this.onItemClickListener = onItemClickListener;
         this.groups = groups;

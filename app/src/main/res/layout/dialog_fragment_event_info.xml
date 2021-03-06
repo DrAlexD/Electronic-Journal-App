@@ -12,7 +12,7 @@
         android:paddingEnd="32dp">
 
         <TextView
-            android:id="@+id/eventMinPointsText"
+            android:id="@+id/eventInfoMinPointsText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
@@ -21,12 +21,11 @@
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/eventMinPoints"
+            android:id="@+id/eventInfoMinPoints"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_weight="1"
-            android:enabled="false"
             android:inputType="number"
             android:textSize="20sp" />
     </LinearLayout>

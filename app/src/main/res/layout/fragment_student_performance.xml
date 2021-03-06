@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/events_or_visits_tab_layout"
+        android:id="@+id/events_or_lessons_tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <!--app:tabTextColor="@color/primaryColor"
@@ -13,7 +13,7 @@
     app:tabSelectedTextColor="@color/secondaryDarkColor" />-->
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/events_or_visits_pager"
+        android:id="@+id/events_or_lessons_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

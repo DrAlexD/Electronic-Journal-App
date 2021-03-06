@@ -45,15 +45,17 @@
         android:text="@string/is_remember_me"
         android:textSize="18sp" />
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    <Button
         android:id="@+id/login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="2dp"
+        android:backgroundTint="@color/secondaryColor"
         android:enabled="false"
         android:text="@string/action_sign_in"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textColor="@color/black" />
 
     <!--<ProgressBar
         android:id="@+id/loading"

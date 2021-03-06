@@ -6,7 +6,7 @@ import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.example.electronicdiary.R;
-import com.example.electronicdiary.search.Semester;
+import com.example.electronicdiary.Semester;
 
 import java.util.ArrayList;
 

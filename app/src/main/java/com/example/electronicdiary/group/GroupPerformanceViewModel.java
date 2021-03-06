@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.electronicdiary.student.Student;
+import com.example.electronicdiary.Student;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,7 +16,7 @@ public class GroupPerformanceViewModel extends ViewModel {
     private final MutableLiveData<ArrayList<StudentInModule>> studentsInModule = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<Student>> students = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<String>> events = new MutableLiveData<>();
-    private final MutableLiveData<ArrayList<Date>> visits = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<Date>> lessons = new MutableLiveData<>();
 
     public LiveData<String> getSubject() {
         return subject;
@@ -58,11 +58,11 @@ public class GroupPerformanceViewModel extends ViewModel {
         this.events.setValue(events);
     }
 
-    public LiveData<ArrayList<Date>> getVisits() {
-        return visits;
+    public LiveData<ArrayList<Date>> getLessons() {
+        return lessons;
     }
 
-    public void setVisits(ArrayList<Date> visits) {
-        this.visits.setValue(visits);
+    public void setLessons(ArrayList<Date> lessons) {
+        this.lessons.setValue(lessons);
     }
 }

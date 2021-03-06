@@ -28,16 +28,6 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        /*TODO Действия преподавателя
-            1. Добавление к себе предмета
-            2. Добавление группы к своему предмету
-            3. Выбор семестра в настройках из доступных
-            4. Добавление/удаление/изменение контрольных мероприятий
-            5. Добавление/удаление/изменение оценок по контрольным мероприятиям
-            6. Добавление/удаление/изменение пар
-            7. Добавление/удаление/изменение посещаемости пар
-         */
-
         downloadData();
 
         setPreferences(root);
@@ -73,15 +63,33 @@ public class ProfileFragment extends Fragment {
         Button addSubjectButton = root.findViewById(R.id.add_subject);
         addSubjectButton.setVisibility(isProfessorRules ? View.VISIBLE : View.GONE);
         addSubjectButton.setOnClickListener(view -> {
-            /*Bundle bundle = new Bundle();
-            bundle.putInt("actionCode", 1);
-            Navigation.findNavController(root).navigate(R.id.action_admin_actions_to_search_subjects, bundle);*/
+            Bundle bundle = new Bundle();
+            bundle.putInt("actionCode", 10);
+            Navigation.findNavController(root).navigate(R.id.action_profile_to_search_all_subjects, bundle);
         });
 
         Button addGroupButton = root.findViewById(R.id.add_group);
         addGroupButton.setVisibility(isProfessorRules ? View.VISIBLE : View.GONE);
         addGroupButton.setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            bundle.putInt("actionCode", 11);
+            Navigation.findNavController(root).navigate(R.id.action_profile_to_search_available_subjects, bundle);
+        });
 
+        Button deleteSubjectButton = root.findViewById(R.id.delete_subject);
+        deleteSubjectButton.setVisibility(isProfessorRules ? View.VISIBLE : View.GONE);
+        deleteSubjectButton.setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            bundle.putInt("actionCode", 12);
+            Navigation.findNavController(root).navigate(R.id.action_profile_to_search_available_subjects, bundle);
+        });
+
+        Button deleteGroupButton = root.findViewById(R.id.delete_group);
+        deleteGroupButton.setVisibility(isProfessorRules ? View.VISIBLE : View.GONE);
+        deleteGroupButton.setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            bundle.putInt("actionCode", 13);
+            Navigation.findNavController(root).navigate(R.id.action_profile_to_search_available_subjects, bundle);
         });
     }
 

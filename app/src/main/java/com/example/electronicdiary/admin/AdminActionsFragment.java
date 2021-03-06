@@ -26,7 +26,7 @@ public class AdminActionsFragment extends Fragment {
         AdminOneTypeActionsPagerAdapter adminOneTypeActionsPagerAdapter = new AdminOneTypeActionsPagerAdapter(this);
         ViewPager2 viewPager = root.findViewById(R.id.admin_one_type_actions_pager);
         viewPager.setAdapter(adminOneTypeActionsPagerAdapter);
-        viewPager.setCurrentItem(page);
+        viewPager.setCurrentItem(page, false);
         viewPager.setOffscreenPageLimit(2);
 
         TabLayout tabLayout = root.findViewById(R.id.admin_one_type_actions_tab_layout);

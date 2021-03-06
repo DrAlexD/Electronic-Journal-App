@@ -26,7 +26,6 @@
     <string name="is_professor_rules">Режим преподавателя</string>
     <string name="is_admin_rules">Режим админа</string>
     <string name="semester_choose">Выберите семестер</string>
-    <string name="event_min_points_text">Мин. баллов</string>
     <!-- Strings related to search -->
     <string name="student_search_hint">Поиск студента…</string>
     <string name="group_search_hint">Поиск группы…</string>
@@ -47,4 +46,15 @@
     <!-- Strings related to professor actions -->
     <string name="add_subject_button">Добавить предмет</string>
     <string name="add_group_button">Добавить группу</string>
+    <string name="delete_subject_button">Удалить предмет</string>
+    <string name="delete_group_button">Удалить группу</string>
+    <string name="add_event_button">Добавить мероприятие</string>
+    <string name="add_lesson_button">Добавить занятие</string>
+    <!-- Strings related to actions in group performance -->
+    <string name="event_type_text">Тип</string>
+    <string name="lesson_date_text">Дата занятия</string>
+    <string name="event_min_points_text">Мин. баллов</string>
+    <string name="lesson_attend_points_text">Баллов за посещение</string>
+    <string name="event_earned_points_text">Получ. баллы</string>
+    <string name="lesson_is_attended_text">Посещено</string>
 </resources>

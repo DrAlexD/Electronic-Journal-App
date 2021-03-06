@@ -1,12 +1,15 @@
 package com.example.electronicdiary.group;
 
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -19,7 +22,7 @@ import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.electronicdiary.R;
-import com.example.electronicdiary.student.Student;
+import com.example.electronicdiary.Student;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -34,7 +37,7 @@ public class GroupPerformanceFragment extends Fragment {
 
     private ArrayList<Student> students;
     private ArrayList<String> events;
-    private ArrayList<Date> visits;
+    private ArrayList<Date> lessons;
     private ArrayList<StudentInModule> studentsInModule;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,18 +55,31 @@ public class GroupPerformanceFragment extends Fragment {
         groupPerformanceViewModel.setStudentsInModule(studentsInModule);
         groupPerformanceViewModel.setStudents(students);
         groupPerformanceViewModel.setEvents(events);
-        groupPerformanceViewModel.setVisits(visits);
+        groupPerformanceViewModel.setLessons(lessons);
 
         //TODO подумать как оставлять первую строку и первый столбец на месте при скроллинге
         int orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+            boolean isProfessorRules = sharedPreferences.getBoolean(getString(R.string.is_professor_rules), false);
+
+            Button addEventButton = root.findViewById(R.id.addEventButton);
+            addEventButton.setVisibility(isProfessorRules ? View.VISIBLE : View.GONE);
+            addEventButton.setOnClickListener(view -> {
+                Bundle bundle = new Bundle();
+                bundle.putString("subject", subject);
+                bundle.putString("group", group);
+                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_event_adding, bundle);
+            });
+
             generateEventsTable(root);
         } else {
+            int page = getArguments() != null ? getArguments().getInt("openPage") : 0;
             //TODO фрагменты-дети не удаляются, при этом создаются лишние
             ModulesPagerAdapter modulesPagerAdapter = new ModulesPagerAdapter(this);
             ViewPager2 viewPager = root.findViewById(R.id.modules_pager);
             viewPager.setAdapter(modulesPagerAdapter);
-            viewPager.setCurrentItem(0);
+            viewPager.setCurrentItem(page, false);
             viewPager.setOffscreenPageLimit(2);
             viewPager.setUserInputEnabled(false);
 
@@ -93,19 +109,19 @@ public class GroupPerformanceFragment extends Fragment {
         events.add("РК3");
         events.add("ДЗ3");
 
-        visits = new ArrayList<>();
-        visits.add(new Date(2020, 0, 1));
-        visits.add(new Date(2020, 1, 2));
-        visits.add(new Date(2020, 2, 3));
-        visits.add(new Date(2020, 3, 4));
-        visits.add(new Date(2020, 4, 5));
-        visits.add(new Date(2020, 5, 6));
-        visits.add(new Date(2020, 6, 7));
-        visits.add(new Date(2020, 7, 8));
-        visits.add(new Date(2020, 8, 9));
-        visits.add(new Date(2020, 9, 10));
-        visits.add(new Date(2020, 10, 11));
-        visits.add(new Date(2020, 11, 12));
+        lessons = new ArrayList<>();
+        lessons.add(new Date(2020, 0, 1));
+        lessons.add(new Date(2020, 1, 2));
+        lessons.add(new Date(2020, 2, 3));
+        lessons.add(new Date(2020, 3, 4));
+        lessons.add(new Date(2020, 4, 5));
+        lessons.add(new Date(2020, 5, 6));
+        lessons.add(new Date(2020, 6, 7));
+        lessons.add(new Date(2020, 7, 8));
+        lessons.add(new Date(2020, 8, 9));
+        lessons.add(new Date(2020, 9, 10));
+        lessons.add(new Date(2020, 10, 11));
+        lessons.add(new Date(2020, 11, 12));
 
         studentsInModule = new ArrayList<>();
         for (int i = 0; i < students.size(); i++) {
@@ -117,13 +133,13 @@ public class GroupPerformanceFragment extends Fragment {
                 eventsWithPoints.put(event, j + i);
             }
 
-            Map<Date, Integer> visitsWithPoints = new HashMap<>();
-            for (int j = 3; (j - 3) / 3 < visits.size(); j += 3) {
-                Date visit = visits.get((j - 3) / 3);
-                visitsWithPoints.put(visit, j + i);
+            Map<Date, Integer> lessonsWithPoints = new HashMap<>();
+            for (int j = 3; (j - 3) / 3 < lessons.size(); j += 3) {
+                Date lesson = lessons.get((j - 3) / 3);
+                lessonsWithPoints.put(lesson, j + i);
             }
 
-            studentsInModule.add(new StudentInModule(student, eventsWithPoints, visitsWithPoints));
+            studentsInModule.add(new StudentInModule(student, eventsWithPoints, lessonsWithPoints));
         }
     }
 
@@ -162,6 +178,8 @@ public class GroupPerformanceFragment extends Fragment {
             eventView.setGravity(Gravity.CENTER);
             eventView.setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
+                bundle.putString("subject", subject);
+                bundle.putString("group", group);
                 bundle.putString("eventTitle", eventTitle);
                 Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_event_info, bundle);
             });
@@ -192,15 +210,23 @@ public class GroupPerformanceFragment extends Fragment {
         });
         pointsRow.addView(studentView);
 
-        for (String event : events) {
+        for (String eventTitle : events) {
             TextView pointsView = new TextView(getContext());
             pointsView.setTextSize(20);
             pointsView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
-            if (studentInModule.getEventsWithPoints().containsKey(event))
-                pointsView.setText(studentInModule.getEventsWithPoints().get(event).toString());
+            if (studentInModule.getEventsWithPoints().containsKey(eventTitle))
+                pointsView.setText(studentInModule.getEventsWithPoints().get(eventTitle).toString());
             else
                 pointsView.setText("");
             pointsView.setGravity(Gravity.CENTER);
+            pointsView.setOnClickListener(view -> {
+                Bundle bundle = new Bundle();
+                bundle.putString("subject", subject);
+                bundle.putString("group", group);
+                bundle.putString("earnedPoints", studentInModule.getEventsWithPoints().get(eventTitle).toString());
+                bundle.putString("eventTitle", eventTitle);
+                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_event_performance, bundle);
+            });
             pointsRow.addView(pointsView);
         }
 

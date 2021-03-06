@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.ViewHolder> implements Filterable {
+public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.ViewHolder> implements Filterable {
     private final LayoutInflater inflater;
     private final View.OnClickListener onItemClickListener;
 
@@ -24,7 +24,7 @@ class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.ViewHolder> i
 
     private ArrayList<String> originalSubjects;
 
-    SubjectsAdapter(Context context, ArrayList<String> subjects, View.OnClickListener onItemClickListener) {
+    public SubjectsAdapter(Context context, ArrayList<String> subjects, View.OnClickListener onItemClickListener) {
         this.inflater = LayoutInflater.from(context);
         this.onItemClickListener = onItemClickListener;
         this.subjects = subjects;
