@@ -18,6 +18,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.electronicdiary.MainActivity;
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.Repository;
+import com.example.electronicdiary.Result;
+import com.example.electronicdiary.User;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -40,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         isRememberMe.setChecked(sharedPreferences.getBoolean(getString(R.string.is_remember_me), false));
 
         if (isRememberMe.isChecked()) {
+            Repository.getInstance().setLastLoggedInUser(sharedPreferences.getInt("userId", -1));
             openMainActivity();
         } else {
             initLoginListeners(isRememberMe, sharedPreferences);
@@ -64,13 +68,11 @@ public class LoginActivity extends AppCompatActivity {
             if (loginFormState == null) {
                 return;
             }
+
+            usernameEditText.setError(loginFormState.getUsernameError() != null ? getString(loginFormState.getUsernameError()) : null);
+            passwordEditText.setError(loginFormState.getPasswordError() != null ? getString(loginFormState.getPasswordError()) : null);
+
             loginButton.setEnabled(loginFormState.isDataValid());
-            if (loginFormState.getUsernameError() != null) {
-                usernameEditText.setError(getString(loginFormState.getUsernameError()));
-            }
-            if (loginFormState.getPasswordError() != null) {
-                passwordEditText.setError(getString(loginFormState.getPasswordError()));
-            }
         });
 
         loginViewModel.getLoginResult().observe(this, loginResult -> {
@@ -78,14 +80,13 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
             //loadingProgressBar.setVisibility(View.GONE);
-            if (loginResult instanceof LoginResult.Success) {
+            if (loginResult instanceof Result.Success) {
                 sharedPreferences.edit().putBoolean(getString(R.string.is_remember_me), isRememberMe.isChecked()).apply();
-                sharedPreferences.edit().putString("username",
-                        ((LoginResult.Success<LoggedInUser>) loginResult).getData().getDisplayName()).apply();
+                sharedPreferences.edit().putInt("userId", ((Result.Success<User>) loginResult).getData().getId()).apply();
 
                 openMainActivity();
             } else {
-                String error = ((LoginResult.Error) loginResult).getError();
+                String error = ((Result.Error) loginResult).getError();
                 Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
             }
             //setResult(Activity.RESULT_OK);

@@ -95,11 +95,11 @@ public class GroupPerformanceFragment extends Fragment {
     private void downloadData() {
         //TODO загрузка всех студентов, событий, посещений: возможно лучше поместить в ViewModel, и здесь поставить observe на поля
         students = new ArrayList<>();
-        students.add(new Student("1ИУ9-11", "1Александр", "1Другаков"));
-        students.add(new Student("2ИУ9-21", "2Александр", "2Другаков"));
-        students.add(new Student("3ИУ9-31", "3Александр", "3Другаков"));
-        students.add(new Student("4ИУ9-41", "4Александр", "4Другаков"));
-        students.add(new Student("5ИУ9-51", "5Александр", "5Другаков"));
+        students.add(new Student(1, "1ИУ9-11", "1Александр", "1Другаков"));
+        students.add(new Student(2, "2ИУ9-21", "2Александр", "2Другаков"));
+        students.add(new Student(3, "3ИУ9-31", "3Александр", "3Другаков"));
+        students.add(new Student(4, "4ИУ9-41", "4Александр", "4Другаков"));
+        students.add(new Student(5, "5ИУ9-51", "5Александр", "5Другаков"));
 
         events = new ArrayList<>();
         events.add("РК1");

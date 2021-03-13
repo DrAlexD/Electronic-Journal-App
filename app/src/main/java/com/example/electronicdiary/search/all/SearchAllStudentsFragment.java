@@ -69,15 +69,15 @@ public class SearchAllStudentsFragment extends Fragment {
     private void downloadData() {
         //TODO поиск всех студентов
         students = new ArrayList<>();
-        students.add(new Student("1ИУ9-11", "1Александр", "1Другаков"));
-        students.add(new Student("2ИУ9-21", "2Александр", "2Другаков"));
-        students.add(new Student("3ИУ9-31", "3Александр", "3Другаков"));
-        students.add(new Student("4ИУ9-41", "4Александр", "4Другаков"));
-        students.add(new Student("5ИУ9-51", "5Александр", "5Другаков"));
-        students.add(new Student("6ИУ9-61", "6Александр", "6Другаков"));
-        students.add(new Student("7ИУ9-71", "7Александр", "7Другаков"));
-        students.add(new Student("8ИУ9-81", "8Александр", "8Другаков"));
-        students.add(new Student("9ИУ9-91", "9Александр", "9Другаков"));
+        students.add(new Student(1, "1ИУ9-11", "1Александр", "1Другаков"));
+        students.add(new Student(2, "2ИУ9-21", "2Александр", "2Другаков"));
+        students.add(new Student(3, "3ИУ9-31", "3Александр", "3Другаков"));
+        students.add(new Student(4, "4ИУ9-41", "4Александр", "4Другаков"));
+        students.add(new Student(5, "5ИУ9-51", "5Александр", "5Другаков"));
+        students.add(new Student(6, "6ИУ9-61", "6Александр", "6Другаков"));
+        students.add(new Student(7, "7ИУ9-71", "7Александр", "7Другаков"));
+        students.add(new Student(8, "8ИУ9-81", "8Александр", "8Другаков"));
+        students.add(new Student(9, "9ИУ9-91", "9Александр", "9Другаков"));
     }
 
     private SearchView.OnQueryTextListener getSearchTextUpdateListener() {

@@ -62,11 +62,11 @@ public class SearchProfessorsFragment extends Fragment {
     private void downloadData() {
         //TODO поиск всех преподавателей
         professors = new ArrayList<>();
-        professors.add(new Professor("Александр", "Коновалов"));
-        professors.add(new Professor("Сергей", "Скоробогатов"));
-        professors.add(new Professor("Анна", "Домрачева"));
-        professors.add(new Professor("Александр", "Дубанов"));
-        professors.add(new Professor("Юрий", "Каганов"));
+        professors.add(new Professor(1, "Александр", "Коновалов"));
+        professors.add(new Professor(2, "Сергей", "Скоробогатов"));
+        professors.add(new Professor(3, "Анна", "Домрачева"));
+        professors.add(new Professor(4, "Александр", "Дубанов"));
+        professors.add(new Professor(5, "Юрий", "Каганов"));
     }
 
     private SearchView.OnQueryTextListener getSearchTextUpdateListener() {

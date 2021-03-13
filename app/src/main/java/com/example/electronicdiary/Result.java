@@ -1,25 +1,25 @@
-package com.example.electronicdiary.login;
+package com.example.electronicdiary;
 
 import org.jetbrains.annotations.NotNull;
 
-class LoginResult<T> {
-    private LoginResult() {
+public class Result<T> {
+    private Result() {
     }
 
     @NotNull
     @Override
     public String toString() {
-        if (this instanceof LoginResult.Success) {
-            LoginResult.Success<T> success = (LoginResult.Success<T>) this;
+        if (this instanceof Result.Success) {
+            Result.Success<T> success = (Result.Success<T>) this;
             return "Success[data=" + success.getData().toString() + "]";
-        } else if (this instanceof LoginResult.Error) {
-            LoginResult.Error error = (LoginResult.Error) this;
+        } else if (this instanceof Result.Error) {
+            Result.Error error = (Result.Error) this;
             return "Error[exception=" + error.getError() + "]";
         }
         return "";
     }
 
-    public final static class Success<T> extends LoginResult<T> {
+    public final static class Success<T> extends Result<T> {
         private final T data;
 
         public Success(T data) {
@@ -31,7 +31,7 @@ class LoginResult<T> {
         }
     }
 
-    public final static class Error extends LoginResult {
+    public final static class Error extends Result {
         private final String error;
 
         public Error(String error) {

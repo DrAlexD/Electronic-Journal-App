@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.Repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,11 +55,10 @@ public class ProfileFragment extends Fragment {
     private void setPreferences(View root) {
         //TODO добавить отображение выбранного семестра в профиле преподавателя
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String username = sharedPreferences.getString("username", "");
         boolean isProfessorRules = sharedPreferences.getBoolean(getString(R.string.is_professor_rules), false);
 
-        TextView usernameView = root.findViewById(R.id.user_name_text);
-        usernameView.setText(username);
+        TextView userNameView = root.findViewById(R.id.user_name_text);
+        userNameView.setText(Repository.getInstance().getCache().getUser().getFullName());
 
         Button addSubjectButton = root.findViewById(R.id.add_subject);
         addSubjectButton.setVisibility(isProfessorRules ? View.VISIBLE : View.GONE);

@@ -2,36 +2,35 @@ package com.example.electronicdiary.login;
 
 import androidx.annotation.Nullable;
 
-class LoginFormState {
+import com.example.electronicdiary.R;
+
+public class LoginFormState {
     @Nullable
     private final Integer usernameError;
     @Nullable
     private final Integer passwordError;
     private final boolean isDataValid;
 
-    LoginFormState(@Nullable Integer usernameError, @Nullable Integer passwordError) {
-        this.usernameError = usernameError;
-        this.passwordError = passwordError;
-        this.isDataValid = false;
-    }
+    public LoginFormState(String username, String password) {
+        boolean isUsernameValid = !username.trim().isEmpty();
+        boolean isPasswordValid = password.trim().length() > 5;
 
-    LoginFormState(boolean isDataValid) {
-        this.usernameError = null;
-        this.passwordError = null;
-        this.isDataValid = isDataValid;
+        this.usernameError = !isUsernameValid ? R.string.invalid_username : null;
+        this.passwordError = !isPasswordValid ? R.string.invalid_password : null;
+        this.isDataValid = isUsernameValid && isPasswordValid;
     }
 
     @Nullable
-    Integer getUsernameError() {
+    public Integer getUsernameError() {
         return usernameError;
     }
 
     @Nullable
-    Integer getPasswordError() {
+    public Integer getPasswordError() {
         return passwordError;
     }
 
-    boolean isDataValid() {
+    public boolean isDataValid() {
         return isDataValid;
     }
 }

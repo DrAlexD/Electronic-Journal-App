@@ -2,30 +2,15 @@ package com.example.electronicdiary;
 
 import org.jetbrains.annotations.NotNull;
 
-public class Professor {
-    private final String firstName;
-    private final String secondName;
-
-    public Professor(String firstName, String secondName) {
-        this.firstName = firstName;
-        this.secondName = secondName;
+public class Professor extends User {
+    public Professor(int id, String firstName, String secondName) {
+        super(id, firstName, secondName);
     }
 
     @NotNull
     @Override
     public String toString() {
-        return "Professor{" + "name='" + firstName + secondName + '\'' + '}';
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getSecondName() {
-        return secondName;
-    }
-
-    public String getFullName() {
-        return firstName + " " + secondName;
+        return "Professor{" + "id=" + id + ", firstName='" + firstName + '\'' + ", secondName='" +
+                secondName + '\'' + '}';
     }
 }

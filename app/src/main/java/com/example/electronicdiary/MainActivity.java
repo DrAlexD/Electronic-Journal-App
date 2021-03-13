@@ -17,7 +17,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.electronicdiary.login.LoginActivity;
-import com.example.electronicdiary.login.LoginRepository;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -51,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         navigationView.setNavigationItemSelectedListener(item -> {
             if (item.getItemId() == R.id.nav_logout) {
                 sharedPreferences.edit().putBoolean(getString(R.string.is_remember_me), false).apply();
-                LoginRepository.getInstance().logout();
+                Repository.getInstance().logout();
 
                 Intent intent = new Intent(this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -71,16 +70,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         View headerView = navigationView.getHeaderView(0);
         TextView userName = headerView.findViewById(R.id.user_name_text);
-        userName.setText(sharedPreferences.getString("username", ""));
-
-         /*FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
+        userName.setText(Repository.getInstance().getCache().getUser().getFullName());
     }
 
     @Override
