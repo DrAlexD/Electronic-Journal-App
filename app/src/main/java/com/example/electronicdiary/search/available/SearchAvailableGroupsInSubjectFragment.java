@@ -14,22 +14,22 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.electronicdiary.R;
-import com.example.electronicdiary.search.StudentsAdapter;
+import com.example.electronicdiary.search.GroupsAdapter;
 
-public class SearchAvailableStudentsFragment extends Fragment {
-    private StudentsAdapter studentsAdapter;
+public class SearchAvailableGroupsInSubjectFragment extends Fragment {
+    private GroupsAdapter groupsAdapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_search_available_students, container, false);
+        View root = inflater.inflate(R.layout.fragment_search_available_groups_in_subject, container, false);
 
-        SearchAvailableStudentsViewModel searchAvailableStudentsViewModel = new ViewModelProvider(this).get(SearchAvailableStudentsViewModel.class);
-        searchAvailableStudentsViewModel.downloadAvailableStudents();
+        SearchAvailableGroupsInSubjectViewModel searchAvailableGroupsInSubjectViewModel = new ViewModelProvider(this).get(SearchAvailableGroupsInSubjectViewModel.class);
+        searchAvailableGroupsInSubjectViewModel.downloadAvailableGroupsInSubject(getArguments().getString("subjectTitle"));
 
-        final RecyclerView recyclerView = root.findViewById(R.id.searchedAvailableStudentsList);
-        searchAvailableStudentsViewModel.getAvailableStudents().observe(getViewLifecycleOwner(), availableStudents -> {
-            if (availableStudents == null) {
+        final RecyclerView recyclerView = root.findViewById(R.id.searchedAvailableGroupsInSubjectList);
+        searchAvailableGroupsInSubjectViewModel.getAvailableGroupsInSubject().observe(getViewLifecycleOwner(), availableGroupsInSubject -> {
+            if (availableGroupsInSubject == null) {
                 return;
             }
 
@@ -37,18 +37,17 @@ public class SearchAvailableStudentsFragment extends Fragment {
                 RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
                 int position = viewHolder.getAdapterPosition();
 
-                Bundle bundle = new Bundle();
-                bundle.putString("student", availableStudents.get(position).getFullName());
-                bundle.putString("group", availableStudents.get(position).getGroup());
-                Navigation.findNavController(view).navigate(R.id.action_search_available_students_to_student_profile, bundle);
+                //TODO удалить группу из базы
+                /*getArguments().getString("subjectTitle")*/
+                Navigation.findNavController(view).navigate(R.id.action_search_available_groups_in_subject_to_profile);
             };
 
-            studentsAdapter = new StudentsAdapter(getContext(), availableStudents, onItemClickListener);
-            recyclerView.setAdapter(studentsAdapter);
+            groupsAdapter = new GroupsAdapter(getContext(), availableGroupsInSubject, onItemClickListener);
+            recyclerView.setAdapter(groupsAdapter);
             recyclerView.setHasFixedSize(false);
         });
 
-        final SearchView searchView = root.findViewById(R.id.availableStudentsSearch);
+        final SearchView searchView = root.findViewById(R.id.availableGroupsInSubjectSearch);
         searchView.setSubmitButtonEnabled(true);
         searchView.setOnQueryTextListener(getSearchTextUpdateListener());
 
@@ -65,7 +64,7 @@ public class SearchAvailableStudentsFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                studentsAdapter.getFilter().filter(newText);
+                groupsAdapter.getFilter().filter(newText);
                 return true;
             }
         };

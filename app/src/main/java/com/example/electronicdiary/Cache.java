@@ -10,6 +10,7 @@ public class Cache {
     private ArrayList<Semester> semesters = null;
     private ArrayList<String> allGroups = null;
     private ArrayList<Student> allStudents = null;
+    private ArrayList<Student> availableStudents = null;
     private ArrayList<String> allSubjects = null;
     private ArrayList<Professor> professors = null;
 
@@ -75,5 +76,13 @@ public class Cache {
 
     public void setProfessors(ArrayList<Professor> professors) {
         this.professors = professors;
+    }
+
+    public ArrayList<Student> getAvailableStudents() {
+        return availableStudents;
+    }
+
+    public void setAvailableStudents(ArrayList<Student> availableStudents) {
+        this.availableStudents = availableStudents;
     }
 }

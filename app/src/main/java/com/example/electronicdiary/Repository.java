@@ -16,6 +16,7 @@ public class Repository {
     public boolean allGroupsUpdate = false;
     public boolean allStudentsUpdate = false;
     public boolean allSubjectsUpdate = false;
+    public boolean availableStudentsUpdate = false;
     public boolean professorsUpdate = false;
 
     private Cache cache = new Cache();
@@ -201,5 +202,27 @@ public class Repository {
 
         cache.setProfessors(professors);
         return professors;
+    }
+
+    public ArrayList<String> getAvailableGroupsInSubject(String subjectTitle) {
+        HashMap<String, ArrayList<String>> availableSubjectsWithGroups = getAvailableSubjectsWithGroups();
+        return availableSubjectsWithGroups.get(subjectTitle);
+    }
+
+    public ArrayList<Student> getAvailableStudents() {
+        ArrayList<Student> cached = cache.getAvailableStudents();
+        if (cached != null && !availableStudentsUpdate) {
+            return cached;
+        }
+
+        ArrayList<Student> availableStudents = new ArrayList<>();
+        availableStudents.add(new Student(1, "1ИУ9-11", "1Александр", "1Другаков"));
+        availableStudents.add(new Student(2, "2ИУ9-21", "2Александр", "2Другаков"));
+        availableStudents.add(new Student(3, "3ИУ9-31", "3Александр", "3Другаков"));
+        availableStudents.add(new Student(4, "4ИУ9-41", "4Александр", "4Другаков"));
+        availableStudents.add(new Student(5, "5ИУ9-51", "5Александр", "5Другаков"));
+
+        cache.setAvailableStudents(availableStudents);
+        return availableStudents;
     }
 }
