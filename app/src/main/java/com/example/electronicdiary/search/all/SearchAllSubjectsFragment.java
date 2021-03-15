@@ -9,69 +9,64 @@ import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.search.SubjectsAdapter;
 
-import java.util.ArrayList;
-
 public class SearchAllSubjectsFragment extends Fragment {
     private SubjectsAdapter subjectsAdapter;
-    private ArrayList<String> subjects;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_search_all_subjects, container, false);
 
-        downloadData();
+        SearchAllSubjectsViewModel searchAllSubjectsViewModel = new ViewModelProvider(this).get(SearchAllSubjectsViewModel.class);
+        searchAllSubjectsViewModel.downloadAllSubjects();
 
         int actionCode = getArguments().getInt("actionCode");
 
-        View.OnClickListener onItemClickListener = view -> {
-            RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
-            int position = viewHolder.getAdapterPosition();
-
-            if (actionCode == 1) {
-                Bundle bundle = new Bundle();
-                bundle.putString("subjectTitle", subjects.get(position));
-                Navigation.findNavController(view).navigate(R.id.action_search_all_subjects_to_dialog_subject_editing, bundle);
-            } else if (actionCode == 2) {
-                //TODO удаление предмета из базы
-
-                Bundle bundle = new Bundle();
-                bundle.putInt("openPage", 2);
-                Navigation.findNavController(view).navigate(R.id.action_search_all_subjects_to_admin_actions, bundle);
-            } else if (actionCode == 10) {
-                Bundle bundle = new Bundle();
-                bundle.putInt("actionCode", 10);
-                bundle.putString("subjectTitle", subjects.get(position));
-                Navigation.findNavController(view).navigate(R.id.action_search_all_subjects_to_search_all_groups, bundle);
-            }
-        };
-        subjectsAdapter = new SubjectsAdapter(getContext(), subjects, onItemClickListener);
-
         final RecyclerView recyclerView = root.findViewById(R.id.searchedAllSubjectsList);
-        recyclerView.setAdapter(subjectsAdapter);
-        recyclerView.setHasFixedSize(false);
+        searchAllSubjectsViewModel.getAllSubjects().observe(getViewLifecycleOwner(), allSubjects -> {
+            if (allSubjects == null) {
+                return;
+            }
+
+            View.OnClickListener onItemClickListener = view -> {
+                RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
+                int position = viewHolder.getAdapterPosition();
+
+                if (actionCode == 1) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("subjectTitle", allSubjects.get(position));
+                    Navigation.findNavController(view).navigate(R.id.action_search_all_subjects_to_dialog_subject_editing, bundle);
+                } else if (actionCode == 2) {
+                    //TODO удаление предмета из базы
+
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("openPage", 2);
+                    Navigation.findNavController(view).navigate(R.id.action_search_all_subjects_to_admin_actions, bundle);
+                } else if (actionCode == 10) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("actionCode", 10);
+                    bundle.putString("subjectTitle", allSubjects.get(position));
+                    Navigation.findNavController(view).navigate(R.id.action_search_all_subjects_to_search_all_groups, bundle);
+                }
+            };
+
+            subjectsAdapter = new SubjectsAdapter(getContext(), allSubjects, onItemClickListener);
+            recyclerView.setAdapter(subjectsAdapter);
+            recyclerView.setHasFixedSize(false);
+        });
 
         final SearchView searchView = root.findViewById(R.id.allSubjectsSearch);
         searchView.setSubmitButtonEnabled(true);
         searchView.setOnQueryTextListener(getSearchTextUpdateListener());
-        return root;
-    }
 
-    private void downloadData() {
-        //TODO поиск всех предметов
-        subjects = new ArrayList<>();
-        subjects.add("Матан");
-        subjects.add("Мобилки");
-        subjects.add("Алгебра");
-        subjects.add("Операционки");
-        subjects.add("Моделирование");
-        subjects.add("Методы оптимизации");
+        return root;
     }
 
     private SearchView.OnQueryTextListener getSearchTextUpdateListener() {

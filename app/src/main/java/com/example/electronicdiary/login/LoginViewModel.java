@@ -9,11 +9,11 @@ import com.example.electronicdiary.Result;
 import com.example.electronicdiary.User;
 
 public class LoginViewModel extends ViewModel {
-    private final MutableLiveData<Result<User>> loginResult = new MutableLiveData<>();
+    private final MutableLiveData<Result<User>> user = new MutableLiveData<>();
     private final MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
 
-    LiveData<Result<User>> getLoginResult() {
-        return loginResult;
+    LiveData<Result<User>> getUser() {
+        return user;
     }
 
     LiveData<LoginFormState> getLoginFormState() {
@@ -21,7 +21,7 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void login(String username, String password) {
-        loginResult.setValue(Repository.getInstance().login(username, password));
+        user.setValue(Repository.getInstance().login(username, password));
     }
 
     public void loginDataChanged(String username, String password) {

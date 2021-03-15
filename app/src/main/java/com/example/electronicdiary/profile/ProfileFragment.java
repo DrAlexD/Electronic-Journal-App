@@ -18,35 +18,47 @@ import androidx.navigation.Navigation;
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 public class ProfileFragment extends Fragment {
-    private HashMap<String, ArrayList<String>> subjectsWithGroups;
-    private ArrayList<String> subjects;
-    private ArrayList<ArrayList<String>> groups;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        downloadData();
-
         setPreferences(root);
 
         ProfileViewModel profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
-        profileViewModel.setSubjectsWithGroups(subjectsWithGroups);
-        profileViewModel.setSubjects(subjects);
-        profileViewModel.setGroups(groups);
+        profileViewModel.downloadAvailableSubjectsWithGroups();
 
-        SubjectsWithGroupsAdapter subjectsWithGroupsAdapter = new SubjectsWithGroupsAdapter(getContext(), subjects, subjectsWithGroups);
         final ExpandableListView expandableListView = root.findViewById(R.id.subjectsWithGroupsList);
-        expandableListView.setAdapter(subjectsWithGroupsAdapter);
-        expandableListView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
-            Bundle bundle = new Bundle();
-            bundle.putString("subject", subjects.get(groupPosition));
-            bundle.putString("group", subjectsWithGroups.get(subjects.get(groupPosition)).get(childPosition));
-            Navigation.findNavController(v).navigate(R.id.action_profile_to_group_performance, bundle);
-            return true;
+        profileViewModel.getAvailableSubjects().observe(getViewLifecycleOwner(), availableSubjects -> {
+            if (availableSubjects == null) {
+                return;
+            }
+
+            SubjectsWithGroupsAdapter subjectsWithGroupsAdapter = new SubjectsWithGroupsAdapter(getContext(), availableSubjects, profileViewModel.getAvailableSubjectsWithGroups().getValue());
+            expandableListView.setAdapter(subjectsWithGroupsAdapter);
+            expandableListView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+                Bundle bundle = new Bundle();
+                bundle.putString("subject", availableSubjects.get(groupPosition));
+                bundle.putString("group", profileViewModel.getAvailableSubjectsWithGroups().getValue().get(availableSubjects.get(groupPosition)).get(childPosition));
+                Navigation.findNavController(v).navigate(R.id.action_profile_to_group_performance, bundle);
+                return true;
+            });
+        });
+
+        profileViewModel.getAvailableSubjectsWithGroups().observe(getViewLifecycleOwner(), availableSubjectsWithGroups -> {
+            if (availableSubjectsWithGroups == null) {
+                return;
+            }
+
+            SubjectsWithGroupsAdapter subjectsWithGroupsAdapter = new SubjectsWithGroupsAdapter(getContext(), profileViewModel.getAvailableSubjects().getValue(), availableSubjectsWithGroups);
+            expandableListView.setAdapter(subjectsWithGroupsAdapter);
+            expandableListView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
+                Bundle bundle = new Bundle();
+                bundle.putString("subject", profileViewModel.getAvailableSubjects().getValue().get(groupPosition));
+                bundle.putString("group", availableSubjectsWithGroups.get(profileViewModel.getAvailableSubjects().getValue().get(groupPosition)).get(childPosition));
+                Navigation.findNavController(v).navigate(R.id.action_profile_to_group_performance, bundle);
+                return true;
+            });
         });
 
         return root;
@@ -58,7 +70,7 @@ public class ProfileFragment extends Fragment {
         boolean isProfessorRules = sharedPreferences.getBoolean(getString(R.string.is_professor_rules), false);
 
         TextView userNameView = root.findViewById(R.id.user_name_text);
-        userNameView.setText(Repository.getInstance().getCache().getUser().getFullName());
+        userNameView.setText(Repository.getInstance().getUser().getFullName());
 
         Button addSubjectButton = root.findViewById(R.id.add_subject);
         addSubjectButton.setVisibility(isProfessorRules ? View.VISIBLE : View.GONE);
@@ -91,36 +103,5 @@ public class ProfileFragment extends Fragment {
             bundle.putInt("actionCode", 13);
             Navigation.findNavController(root).navigate(R.id.action_profile_to_search_available_subjects, bundle);
         });
-    }
-
-    private void downloadData() {
-        //TODO поиск предметов и групп у преподавателя
-        subjectsWithGroups = new HashMap<>();
-
-        subjects = new ArrayList<>();
-        subjects.add("Матан");
-        subjects.add("Мобилки");
-        subjects.add("Алгебра");
-
-        groups = new ArrayList<>();
-        ArrayList<String> groups1 = new ArrayList<>();
-        groups1.add("ИУ9-11");
-        groups1.add("ИУ9-21");
-        groups1.add("ИУ9-31");
-        ArrayList<String> groups2 = new ArrayList<>();
-        groups2.add("ИУ9-41");
-        groups2.add("ИУ9-51");
-        groups2.add("ИУ9-61");
-        ArrayList<String> groups3 = new ArrayList<>();
-        groups3.add("ИУ9-11");
-        groups3.add("ИУ9-31");
-        groups3.add("ИУ9-51");
-        groups.add(groups1);
-        groups.add(groups2);
-        groups.add(groups3);
-
-        for (int i = 0; i < subjects.size(); i++) {
-            subjectsWithGroups.put(subjects.get(i), groups.get(i));
-        }
     }
 }

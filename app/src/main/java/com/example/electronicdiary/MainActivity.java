@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         View headerView = navigationView.getHeaderView(0);
         TextView userName = headerView.findViewById(R.id.user_name_text);
-        userName.setText(Repository.getInstance().getCache().getUser().getFullName());
+        userName.setText(Repository.getInstance().getUser().getFullName());
     }
 
     @Override

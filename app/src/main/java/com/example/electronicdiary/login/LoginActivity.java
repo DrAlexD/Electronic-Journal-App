@@ -75,18 +75,18 @@ public class LoginActivity extends AppCompatActivity {
             loginButton.setEnabled(loginFormState.isDataValid());
         });
 
-        loginViewModel.getLoginResult().observe(this, loginResult -> {
-            if (loginResult == null) {
+        loginViewModel.getUser().observe(this, user -> {
+            if (user == null) {
                 return;
             }
             //loadingProgressBar.setVisibility(View.GONE);
-            if (loginResult instanceof Result.Success) {
+            if (user instanceof Result.Success) {
                 sharedPreferences.edit().putBoolean(getString(R.string.is_remember_me), isRememberMe.isChecked()).apply();
-                sharedPreferences.edit().putInt("userId", ((Result.Success<User>) loginResult).getData().getId()).apply();
+                sharedPreferences.edit().putInt("userId", ((Result.Success<User>) user).getData().getId()).apply();
 
                 openMainActivity();
             } else {
-                String error = ((Result.Error) loginResult).getError();
+                String error = ((Result.Error) user).getError();
                 Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
             }
             //setResult(Activity.RESULT_OK);
