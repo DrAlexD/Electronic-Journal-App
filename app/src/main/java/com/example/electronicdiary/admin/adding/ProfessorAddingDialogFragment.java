@@ -12,73 +12,60 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.electronicdiary.R;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Random;
-
 public class ProfessorAddingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
-    private CheckBox generateCheckBox;
-    private EditText professorLogin;
-    private EditText professorPassword;
+    private ProfessorAddingViewModel professorAddingViewModel;
+
     private EditText professorName;
     private EditText professorSecondName;
-
-    private int professorId;
-
-    private boolean nameIsEmptyFlag = true;
-    private boolean secondNameIsEmptyFlag = true;
-    private boolean loginIsEmptyFlag = true;
-    private boolean passwordIsEmptyFlag = true;
+    private EditText professorLogin;
+    private EditText professorPassword;
+    private CheckBox generateCheckBox;
 
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_professor_adding, null);
 
-        downloadData();
+        professorAddingViewModel = new ViewModelProvider(this).get(ProfessorAddingViewModel.class);
+        professorAddingViewModel.downloadLastProfessorId();
 
-        generateCheckBox = root.findViewById(R.id.professorAddingGenerate);
-        professorLogin = root.findViewById(R.id.professorLoginAdding);
-        professorPassword = root.findViewById(R.id.professorPasswordAdding);
-        professorName = root.findViewById(R.id.professorNameAdding);
-        professorSecondName = root.findViewById(R.id.professorSecondNameAdding);
-
-        setupAutoGenerate();
+        setupAutoGenerate(root);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
                 .setTitle("Введите данные преподавателя")
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-
-                    //TODO добавление преподавателя в базу
+                    professorAddingViewModel.addProfessor(professorName.getText().toString(),
+                            professorSecondName.getText().toString(), professorLogin.getText().toString(),
+                            professorPassword.getText().toString());
                     dismiss();
                 }).create();
 
-        dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE)
-                .setEnabled(!nameIsEmptyFlag && !secondNameIsEmptyFlag && !loginIsEmptyFlag && !passwordIsEmptyFlag));
+        dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false));
 
         return dialog;
     }
 
-    private void downloadData() {
-        //TODO получить первый доступный для добавления id преподавателя
-        professorId = new Random().nextInt(1000);
-    }
+    private void setupAutoGenerate(View root) {
+        generateCheckBox = root.findViewById(R.id.professorAddingGenerate);
+        professorName = root.findViewById(R.id.professorNameAdding);
+        professorSecondName = root.findViewById(R.id.professorSecondNameAdding);
+        professorLogin = root.findViewById(R.id.professorLoginAdding);
+        professorPassword = root.findViewById(R.id.professorPasswordAdding);
 
-    private void setupAutoGenerate() {
-        professorName.addTextChangedListener(new TextWatcher() {
+        TextWatcher afterNameAndSecondNameChangedListener = new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                nameIsEmptyFlag = s.toString().trim().isEmpty();
-                if (nameIsEmptyFlag)
-                    professorName.setError("Пустое поле");
-                else
-                    professorName.setError(null);
-                afterNameAndSecondNameChanges();
+                professorAddingViewModel.professorAddingDataChanged(professorName.getText().toString(),
+                        professorSecondName.getText().toString(), professorLogin.getText().toString(),
+                        professorPassword.getText().toString(), true);
             }
 
             @Override
@@ -90,17 +77,14 @@ public class ProfessorAddingDialogFragment extends DialogFragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // ignore
             }
-        });
+        };
 
-        professorSecondName.addTextChangedListener(new TextWatcher() {
+        TextWatcher afterLoginAndPasswordChangedListener = new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                secondNameIsEmptyFlag = s.toString().trim().isEmpty();
-                if (secondNameIsEmptyFlag)
-                    professorSecondName.setError("Пустое поле");
-                else
-                    professorSecondName.setError(null);
-                afterNameAndSecondNameChanges();
+                professorAddingViewModel.professorAddingDataChanged(professorName.getText().toString(),
+                        professorSecondName.getText().toString(), professorLogin.getText().toString(),
+                        professorPassword.getText().toString(), false);
             }
 
             @Override
@@ -112,54 +96,12 @@ public class ProfessorAddingDialogFragment extends DialogFragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // ignore
             }
-        });
+        };
 
-        professorLogin.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                loginIsEmptyFlag = s.toString().trim().isEmpty();
-                if (loginIsEmptyFlag)
-                    professorLogin.setError("Пустое поле");
-                else
-                    professorLogin.setError(null);
-                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(!nameIsEmptyFlag &&
-                        !secondNameIsEmptyFlag && !loginIsEmptyFlag && !passwordIsEmptyFlag);
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
-            }
-        });
-
-        professorPassword.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                passwordIsEmptyFlag = s.toString().trim().isEmpty();
-                if (passwordIsEmptyFlag)
-                    professorPassword.setError("Пустое поле");
-                else
-                    professorPassword.setError(null);
-                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(!nameIsEmptyFlag &&
-                        !secondNameIsEmptyFlag && !loginIsEmptyFlag && !passwordIsEmptyFlag);
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
-            }
-        });
-
+        professorName.addTextChangedListener(afterNameAndSecondNameChangedListener);
+        professorSecondName.addTextChangedListener(afterNameAndSecondNameChangedListener);
+        professorLogin.addTextChangedListener(afterLoginAndPasswordChangedListener);
+        professorPassword.addTextChangedListener(afterLoginAndPasswordChangedListener);
         generateCheckBox.setOnClickListener(view -> {
             if (generateCheckBox.isChecked()) {
                 setGeneratedLoginAndPassword();
@@ -167,34 +109,46 @@ public class ProfessorAddingDialogFragment extends DialogFragment {
                 setEmptyLoginAndPassword();
             }
         });
-    }
 
-    private void afterNameAndSecondNameChanges() {
-        if (!nameIsEmptyFlag && !secondNameIsEmptyFlag) {
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(!loginIsEmptyFlag && !passwordIsEmptyFlag);
-            generateCheckBox.setEnabled(true);
-
-            if (generateCheckBox.isChecked()) {
-                setGeneratedLoginAndPassword();
+        professorAddingViewModel.getProfessorAddingFormState().observe(this, professorAddingFormState -> {
+            if (professorAddingFormState == null) {
+                return;
             }
-        } else {
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
-            generateCheckBox.setEnabled(false);
 
-            setEmptyLoginAndPassword();
-        }
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(professorAddingFormState.isDataValid());
+            if (professorAddingFormState.isNameOrSecondNameChanged()) {
+                professorName.setError(professorAddingFormState.getProfessorNameError() != null ?
+                        getString(professorAddingFormState.getProfessorNameError()) : null);
+                professorSecondName.setError(professorAddingFormState.getProfessorSecondNameError() != null ?
+                        getString(professorAddingFormState.getProfessorSecondNameError()) : null);
+                if (professorAddingFormState.getProfessorNameError() == null && professorAddingFormState.getProfessorSecondNameError() == null) {
+                    generateCheckBox.setEnabled(true);
+
+                    if (generateCheckBox.isChecked()) {
+                        setGeneratedLoginAndPassword();
+                    }
+                } else {
+                    generateCheckBox.setEnabled(false);
+
+                    setEmptyLoginAndPassword();
+                }
+            } else {
+                professorLogin.setError(professorAddingFormState.getProfessorLoginError() != null ?
+                        getString(professorAddingFormState.getProfessorLoginError()) : null);
+                professorPassword.setError(professorAddingFormState.getProfessorPasswordError() != null ?
+                        getString(professorAddingFormState.getProfessorPasswordError()) : null);
+            }
+        });
     }
 
     private void setGeneratedLoginAndPassword() {
         professorLogin.setText(professorName.getText().toString().toLowerCase() +
-                professorSecondName.getText().toString().toLowerCase() + professorId);
-        professorPassword.setText("123456" + professorId);
+                professorSecondName.getText().toString().toLowerCase() + professorAddingViewModel.getLastProfessorId().getValue().toString());
+        professorPassword.setText("123456" + professorAddingViewModel.getLastProfessorId().getValue().toString());
     }
 
     private void setEmptyLoginAndPassword() {
-        if (!professorLogin.getText().toString().isEmpty())
-            professorLogin.setText("");
-        if (!professorPassword.getText().toString().isEmpty())
-            professorPassword.setText("");
+        professorLogin.setText("");
+        professorPassword.setText("");
     }
 }

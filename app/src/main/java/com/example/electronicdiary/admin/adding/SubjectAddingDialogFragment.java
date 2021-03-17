@@ -11,6 +11,7 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.electronicdiary.R;
 
@@ -19,23 +20,18 @@ import org.jetbrains.annotations.NotNull;
 public class SubjectAddingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
 
-    private boolean titleIsEmptyFlag = true;
-
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_subject_adding, null);
 
+        SubjectAddingViewModel subjectAddingViewModel = new ViewModelProvider(this).get(SubjectAddingViewModel.class);
+
         EditText subjectTitle = root.findViewById(R.id.subjectTitleAdding);
-        subjectTitle.addTextChangedListener(new TextWatcher() {
+        TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                titleIsEmptyFlag = s.toString().trim().isEmpty();
-                if (titleIsEmptyFlag)
-                    subjectTitle.setError("Пустое поле");
-                else
-                    subjectTitle.setError(null);
-                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(!titleIsEmptyFlag);
+                subjectAddingViewModel.subjectAddingDataChanged(subjectTitle.getText().toString());
             }
 
             @Override
@@ -47,6 +43,18 @@ public class SubjectAddingDialogFragment extends DialogFragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // ignore
             }
+        };
+        subjectTitle.addTextChangedListener(afterTextChangedListener);
+
+        subjectAddingViewModel.getSubjectAddingFormState().observe(this, subjectAddingFormState -> {
+            if (subjectAddingFormState == null) {
+                return;
+            }
+
+            subjectTitle.setError(subjectAddingFormState.getSubjectTitleError() != null ?
+                    getString(subjectAddingFormState.getSubjectTitleError()) : null);
+
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(subjectAddingFormState.isDataValid());
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -58,8 +66,7 @@ public class SubjectAddingDialogFragment extends DialogFragment {
                     dismiss();
                 }).create();
 
-        dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE)
-                .setEnabled(!titleIsEmptyFlag));
+        dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false));
 
         return dialog;
     }

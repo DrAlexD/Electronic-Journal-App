@@ -13,6 +13,8 @@ public class Cache {
     private ArrayList<Student> availableStudents = null;
     private ArrayList<String> allSubjects = null;
     private ArrayList<Professor> professors = null;
+    private Integer lastStudentId = null;
+    private Integer lastProfessorId = null;
 
     public User getUser() {
         return user;
@@ -84,5 +86,21 @@ public class Cache {
 
     public void setAvailableStudents(ArrayList<Student> availableStudents) {
         this.availableStudents = availableStudents;
+    }
+
+    public Integer getLastStudentId() {
+        return lastStudentId;
+    }
+
+    public void setLastStudentId(Integer lastStudentId) {
+        this.lastStudentId = lastStudentId;
+    }
+
+    public Integer getLastProfessorId() {
+        return lastProfessorId;
+    }
+
+    public void setLastProfessorId(Integer lastProfessorId) {
+        this.lastProfessorId = lastProfessorId;
     }
 }

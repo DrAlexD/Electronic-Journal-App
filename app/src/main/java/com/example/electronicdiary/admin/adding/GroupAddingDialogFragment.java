@@ -11,6 +11,7 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.electronicdiary.R;
 
@@ -19,23 +20,18 @@ import org.jetbrains.annotations.NotNull;
 public class GroupAddingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
 
-    private boolean titleIsLessFlag = true;
-
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_group_adding, null);
 
+        GroupAddingViewModel groupAddingViewModel = new ViewModelProvider(this).get(GroupAddingViewModel.class);
+
         EditText groupTitle = root.findViewById(R.id.groupTitleAdding);
-        groupTitle.addTextChangedListener(new TextWatcher() {
+        TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                titleIsLessFlag = s.toString().trim().length() < 5;
-                if (titleIsLessFlag)
-                    groupTitle.setError("Группа должна содежать >4 символов");
-                else
-                    groupTitle.setError(null);
-                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(!titleIsLessFlag);
+                groupAddingViewModel.groupAddingDataChanged(groupTitle.getText().toString());
             }
 
             @Override
@@ -47,19 +43,29 @@ public class GroupAddingDialogFragment extends DialogFragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // ignore
             }
+        };
+        groupTitle.addTextChangedListener(afterTextChangedListener);
+
+        groupAddingViewModel.getGroupAddingFormState().observe(this, groupAddingFormState -> {
+            if (groupAddingFormState == null) {
+                return;
+            }
+
+            groupTitle.setError(groupAddingFormState.getGroupTitleError() != null ?
+                    getString(groupAddingFormState.getGroupTitleError()) : null);
+
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(groupAddingFormState.isDataValid());
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
                 .setTitle("Введите группу")
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-
-                    //TODO добавление группы в базу
+                    groupAddingViewModel.addGroup(groupTitle.getText().toString());
                     dismiss();
                 }).create();
 
-        dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE)
-                .setEnabled(!titleIsLessFlag));
+        dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false));
 
         return dialog;
     }

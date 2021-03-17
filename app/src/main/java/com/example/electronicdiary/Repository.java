@@ -3,6 +3,7 @@ package com.example.electronicdiary;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Random;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -19,6 +20,8 @@ public class Repository {
     public boolean allSubjectsUpdate = false;
     public boolean availableStudentsUpdate = false;
     public boolean professorsUpdate = false;
+    public boolean lastStudentIdUpdate = false;
+    public boolean lastProfessorIdUpdate = false;
 
     private Cache cache = new Cache();
 
@@ -337,5 +340,43 @@ public class Repository {
         studentsLessonsByModules.put(modules.get(1), secondModule);
         studentsLessonsByModules.put(modules.get(2), thirdModule);
         return studentsLessonsByModules;
+    }
+
+    public void addGroup(String groupTitle) {
+        //
+    }
+
+    public void addSemester(String semesterYear) {
+        //
+    }
+
+    public void addSubject(String subjectTitle) {
+        //
+    }
+
+    public void addProfessor(String professorName, String professorSecondName, String professorLogin, String professorPassword) {
+        //
+    }
+
+    public Integer getLastStudentId() {
+        Integer cached = cache.getLastStudentId();
+        if (cached != null && !lastStudentIdUpdate) {
+            return cached;
+        }
+
+        Integer lastStudentId = new Random().nextInt(1000);
+        cache.setLastStudentId(lastStudentId);
+        return lastStudentId;
+    }
+
+    public Integer getLastProfessorId() {
+        Integer cached = cache.getLastProfessorId();
+        if (cached != null && !lastProfessorIdUpdate) {
+            return cached;
+        }
+
+        Integer lastProfessorId = new Random().nextInt(1000);
+        cache.setLastProfessorId(lastProfessorId);
+        return lastProfessorId;
     }
 }

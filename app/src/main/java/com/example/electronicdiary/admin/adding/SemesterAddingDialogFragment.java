@@ -11,6 +11,7 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.electronicdiary.R;
 
@@ -19,23 +20,18 @@ import org.jetbrains.annotations.NotNull;
 public class SemesterAddingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
 
-    private boolean yearIsLessFlag = true;
-
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_semester_adding, null);
 
+        SemesterAddingViewModel semesterAddingViewModel = new ViewModelProvider(this).get(SemesterAddingViewModel.class);
+
         EditText semesterYear = root.findViewById(R.id.semesterYearAdding);
-        semesterYear.addTextChangedListener(new TextWatcher() {
+        TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                yearIsLessFlag = s.toString().trim().length() < 4;
-                if (yearIsLessFlag)
-                    semesterYear.setError("Год должен содержать =4 символа");
-                else
-                    semesterYear.setError(null);
-                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(!yearIsLessFlag);
+                semesterAddingViewModel.semesterAddingDataChanged(semesterYear.getText().toString());
             }
 
             @Override
@@ -47,19 +43,29 @@ public class SemesterAddingDialogFragment extends DialogFragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // ignore
             }
+        };
+        semesterYear.addTextChangedListener(afterTextChangedListener);
+
+        semesterAddingViewModel.getSemesterAddingFormState().observe(this, semesterAddingFormState -> {
+            if (semesterAddingFormState == null) {
+                return;
+            }
+
+            semesterYear.setError(semesterAddingFormState.getSemesterYearError() != null ?
+                    getString(semesterAddingFormState.getSemesterYearError()) : null);
+
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(semesterAddingFormState.isDataValid());
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
                 .setTitle("Введите данные семестра")
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-
-                    //TODO добавление семестра в базу
+                    semesterAddingViewModel.addSemester(semesterYear.getText().toString());
                     dismiss();
                 }).create();
 
-        dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE)
-                .setEnabled(!yearIsLessFlag));
+        dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false));
 
         return dialog;
     }

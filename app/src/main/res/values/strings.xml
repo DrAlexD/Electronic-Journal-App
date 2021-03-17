@@ -3,8 +3,6 @@
     <!-- Strings related to login -->
     <string name="action_sign_in">Войти</string>
     <string name="welcome">Добро пожаловать, </string>
-    <string name="invalid_username">Неверный логин</string>
-    <string name="invalid_password">Пароль должен содежать >5 символов</string>
     <string name="login_failed">Вход не выполнен</string>
     <!-- Strings related to menu and navigation -->
     <string name="menu_profile">Мой Профиль</string>
@@ -55,4 +53,10 @@
     <string name="lesson_attend_points_text">Баллов за посещение</string>
     <string name="event_earned_points_text">Получ. баллы</string>
     <string name="lesson_is_attended_text">Посещено</string>
+    <!-- Strings related to form valid -->
+    <string name="invalid_username">Неверный логин</string>
+    <string name="invalid_empty_field">Пустое поле</string>
+    <string name="invalid_password">Пароль должен содежать >5 символов</string>
+    <string name="invalid_group_title">Группа должна содежать >4 символов</string>
+    <string name="invalid_semester_year">Год должен содержать =4 символа</string>
 </resources>
