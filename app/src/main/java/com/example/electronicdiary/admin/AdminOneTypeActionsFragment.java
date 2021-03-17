@@ -16,13 +16,12 @@ import com.example.electronicdiary.R;
 import java.util.ArrayList;
 
 public class AdminOneTypeActionsFragment extends Fragment {
-    private int position;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_admin_one_type_actions, container, false);
 
-        position = getArguments().getInt("position");
+        int position = getArguments().getInt("position");
 
         if (position == 1) {
             addActions(root);

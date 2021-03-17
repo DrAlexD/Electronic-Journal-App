@@ -2,28 +2,26 @@ package com.example.electronicdiary;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Date;
-
-public class Lesson {
-    private final Date date;
+public class StudentEvent {
+    private final String title;
     private final int points;
 
-    public Lesson(Date date, int points) {
-        this.date = date;
+    public StudentEvent(String title, int points) {
+        this.title = title;
         this.points = points;
     }
 
     @NotNull
     @Override
     public String toString() {
-        return "Event{" +
-                "title='" + date + '\'' +
+        return "StudentEvent{" +
+                "title='" + title + '\'' +
                 ", points='" + points + '\'' +
                 '}';
     }
 
-    public String getDate() {
-        return date.getDate() + "." + (date.getMonth() + 1);
+    public String getTitle() {
+        return title;
     }
 
     public int getPoints() {

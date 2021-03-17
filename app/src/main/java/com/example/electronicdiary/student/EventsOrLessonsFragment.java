@@ -11,62 +11,49 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.electronicdiary.Event;
-import com.example.electronicdiary.Lesson;
 import com.example.electronicdiary.R;
-
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.example.electronicdiary.Repository;
 
 public class EventsOrLessonsFragment extends Fragment {
-    private int position;
-
-    private ArrayList<Event> events;
-
-    private HashMap<String, ArrayList<Lesson>> lessonsByModules;
-    private ArrayList<String> modules;
-    private ArrayList<ArrayList<Lesson>> lessons;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_events_or_lessons, container, false);
 
-        position = getArguments().getInt("position");
+        int position = getArguments().getInt("position");
 
         StudentPerformanceViewModel studentPerformanceViewModel = new ViewModelProvider(getParentFragment()).get(StudentPerformanceViewModel.class);
-        events = studentPerformanceViewModel.getEvents().getValue();
-        lessonsByModules = studentPerformanceViewModel.getLessonsByModules().getValue();
-        modules = studentPerformanceViewModel.getModules().getValue();
-        lessons = studentPerformanceViewModel.getLessons().getValue();
 
-        EventsOrLessonsViewModel eventsOrLessonsViewModel = new ViewModelProvider(this).get(EventsOrLessonsViewModel.class);
-        eventsOrLessonsViewModel.setPosition(position);
-
+        final RecyclerView recyclerView = root.findViewById(R.id.student_events_list);
         if (position == 1) {
-            generateEventsList(root);
+            studentPerformanceViewModel.getStudentEvents().observe(getViewLifecycleOwner(), studentEvents -> {
+                if (studentEvents == null) {
+                    return;
+                }
+
+                EventsAdapter eventsAdapter = new EventsAdapter(getContext(), studentEvents);
+                recyclerView.setAdapter(eventsAdapter);
+                recyclerView.setHasFixedSize(false);
+            });
         } else {
-            generateLessonsByModuleList(root);
+            recyclerView.setVisibility(View.GONE);
+
+            //TODO можно ли создать expandableList с двойной вложенностью?
+            final ExpandableListView expandableListView = root.findViewById(R.id.lessons_by_modules);
+            studentPerformanceViewModel.getStudentLessonsByModules().observe(getViewLifecycleOwner(),
+                    studentLessonsByModules -> {
+                        if (studentLessonsByModules == null) {
+                            return;
+                        }
+
+                        LessonsAdapter lessonsAdapter = new LessonsAdapter(getContext(),
+                                Repository.getInstance().getModules(),
+                                studentLessonsByModules);
+                        expandableListView.setVisibility(View.VISIBLE);
+                        expandableListView.setAdapter(lessonsAdapter);
+                    });
         }
 
         return root;
-    }
-
-    private void generateEventsList(View root) {
-        EventsAdapter eventsAdapter = new EventsAdapter(getContext(), events);
-        final RecyclerView recyclerView = root.findViewById(R.id.student_events_list);
-        recyclerView.setAdapter(eventsAdapter);
-        recyclerView.setHasFixedSize(false);
-    }
-
-    private void generateLessonsByModuleList(View root) {
-        final RecyclerView recyclerView = root.findViewById(R.id.student_events_list);
-        recyclerView.setVisibility(View.GONE);
-
-        //TODO можно ли создать expandableList с двойной вложенностью?
-        LessonsAdapter lessonsAdapter = new LessonsAdapter(getContext(), modules, lessonsByModules);
-
-        final ExpandableListView expandableListView = root.findViewById(R.id.lessons_by_modules);
-        expandableListView.setVisibility(View.VISIBLE);
-        expandableListView.setAdapter(lessonsAdapter);
     }
 }

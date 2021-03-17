@@ -28,6 +28,7 @@ public class ProfileFragment extends Fragment {
         ProfileViewModel profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
         profileViewModel.downloadAvailableSubjectsWithGroups();
 
+        //TODO при обновлении предметов обновляются ли автоматически и предметы по группам
         final ExpandableListView expandableListView = root.findViewById(R.id.subjectsWithGroupsList);
         profileViewModel.getAvailableSubjects().observe(getViewLifecycleOwner(), availableSubjects -> {
             if (availableSubjects == null) {

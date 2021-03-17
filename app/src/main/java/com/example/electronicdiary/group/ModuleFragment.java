@@ -20,19 +20,18 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.Student;
+import com.example.electronicdiary.StudentLesson;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 
 public class ModuleFragment extends Fragment {
     private int position;
 
     private String subject;
     private String group;
-    private ArrayList<Student> students;
-    private ArrayList<Date> lessons;
-    private ArrayList<StudentInModule> studentsInModule;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,11 +40,8 @@ public class ModuleFragment extends Fragment {
         position = getArguments().getInt("position");
 
         GroupPerformanceViewModel groupPerformanceViewModel = new ViewModelProvider(getParentFragment()).get(GroupPerformanceViewModel.class);
-        studentsInModule = groupPerformanceViewModel.getStudentsInModule().getValue();
-        students = groupPerformanceViewModel.getStudents().getValue();
-        lessons = groupPerformanceViewModel.getLessons().getValue();
-        group = groupPerformanceViewModel.getGroup().getValue();
         subject = groupPerformanceViewModel.getSubject().getValue();
+        group = groupPerformanceViewModel.getGroup().getValue();
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         boolean isProfessorRules = sharedPreferences.getBoolean(getString(R.string.is_professor_rules), false);
@@ -60,29 +56,45 @@ public class ModuleFragment extends Fragment {
             Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_lesson_adding, bundle);
         });
 
-        ModuleViewModel moduleViewModel = new ViewModelProvider(this).get(ModuleViewModel.class);
-        moduleViewModel.setPosition(position);
+        //TODO при обновлении студентов обновляются ли автоматически и баллы за посещения
+        groupPerformanceViewModel.getStudentsInGroup().observe(getViewLifecycleOwner(), students -> {
+            if (students == null) {
+                return;
+            }
 
-        generateLessonsTable(root);
+            generateLessonsTable(root, students, groupPerformanceViewModel.getStudentsLessonsByModules().getValue());
+        });
+
+        groupPerformanceViewModel.getStudentsLessonsByModules().observe(getViewLifecycleOwner(), studentsLessonsByModules -> {
+            if (studentsLessonsByModules == null) {
+                return;
+            }
+
+            generateLessonsTable(root, groupPerformanceViewModel.getStudentsInGroup().getValue(), studentsLessonsByModules);
+        });
 
         return root;
     }
 
-    private void generateLessonsTable(View root) {
+    private void generateLessonsTable(View root, ArrayList<Student> students,
+                                      HashMap<String, ArrayList<ArrayList<StudentLesson>>> studentsLessonsByModules) {
         TableLayout studentsInModuleLessonsTable = root.findViewById(R.id.studentsInModuleLessonsTable);
         int padding2inDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics());
         int padding5inDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
 
-        TableRow lessonsRow = generateLessonsRow(padding2inDp, padding5inDp);
+        ArrayList<String> modules = Repository.getInstance().getModules();
+        TableRow lessonsRow = generateLessonsRow(padding2inDp, padding5inDp,
+                studentsLessonsByModules.get(modules.get(position - 1)).get(0));
         studentsInModuleLessonsTable.addView(lessonsRow);
 
-        for (int i = 0; i < studentsInModule.size(); i++) {
-            TableRow pointsRow = generatePointsRow(i, padding2inDp, padding5inDp);
+        for (int i = 0; i < students.size(); i++) {
+            TableRow pointsRow = generatePointsRow(padding2inDp, padding5inDp, students.get(i),
+                    studentsLessonsByModules.get(modules.get(position - 1)).get(i));
             studentsInModuleLessonsTable.addView(pointsRow);
         }
     }
 
-    private TableRow generateLessonsRow(int padding2inDp, int padding5inDp) {
+    private TableRow generateLessonsRow(int padding2inDp, int padding5inDp, ArrayList<StudentLesson> studentLessons) {
         TableRow lessonsRow = new TableRow(getContext());
         lessonsRow.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE |
                 LinearLayout.SHOW_DIVIDER_BEGINNING | LinearLayout.SHOW_DIVIDER_END);
@@ -95,10 +107,10 @@ public class ModuleFragment extends Fragment {
         infoView.setGravity(Gravity.CENTER);
         lessonsRow.addView(infoView);
 
-        for (Date lesson : lessons) {
+        for (StudentLesson studentLesson : studentLessons) {
             TextView lessonView = new TextView(getContext());
             lessonView.setTextSize(20);
-            lessonView.setText(lesson.getDate() + "." + (lesson.getMonth() + 1));
+            lessonView.setText(studentLesson.getDate());
             lessonView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
             lessonView.setGravity(Gravity.CENTER);
             lessonView.setOnClickListener(view -> {
@@ -106,7 +118,7 @@ public class ModuleFragment extends Fragment {
                 bundle.putInt("position", position);
                 bundle.putString("subject", subject);
                 bundle.putString("group", group);
-                bundle.putString("lessonDate", lesson.getDate() + "." + (lesson.getMonth() + 1));
+                bundle.putString("lessonDate", studentLesson.getDate());
                 Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_lesson_info, bundle);
             });
             //lessonView.setRotation(90);
@@ -116,16 +128,15 @@ public class ModuleFragment extends Fragment {
         return lessonsRow;
     }
 
-    private TableRow generatePointsRow(int i, int padding2inDp, int padding5inDp) {
-        StudentInModule studentInModule = studentsInModule.get(i);
-
+    private TableRow generatePointsRow(int padding2inDp, int padding5inDp, Student student,
+                                       ArrayList<StudentLesson> studentLessons) {
         TableRow pointsRow = new TableRow(getContext());
         pointsRow.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE |
                 LinearLayout.SHOW_DIVIDER_BEGINNING | LinearLayout.SHOW_DIVIDER_END);
         pointsRow.setDividerDrawable(getResources().getDrawable(R.drawable.divider));
 
         TextView studentView = new TextView(getContext());
-        studentView.setText(students.get(i).getFullName());
+        studentView.setText(student.getFullName());
         studentView.setTextSize(20);
         studentView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
         studentView.setGravity(Gravity.CENTER);
@@ -137,12 +148,12 @@ public class ModuleFragment extends Fragment {
         });
         pointsRow.addView(studentView);
 
-        for (Date lesson : lessons) {
+        for (StudentLesson studentLesson : studentLessons) {
             TextView pointsView = new TextView(getContext());
             pointsView.setTextSize(20);
             pointsView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
-            if (studentInModule.getLessonsWithPoints().containsKey(lesson))
-                pointsView.setText(studentInModule.getLessonsWithPoints().get(lesson).toString());
+            if (studentLesson.getPoints() != -1)
+                pointsView.setText(String.valueOf(studentLesson.getPoints()));
             else
                 pointsView.setText("");
             pointsView.setGravity(Gravity.CENTER);
@@ -151,7 +162,7 @@ public class ModuleFragment extends Fragment {
                 bundle.putInt("position", position);
                 bundle.putString("subject", subject);
                 bundle.putString("group", group);
-                bundle.putString("lessonDate", lesson.getDate() + "." + (lesson.getMonth() + 1));
+                bundle.putString("lessonDate", studentLesson.getDate());
                 bundle.putString("isAttended", "true");
                 Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_lesson_performance, bundle);
             });

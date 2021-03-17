@@ -1,6 +1,7 @@
 package com.example.electronicdiary;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import retrofit2.Retrofit;
@@ -61,6 +62,15 @@ public class Repository {
         return result;
     }
 
+    public ArrayList<String> getModules() {
+        ArrayList<String> modules = new ArrayList<>();
+        modules.add("Модуль 1");
+        modules.add("Модуль 2");
+        modules.add("Модуль 3");
+
+        return modules;
+    }
+
     public ArrayList<String> getAvailableSubjects() {
         ArrayList<String> cached = cache.getAvailableSubjects();
         if (cached != null && !availableSubjectsUpdate) {
@@ -76,6 +86,15 @@ public class Repository {
         return availableSubjects;
     }
 
+    public ArrayList<String> getAvailableGroupsInSubject(String subject) {
+        ArrayList<String> availableGroupsInSubject = new ArrayList<>();
+        availableGroupsInSubject.add("ИУ9-11");
+        availableGroupsInSubject.add("ИУ9-41");
+        availableGroupsInSubject.add("ИУ9-31");
+
+        return availableGroupsInSubject;
+    }
+
     public HashMap<String, ArrayList<String>> getAvailableSubjectsWithGroups() {
         HashMap<String, ArrayList<String>> cached = cache.getAvailableSubjectsWithGroups();
         if (cached != null && !availableSubjectsWithGroupsUpdate) {
@@ -84,24 +103,9 @@ public class Repository {
 
         HashMap<String, ArrayList<String>> availableSubjectsWithGroups = new HashMap<>();
         ArrayList<String> availableSubjects = getAvailableSubjects();
-        ArrayList<ArrayList<String>> groups = new ArrayList<>();
-        ArrayList<String> groups1 = new ArrayList<>();
-        groups1.add("ИУ9-11");
-        groups1.add("ИУ9-21");
-        groups1.add("ИУ9-31");
-        ArrayList<String> groups2 = new ArrayList<>();
-        groups2.add("ИУ9-41");
-        groups2.add("ИУ9-51");
-        groups2.add("ИУ9-61");
-        ArrayList<String> groups3 = new ArrayList<>();
-        groups3.add("ИУ9-11");
-        groups3.add("ИУ9-31");
-        groups3.add("ИУ9-51");
-        groups.add(groups1);
-        groups.add(groups2);
-        groups.add(groups3);
         for (int i = 0; i < availableSubjects.size(); i++) {
-            availableSubjectsWithGroups.put(availableSubjects.get(i), groups.get(i));
+            ArrayList<String> groups = getAvailableGroupsInSubject(availableSubjects.get(i));
+            availableSubjectsWithGroups.put(availableSubjects.get(i), groups);
         }
 
         cache.setAvailableSubjectsWithGroups(availableSubjectsWithGroups);
@@ -204,11 +208,6 @@ public class Repository {
         return professors;
     }
 
-    public ArrayList<String> getAvailableGroupsInSubject(String subjectTitle) {
-        HashMap<String, ArrayList<String>> availableSubjectsWithGroups = getAvailableSubjectsWithGroups();
-        return availableSubjectsWithGroups.get(subjectTitle);
-    }
-
     public ArrayList<Student> getAvailableStudents() {
         ArrayList<Student> cached = cache.getAvailableStudents();
         if (cached != null && !availableStudentsUpdate) {
@@ -224,5 +223,119 @@ public class Repository {
 
         cache.setAvailableStudents(availableStudents);
         return availableStudents;
+    }
+
+    public ArrayList<String> getAvailableStudentSubjects(String studentName, String group) {
+        ArrayList<String> availableStudentSubjects = new ArrayList<>();
+        availableStudentSubjects.add("Матан");
+        availableStudentSubjects.add("Мобилки");
+        availableStudentSubjects.add("Алгебра");
+
+        return availableStudentSubjects;
+    }
+
+    public ArrayList<StudentEvent> getStudentEvents(String studentName, String subject, String group) {
+        ArrayList<StudentEvent> studentEvents = new ArrayList<>();
+        studentEvents.add(new StudentEvent("РК1", 5));
+        studentEvents.add(new StudentEvent("ДЗ1", 10));
+        studentEvents.add(new StudentEvent("РК2", 15));
+        studentEvents.add(new StudentEvent("ДЗ2", 20));
+        studentEvents.add(new StudentEvent("РК3", 25));
+        studentEvents.add(new StudentEvent("ДЗ3", 30));
+
+        return studentEvents;
+    }
+
+    public ArrayList<StudentLesson> getStudentLessonsInModule(String studentName, String moduleTitle) {
+        ArrayList<StudentLesson> studentLessonsInModule = new ArrayList<>();
+        studentLessonsInModule.add(new StudentLesson(new Date(2020, 0, 1), 1));
+        studentLessonsInModule.add(new StudentLesson(new Date(2020, 1, 2), 2));
+        studentLessonsInModule.add(new StudentLesson(new Date(2020, 2, 3), 3));
+
+        return studentLessonsInModule;
+    }
+
+    public HashMap<String, ArrayList<StudentLesson>> getStudentLessonsByModules(String studentName, String subject, String group) {
+        HashMap<String, ArrayList<StudentLesson>> studentLessonsByModules = new HashMap<>();
+        ArrayList<String> modules = getModules();
+        for (int i = 0; i < modules.size(); i++) {
+            ArrayList<StudentLesson> studentLessons = getStudentLessonsInModule(studentName, modules.get(i));
+            studentLessonsByModules.put(modules.get(i), studentLessons);
+        }
+
+        return studentLessonsByModules;
+    }
+
+    public ArrayList<Student> getStudentsInGroup(String group) {
+        ArrayList<Student> studentsInGroup = new ArrayList<>();
+        studentsInGroup.add(new Student(1, "1ИУ9-11", "1Александр", "1Другаков"));
+        studentsInGroup.add(new Student(2, "2ИУ9-21", "2Александр", "2Другаков"));
+        studentsInGroup.add(new Student(3, "3ИУ9-31", "3Александр", "3Другаков"));
+
+        return studentsInGroup;
+    }
+
+/*   public ArrayList<String> getEvents(String subject, String group) {
+        ArrayList<String> events = new ArrayList<>();
+        events.add("РК1");
+        events.add("ДЗ1");
+        events.add("РК2");
+        events.add("ДЗ2");
+        events.add("РК3");
+        events.add("ДЗ3");
+
+        return events;
+    }
+
+     public ArrayList<Date> getLessonsInModule(String moduleTitle) {
+        ArrayList<Date> lessonsInModule = new ArrayList<>();
+        lessonsInModule.add(new Date(2019, 0, 1));
+        lessonsInModule.add(new Date(2019, 1, 2));
+        lessonsInModule.add(new Date(2019, 2, 3));
+
+        return lessonsInModule;
+    }
+
+      public HashMap<String, ArrayList<Date>> getLessonsByModules(String subject, String group) {
+        HashMap<String, ArrayList<Date>> lessonsByModules = new HashMap<>();
+        ArrayList<String> modules = getModules();
+        for (int i = 0; i < modules.size(); i++) {
+            ArrayList<Date> lessons = getLessonsInModule(modules.get(i));
+            lessonsByModules.put(modules.get(i), lessons);
+        }
+
+        return lessonsByModules;
+    }*/
+
+    public ArrayList<ArrayList<StudentEvent>> getStudentsEvents(String subject, String group) {
+        ArrayList<ArrayList<StudentEvent>> studentsEvents = new ArrayList<>();
+        ArrayList<Student> students = getStudentsInGroup(group);
+        for (int i = 0; i < students.size(); i++) {
+            studentsEvents.add(getStudentEvents(students.get(i).getFullName(), subject, group));
+        }
+
+        return studentsEvents;
+    }
+
+    public HashMap<String, ArrayList<ArrayList<StudentLesson>>> getStudentsLessonsByModules(String subject, String group) {
+        HashMap<String, ArrayList<ArrayList<StudentLesson>>> studentsLessonsByModules = new HashMap<>();
+        ArrayList<ArrayList<StudentLesson>> firstModule = new ArrayList<>();
+        ArrayList<ArrayList<StudentLesson>> secondModule = new ArrayList<>();
+        ArrayList<ArrayList<StudentLesson>> thirdModule = new ArrayList<>();
+
+        ArrayList<String> modules = getModules();
+        ArrayList<Student> students = getStudentsInGroup(group);
+        for (int i = 0; i < students.size(); i++) {
+            HashMap<String, ArrayList<StudentLesson>> studentLessonsByModules =
+                    getStudentLessonsByModules(students.get(i).getFullName(), subject, group);
+            firstModule.add(studentLessonsByModules.get(modules.get(0)));
+            secondModule.add(studentLessonsByModules.get(modules.get(1)));
+            thirdModule.add(studentLessonsByModules.get(modules.get(2)));
+        }
+
+        studentsLessonsByModules.put(modules.get(0), firstModule);
+        studentsLessonsByModules.put(modules.get(1), secondModule);
+        studentsLessonsByModules.put(modules.get(2), thirdModule);
+        return studentsLessonsByModules;
     }
 }

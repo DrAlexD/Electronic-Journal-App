@@ -16,13 +16,9 @@ import androidx.navigation.Navigation;
 
 import com.example.electronicdiary.R;
 
-import java.util.ArrayList;
-
 public class StudentProfileFragment extends Fragment {
     private String studentName;
     private String group;
-
-    private ArrayList<String> subjects;
 
     @Nullable
     @Override
@@ -32,35 +28,27 @@ public class StudentProfileFragment extends Fragment {
         studentName = getArguments().getString("student");
         group = getArguments().getString("group");
 
-        downloadData();
-
         setPreferences(root);
 
         StudentProfileViewModel studentProfileViewModel = new ViewModelProvider(this).get(StudentProfileViewModel.class);
-        studentProfileViewModel.setStudentName(studentName);
-        studentProfileViewModel.setGroup(group);
-        studentProfileViewModel.setSubjects(subjects);
+        studentProfileViewModel.downloadAvailableStudentSubjects(studentName, group);
 
-        ArrayAdapter<String> subjectsAdapter = new ArrayAdapter<>(getContext(), R.layout.holder_subject_with_group, R.id.subjectTitle, subjects);
         final ListView listView = root.findViewById(R.id.studentSubjectsList);
-        listView.setAdapter(subjectsAdapter);
-        listView.setOnItemClickListener((parent, view, position, id) -> {
-            Bundle bundle = new Bundle();
-            bundle.putString("subject", subjects.get(position));
-            bundle.putString("student", studentName);
-            bundle.putString("group", group);
-            Navigation.findNavController(view).navigate(R.id.action_student_profile_to_student_performance, bundle);
+        studentProfileViewModel.getAvailableStudentSubjects().observe(getViewLifecycleOwner(), availableStudentSubjects -> {
+            if (availableStudentSubjects == null) {
+                return;
+            }
+            ArrayAdapter<String> subjectsAdapter = new ArrayAdapter<>(getContext(), R.layout.holder_subject_with_group, R.id.subjectTitle, availableStudentSubjects);
+            listView.setAdapter(subjectsAdapter);
+            listView.setOnItemClickListener((parent, view, position, id) -> {
+                Bundle bundle = new Bundle();
+                bundle.putString("subject", availableStudentSubjects.get(position));
+                bundle.putString("student", studentName);
+                bundle.putString("group", group);
+                Navigation.findNavController(view).navigate(R.id.action_student_profile_to_student_performance, bundle);
+            });
         });
-
         return root;
-    }
-
-    private void downloadData() {
-        //TODO поиск всех предметов у студента
-        subjects = new ArrayList<>();
-        subjects.add("Матан");
-        subjects.add("Мобилки");
-        subjects.add("Алгебра");
     }
 
     private void setPreferences(View root) {

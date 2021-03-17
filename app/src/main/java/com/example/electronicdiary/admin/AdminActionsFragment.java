@@ -41,5 +41,4 @@ public class AdminActionsFragment extends Fragment {
 
         return root;
     }
-
 }

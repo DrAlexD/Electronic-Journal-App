@@ -4,19 +4,21 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.Student;
+import com.example.electronicdiary.StudentEvent;
+import com.example.electronicdiary.StudentLesson;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 
 public class GroupPerformanceViewModel extends ViewModel {
     private final MutableLiveData<String> group = new MutableLiveData<>();
     private final MutableLiveData<String> subject = new MutableLiveData<>();
 
-    private final MutableLiveData<ArrayList<StudentInModule>> studentsInModule = new MutableLiveData<>();
-    private final MutableLiveData<ArrayList<Student>> students = new MutableLiveData<>();
-    private final MutableLiveData<ArrayList<String>> events = new MutableLiveData<>();
-    private final MutableLiveData<ArrayList<Date>> lessons = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<Student>> studentsInGroup = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<ArrayList<StudentEvent>>> studentsEvents = new MutableLiveData<>();
+    private final MutableLiveData<HashMap<String, ArrayList<ArrayList<StudentLesson>>>> studentsLessonsByModules = new MutableLiveData<>();
 
     public LiveData<String> getSubject() {
         return subject;
@@ -34,35 +36,27 @@ public class GroupPerformanceViewModel extends ViewModel {
         this.group.setValue(group);
     }
 
-    public LiveData<ArrayList<StudentInModule>> getStudentsInModule() {
-        return studentsInModule;
+    public LiveData<ArrayList<Student>> getStudentsInGroup() {
+        return studentsInGroup;
     }
 
-    public void setStudentsInModule(ArrayList<StudentInModule> studentsInModule) {
-        this.studentsInModule.setValue(studentsInModule);
+    public LiveData<ArrayList<ArrayList<StudentEvent>>> getStudentsEvents() {
+        return studentsEvents;
     }
 
-    public LiveData<ArrayList<Student>> getStudents() {
-        return students;
+    public LiveData<HashMap<String, ArrayList<ArrayList<StudentLesson>>>> getStudentsLessonsByModules() {
+        return studentsLessonsByModules;
     }
 
-    public void setStudents(ArrayList<Student> students) {
-        this.students.setValue(students);
+    public void downloadStudentsInGroup(String group) {
+        this.studentsInGroup.setValue(Repository.getInstance().getStudentsInGroup(group));
     }
 
-    public LiveData<ArrayList<String>> getEvents() {
-        return events;
+    public void downloadStudentsEvents(String subject, String group) {
+        this.studentsEvents.setValue(Repository.getInstance().getStudentsEvents(subject, group));
     }
 
-    public void setEvents(ArrayList<String> events) {
-        this.events.setValue(events);
-    }
-
-    public LiveData<ArrayList<Date>> getLessons() {
-        return lessons;
-    }
-
-    public void setLessons(ArrayList<Date> lessons) {
-        this.lessons.setValue(lessons);
+    public void downloadStudentsLessonsByModules(String subject, String group) {
+        this.studentsLessonsByModules.setValue(Repository.getInstance().getStudentsLessonsByModules(subject, group));
     }
 }

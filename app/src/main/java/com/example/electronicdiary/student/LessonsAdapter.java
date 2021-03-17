@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
-import com.example.electronicdiary.Lesson;
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.StudentLesson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,9 +16,9 @@ import java.util.HashMap;
 class LessonsAdapter extends BaseExpandableListAdapter {
     private final LayoutInflater inflater;
     private final ArrayList<String> modules;
-    private final HashMap<String, ArrayList<Lesson>> lessonsByModules;
+    private final HashMap<String, ArrayList<StudentLesson>> lessonsByModules;
 
-    LessonsAdapter(Context context, ArrayList<String> modules, HashMap<String, ArrayList<Lesson>> lessonsByModules) {
+    LessonsAdapter(Context context, ArrayList<String> modules, HashMap<String, ArrayList<StudentLesson>> lessonsByModules) {
         this.inflater = LayoutInflater.from(context);
         this.modules = modules;
         this.lessonsByModules = lessonsByModules;
@@ -74,15 +74,15 @@ class LessonsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isExpanded, View view, ViewGroup parent) {
-        Lesson lesson = lessonsByModules.get(modules.get(groupPosition)).get(childPosition);
+        StudentLesson studentLesson = lessonsByModules.get(modules.get(groupPosition)).get(childPosition);
         if (view == null) {
             view = inflater.inflate(R.layout.holder_lesson, null);
         }
 
         TextView lessonDateView = view.findViewById(R.id.lessonDate);
         TextView lessonPointsView = view.findViewById(R.id.lessonPoints);
-        lessonDateView.setText(lesson.getDate());
-        lessonPointsView.setText(String.valueOf(lesson.getPoints()));
+        lessonDateView.setText(studentLesson.getDate());
+        lessonPointsView.setText(String.valueOf(studentLesson.getPoints()));
 
         return view;
     }

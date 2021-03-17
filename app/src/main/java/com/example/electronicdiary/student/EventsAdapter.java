@@ -8,8 +8,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.electronicdiary.Event;
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.StudentEvent;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -17,11 +17,11 @@ import java.util.ArrayList;
 
 class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
     private final LayoutInflater inflater;
-    private final ArrayList<Event> events;
+    private final ArrayList<StudentEvent> studentEvents;
 
-    EventsAdapter(Context context, ArrayList<Event> events) {
+    EventsAdapter(Context context, ArrayList<StudentEvent> studentEvents) {
         this.inflater = LayoutInflater.from(context);
-        this.events = events;
+        this.studentEvents = studentEvents;
     }
 
     @Override
@@ -33,15 +33,15 @@ class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NotNull EventsAdapter.ViewHolder holder, int position) {
-        Event event = events.get(position);
+        StudentEvent studentEvent = studentEvents.get(position);
 
-        holder.eventTitleView.setText(event.getTitle());
-        holder.eventPointsView.setText(String.valueOf(event.getPoints()));
+        holder.eventTitleView.setText(studentEvent.getTitle());
+        holder.eventPointsView.setText(String.valueOf(studentEvent.getPoints()));
     }
 
     @Override
     public int getItemCount() {
-        return events.size();
+        return studentEvents.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
