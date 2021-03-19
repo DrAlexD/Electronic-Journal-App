@@ -39,20 +39,20 @@
             android:id="@+id/action_group_performance_to_dialog_event_adding"
             app:destination="@id/nav_dialog_event_adding" />
         <action
-            android:id="@+id/action_group_performance_to_dialog_event_info"
-            app:destination="@id/nav_dialog_event_info" />
+            android:id="@+id/action_group_performance_to_dialog_event_editing"
+            app:destination="@id/nav_dialog_event_editing" />
         <action
-            android:id="@+id/action_group_performance_to_dialog_event_performance"
-            app:destination="@id/nav_dialog_event_performance" />
+            android:id="@+id/action_group_performance_to_dialog_student_event"
+            app:destination="@id/nav_dialog_student_event" />
         <action
             android:id="@+id/action_group_performance_to_dialog_lesson_adding"
             app:destination="@id/nav_dialog_lesson_adding" />
         <action
-            android:id="@+id/action_group_performance_to_dialog_lesson_info"
-            app:destination="@id/nav_dialog_lesson_info" />
+            android:id="@+id/action_group_performance_to_dialog_lesson_editing"
+            app:destination="@id/nav_dialog_lesson_editing" />
         <action
-            android:id="@+id/action_group_performance_to_dialog_lesson_performance"
-            app:destination="@id/nav_dialog_lesson_performance" />
+            android:id="@+id/action_group_performance_to_dialog_student_lesson"
+            app:destination="@id/nav_dialog_student_lesson" />
     </fragment>
 
     <dialog
@@ -70,28 +70,28 @@
     </dialog>
 
     <dialog
-        android:id="@+id/nav_dialog_event_info"
-        android:name="com.example.electronicdiary.group.EventInfoDialogFragment">
+        android:id="@+id/nav_dialog_event_editing"
+        android:name="com.example.electronicdiary.group.EventEditingDialogFragment">
         <action
-            android:id="@+id/pop_out_dialog_event_info_to_group_performance"
+            android:id="@+id/pop_out_dialog_event_editing_to_group_performance"
             app:popUpTo="@id/nav_group_performance"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_dialog_event_info_to_group_performance"
+            android:id="@+id/action_dialog_event_editing_to_group_performance"
             app:destination="@id/nav_group_performance"
             app:popUpTo="@id/nav_group_performance"
             app:popUpToInclusive="true" />
     </dialog>
 
     <dialog
-        android:id="@+id/nav_dialog_event_performance"
-        android:name="com.example.electronicdiary.group.EventPerformanceDialogFragment">
+        android:id="@+id/nav_dialog_student_event"
+        android:name="com.example.electronicdiary.group.StudentEventDialogFragment">
         <action
-            android:id="@+id/pop_out_dialog_event_performance_to_group_performance"
+            android:id="@+id/pop_out_dialog_student_event_to_group_performance"
             app:popUpTo="@id/nav_group_performance"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_dialog_event_performance_to_group_performance"
+            android:id="@+id/action_dialog_student_event_to_group_performance"
             app:destination="@id/nav_group_performance"
             app:popUpTo="@id/nav_group_performance"
             app:popUpToInclusive="true" />
@@ -112,28 +112,28 @@
     </dialog>
 
     <dialog
-        android:id="@+id/nav_dialog_lesson_info"
-        android:name="com.example.electronicdiary.group.LessonInfoDialogFragment">
+        android:id="@+id/nav_dialog_lesson_editing"
+        android:name="com.example.electronicdiary.group.LessonEditingDialogFragment">
         <action
-            android:id="@+id/pop_out_dialog_lesson_info_to_group_performance"
+            android:id="@+id/pop_out_dialog_lesson_editing_to_group_performance"
             app:popUpTo="@id/nav_group_performance"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_dialog_lesson_info_to_group_performance"
+            android:id="@+id/action_dialog_lesson_editing_to_group_performance"
             app:destination="@id/nav_group_performance"
             app:popUpTo="@id/nav_group_performance"
             app:popUpToInclusive="true" />
     </dialog>
 
     <dialog
-        android:id="@+id/nav_dialog_lesson_performance"
-        android:name="com.example.electronicdiary.group.LessonPerformanceDialogFragment">
+        android:id="@+id/nav_dialog_student_lesson"
+        android:name="com.example.electronicdiary.group.StudentLessonDialogFragment">
         <action
-            android:id="@+id/pop_out_dialog_lesson_performance_to_group_performance"
+            android:id="@+id/pop_out_dialog_student_lesson_to_group_performance"
             app:popUpTo="@id/nav_group_performance"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_dialog_lesson_performance_to_group_performance"
+            android:id="@+id/action_dialog_student_lesson_to_group_performance"
             app:destination="@id/nav_group_performance"
             app:popUpTo="@id/nav_group_performance"
             app:popUpToInclusive="true" />

@@ -44,7 +44,7 @@ public class SearchAllSubjectsFragment extends Fragment {
                     bundle.putString("subjectTitle", allSubjects.get(position));
                     Navigation.findNavController(view).navigate(R.id.action_search_all_subjects_to_dialog_subject_editing, bundle);
                 } else if (actionCode == 2) {
-                    //TODO удаление предмета из базы
+                    //searchAllSubjectsViewModel.deleteSubject(allSubjects.get(position).getId());
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", 2);

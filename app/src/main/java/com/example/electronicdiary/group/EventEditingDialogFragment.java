@@ -8,7 +8,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Spinner;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
@@ -19,23 +18,32 @@ import com.example.electronicdiary.R;
 
 import org.jetbrains.annotations.NotNull;
 
-public class EventAddingDialogFragment extends DialogFragment {
+public class EventEditingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
 
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_event_adding, null);
+        View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_event_editing, null);
 
-        EventAddingViewModel eventAddingViewModel = new ViewModelProvider(this).get(EventAddingViewModel.class);
+        EventEditingViewModel eventEditingViewModel = new ViewModelProvider(this).get(EventEditingViewModel.class);
+        int eventId = 1;
+        eventEditingViewModel.downloadEventById(eventId);
 
-        Spinner eventType = root.findViewById(R.id.eventTypeAdding);
+        EditText eventMinPoints = root.findViewById(R.id.eventMinPointsEditing);
 
-        EditText eventMinPoints = root.findViewById(R.id.eventMinPointsAdding);
+        eventEditingViewModel.getEvent().observe(this, event -> {
+            if (event == null) {
+                return;
+            }
+
+            eventMinPoints.setText("7");
+        });
+
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                eventAddingViewModel.eventAddingDataChanged(eventMinPoints.getText().toString());
+                eventEditingViewModel.eventEditingDataChanged(eventMinPoints.getText().toString());
             }
 
             @Override
@@ -50,7 +58,7 @@ public class EventAddingDialogFragment extends DialogFragment {
         };
         eventMinPoints.addTextChangedListener(afterTextChangedListener);
 
-        eventAddingViewModel.getEventFormState().observe(this, eventFormState -> {
+        eventEditingViewModel.getEventFormState().observe(this, eventFormState -> {
             if (eventFormState == null) {
                 return;
             }
@@ -63,18 +71,29 @@ public class EventAddingDialogFragment extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
-                .setTitle("Введите данные мероприятия")
+                .setTitle("Изменить данные " + getArguments().getString("eventTitle"))
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    eventAddingViewModel.addEvent(eventMinPoints.getText().toString(), eventType.getSelectedItemPosition());
+                    eventEditingViewModel.editEvent(eventMinPoints.getText().toString());
+
+                    dismiss();
+                })
+                .setNegativeButton("Отменить", (dialog, id) -> {
+                    dismiss();
+                })
+                .setNeutralButton("Удалить", (dialog, id) -> {
+                    eventEditingViewModel.deleteEvent(eventId);
 
                     Bundle bundle = new Bundle();
                     bundle.putString("subject", getArguments().getString("subject"));
-                    bundle.putString("group", getArguments().getString("group"));
+                    bundle.putString("event", getArguments().getString("event"));
 
-                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_event_adding_to_group_performance, bundle);
+                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_event_editing_to_group_performance, bundle);
                 }).create();
 
-        dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false));
+        dialog.setOnShowListener(dialog -> {
+            ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.red));
+            ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
+        });
 
         return dialog;
     }

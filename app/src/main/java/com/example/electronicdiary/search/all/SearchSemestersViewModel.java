@@ -19,4 +19,8 @@ public class SearchSemestersViewModel extends ViewModel {
     public void downloadSemesters() {
         this.semesters.setValue(Repository.getInstance().getSemesters());
     }
+
+    public void deleteSemester(int semesterId) {
+        Repository.getInstance().deleteSemester(semesterId);
+    }
 }

@@ -110,18 +110,18 @@ public class ProfessorAddingDialogFragment extends DialogFragment {
             }
         });
 
-        professorAddingViewModel.getProfessorAddingFormState().observe(this, professorAddingFormState -> {
-            if (professorAddingFormState == null) {
+        professorAddingViewModel.getProfessorFormState().observe(this, professorFormState -> {
+            if (professorFormState == null) {
                 return;
             }
 
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(professorAddingFormState.isDataValid());
-            if (professorAddingFormState.isNameOrSecondNameChanged()) {
-                professorName.setError(professorAddingFormState.getProfessorNameError() != null ?
-                        getString(professorAddingFormState.getProfessorNameError()) : null);
-                professorSecondName.setError(professorAddingFormState.getProfessorSecondNameError() != null ?
-                        getString(professorAddingFormState.getProfessorSecondNameError()) : null);
-                if (professorAddingFormState.getProfessorNameError() == null && professorAddingFormState.getProfessorSecondNameError() == null) {
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(professorFormState.isDataValid());
+            if (professorFormState.isNameOrSecondNameChanged()) {
+                professorName.setError(professorFormState.getProfessorNameError() != null ?
+                        getString(professorFormState.getProfessorNameError()) : null);
+                professorSecondName.setError(professorFormState.getProfessorSecondNameError() != null ?
+                        getString(professorFormState.getProfessorSecondNameError()) : null);
+                if (professorFormState.getProfessorNameError() == null && professorFormState.getProfessorSecondNameError() == null) {
                     generateCheckBox.setEnabled(true);
 
                     if (generateCheckBox.isChecked()) {
@@ -133,10 +133,10 @@ public class ProfessorAddingDialogFragment extends DialogFragment {
                     setEmptyLoginAndPassword();
                 }
             } else {
-                professorLogin.setError(professorAddingFormState.getProfessorLoginError() != null ?
-                        getString(professorAddingFormState.getProfessorLoginError()) : null);
-                professorPassword.setError(professorAddingFormState.getProfessorPasswordError() != null ?
-                        getString(professorAddingFormState.getProfessorPasswordError()) : null);
+                professorLogin.setError(professorFormState.getProfessorLoginError() != null ?
+                        getString(professorFormState.getProfessorLoginError()) : null);
+                professorPassword.setError(professorFormState.getProfessorPasswordError() != null ?
+                        getString(professorFormState.getProfessorPasswordError()) : null);
             }
         });
     }

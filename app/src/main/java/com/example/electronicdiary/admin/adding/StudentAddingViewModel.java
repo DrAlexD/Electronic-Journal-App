@@ -5,13 +5,14 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.electronicdiary.Repository;
+import com.example.electronicdiary.admin.StudentFormState;
 
 public class StudentAddingViewModel extends ViewModel {
-    private final MutableLiveData<StudentAddingFormState> studentAddingFormState = new MutableLiveData<>();
+    private final MutableLiveData<StudentFormState> studentFormState = new MutableLiveData<>();
     private final MutableLiveData<Integer> lastStudentId = new MutableLiveData<>();
 
-    LiveData<StudentAddingFormState> getStudentAddingFormState() {
-        return studentAddingFormState;
+    LiveData<StudentFormState> getStudentFormState() {
+        return studentFormState;
     }
 
     public LiveData<Integer> getLastStudentId() {
@@ -20,7 +21,7 @@ public class StudentAddingViewModel extends ViewModel {
 
     public void studentAddingDataChanged(String studentName, String studentSecondName, String studentLogin,
                                          String studentPassword, boolean isNameOrSecondNameChanged) {
-        studentAddingFormState.setValue(new StudentAddingFormState(studentName, studentSecondName, studentLogin,
+        studentFormState.setValue(new StudentFormState(studentName, studentSecondName, studentLogin,
                 studentPassword, isNameOrSecondNameChanged));
     }
 

@@ -52,7 +52,7 @@
     <string name="event_min_points_text">Мин. баллов</string>
     <string name="lesson_attend_points_text">Баллов за посещение</string>
     <string name="event_earned_points_text">Получ. баллы</string>
-    <string name="lesson_is_attended_text">Посещено</string>
+    <string name="lesson_earned_points_text">Получ. баллы</string>
     <!-- Strings related to form valid -->
     <string name="invalid_username">Неверный логин</string>
     <string name="invalid_empty_field">Пустое поле</string>

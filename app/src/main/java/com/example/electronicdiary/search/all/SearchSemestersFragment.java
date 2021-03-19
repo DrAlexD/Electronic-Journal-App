@@ -42,9 +42,10 @@ public class SearchSemestersFragment extends Fragment {
                 if (actionCode == 1) {
                     Bundle bundle = new Bundle();
                     bundle.putString("semesterYear", String.valueOf(semesters.get(position).getYear()));
+                    bundle.putBoolean("isFirstHalf", semesters.get(position).isFirstHalf());
                     Navigation.findNavController(view).navigate(R.id.action_search_semesters_to_dialog_semester_editing, bundle);
                 } else if (actionCode == 2) {
-                    //TODO удаление семестра из базы
+                    //searchSemestersViewModel.deleteSemester(semesters.get(position).getId());
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", 2);

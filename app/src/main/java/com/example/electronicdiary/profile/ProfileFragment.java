@@ -28,9 +28,9 @@ public class ProfileFragment extends Fragment {
         ProfileViewModel profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
         profileViewModel.downloadAvailableSubjectsWithGroups();
 
-        //TODO при обновлении предметов обновляются ли автоматически и предметы по группам
+        //FIXME при обновлении предметов обновляются ли автоматически и предметы по группам
         final ExpandableListView expandableListView = root.findViewById(R.id.subjectsWithGroupsList);
-        profileViewModel.getAvailableSubjects().observe(getViewLifecycleOwner(), availableSubjects -> {
+        /*profileViewModel.getAvailableSubjects().observe(getViewLifecycleOwner(), availableSubjects -> {
             if (availableSubjects == null) {
                 return;
             }
@@ -44,7 +44,7 @@ public class ProfileFragment extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.action_profile_to_group_performance, bundle);
                 return true;
             });
-        });
+        });*/
 
         profileViewModel.getAvailableSubjectsWithGroups().observe(getViewLifecycleOwner(), availableSubjectsWithGroups -> {
             if (availableSubjectsWithGroups == null) {

@@ -44,7 +44,7 @@ public class SearchAllStudentsFragment extends Fragment {
                     bundle.putString("student", allStudents.get(position).getFullName());
                     Navigation.findNavController(view).navigate(R.id.action_search_all_students_to_dialog_student_editing, bundle);
                 } else if (actionCode == 2) {
-                    //TODO удаление студента из базы
+                    searchAllStudentsViewModel.deleteStudent(allStudents.get(position).getId());
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", actionCode);

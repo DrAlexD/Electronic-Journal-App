@@ -33,17 +33,5 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 semesterChoose.setValueIndex(semesterEntries.length - 1);
             }
         });
-
-        /*EditTextPreference numberPreference = findPreference("number");
-
-        if (numberPreference != null) {
-            numberPreference.setOnBindEditTextListener(
-                    new EditTextPreference.OnBindEditTextListener() {
-                        @Override
-                        public void onBindEditText(@NonNull EditText editText) {
-                            editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-                        }
-                    });
-        }*/
     }
 }

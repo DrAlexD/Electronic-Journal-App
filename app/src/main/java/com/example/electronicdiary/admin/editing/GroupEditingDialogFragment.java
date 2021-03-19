@@ -11,6 +11,7 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.electronicdiary.R;
@@ -20,25 +21,29 @@ import org.jetbrains.annotations.NotNull;
 public class GroupEditingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
 
-    private boolean titleIsLessFlag = true;
-
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_group_editing, null);
 
+        GroupEditingViewModel groupEditingViewModel = new ViewModelProvider(this).get(GroupEditingViewModel.class);
+        int groupId = 1;
+        groupEditingViewModel.downloadGroupById(groupId);
+
         EditText groupTitle = root.findViewById(R.id.groupTitleEditing);
-        groupTitle.setText(getArguments().getString("groupTitle"));
-        titleIsLessFlag = false;
-        groupTitle.addTextChangedListener(new TextWatcher() {
+
+        groupEditingViewModel.getGroup().observe(this, group -> {
+            if (group == null) {
+                return;
+            }
+
+            groupTitle.setText(group);
+        });
+
+        TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                titleIsLessFlag = s.toString().trim().length() < 5;
-                if (titleIsLessFlag)
-                    groupTitle.setError("Группа должна содежать >4 символов");
-                else
-                    groupTitle.setError(null);
-                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(!titleIsLessFlag);
+                groupEditingViewModel.groupEditingDataChanged(groupTitle.getText().toString());
             }
 
             @Override
@@ -50,22 +55,32 @@ public class GroupEditingDialogFragment extends DialogFragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // ignore
             }
+        };
+        groupTitle.addTextChangedListener(afterTextChangedListener);
+
+        groupEditingViewModel.getGroupFormState().observe(this, groupFormState -> {
+            if (groupFormState == null) {
+                return;
+            }
+
+            groupTitle.setError(groupFormState.getGroupTitleError() != null ?
+                    getString(groupFormState.getGroupTitleError()) : null);
+
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(groupFormState.isDataValid());
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
                 .setTitle("Измените название группы")
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    //TODO изменение группы в базе
-                    //dismiss();
+                    groupEditingViewModel.editGroup(groupTitle.getText().toString());
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", 1);
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_group_editing_to_admin_actions, bundle);
                 }).create();
 
-        dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE)
-                .setEnabled(!titleIsLessFlag));
+        dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true));
 
         return dialog;
     }

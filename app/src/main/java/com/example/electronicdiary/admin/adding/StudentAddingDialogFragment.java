@@ -115,18 +115,18 @@ public class StudentAddingDialogFragment extends DialogFragment {
             }
         });
 
-        studentAddingViewModel.getStudentAddingFormState().observe(this, studentAddingFormState -> {
-            if (studentAddingFormState == null) {
+        studentAddingViewModel.getStudentFormState().observe(this, studentFormState -> {
+            if (studentFormState == null) {
                 return;
             }
 
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(studentAddingFormState.isDataValid());
-            if (studentAddingFormState.isNameOrSecondNameChanged()) {
-                studentName.setError(studentAddingFormState.getStudentNameError() != null ?
-                        getString(studentAddingFormState.getStudentNameError()) : null);
-                studentSecondName.setError(studentAddingFormState.getStudentSecondNameError() != null ?
-                        getString(studentAddingFormState.getStudentSecondNameError()) : null);
-                if (studentAddingFormState.getStudentNameError() == null && studentAddingFormState.getStudentSecondNameError() == null) {
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(studentFormState.isDataValid());
+            if (studentFormState.isNameOrSecondNameChanged()) {
+                studentName.setError(studentFormState.getStudentNameError() != null ?
+                        getString(studentFormState.getStudentNameError()) : null);
+                studentSecondName.setError(studentFormState.getStudentSecondNameError() != null ?
+                        getString(studentFormState.getStudentSecondNameError()) : null);
+                if (studentFormState.getStudentNameError() == null && studentFormState.getStudentSecondNameError() == null) {
                     generateCheckBox.setEnabled(true);
 
                     if (generateCheckBox.isChecked()) {
@@ -138,10 +138,10 @@ public class StudentAddingDialogFragment extends DialogFragment {
                     setEmptyLoginAndPassword();
                 }
             } else {
-                studentLogin.setError(studentAddingFormState.getStudentLoginError() != null ?
-                        getString(studentAddingFormState.getStudentLoginError()) : null);
-                studentPassword.setError(studentAddingFormState.getStudentPasswordError() != null ?
-                        getString(studentAddingFormState.getStudentPasswordError()) : null);
+                studentLogin.setError(studentFormState.getStudentLoginError() != null ?
+                        getString(studentFormState.getStudentLoginError()) : null);
+                studentPassword.setError(studentFormState.getStudentPasswordError() != null ?
+                        getString(studentFormState.getStudentPasswordError()) : null);
             }
         });
     }

@@ -35,17 +35,12 @@ public class SearchAllGroupsFragment extends Fragment {
                 return;
             }
 
-            if (actionCode == 3) {
-                allGroups.remove(getArguments().getString("group"));
-            }
-
             View.OnClickListener onItemClickListener = view -> {
                 RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
                 int position = viewHolder.getAdapterPosition();
 
                 if (actionCode == 0) {
-                    //TODO добавление студента в базу
-                    /*getArguments().getString("student")*/
+                    //searchAllGroupsViewModel.addStudent(studentName, studentSecondName, allGroups.get(position).getId(), studentLogin, studentPassword);
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", actionCode);
@@ -55,24 +50,29 @@ public class SearchAllGroupsFragment extends Fragment {
                     bundle.putString("groupTitle", allGroups.get(position));
                     Navigation.findNavController(root).navigate(R.id.action_search_all_groups_to_dialog_group_editing, bundle);
                 } else if (actionCode == 2) {
-                    //TODO удаление группы из базы
+                    //searchAllGroupsViewModel.deleteGroup(allGroups.get(position).getId());
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", actionCode);
                     Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_admin_actions, bundle);
                 } else if (actionCode == 3) {
-                    //TODO изменить группу у студента в базе
+                    /*if (getArguments().getString("groupId") != allGroups.get(position).getId()) {
+                        searchAllGroupsViewModel.changeStudentGroup(studentId, allGroups.get(position).getId());
 
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("openPage", 1);
+                        Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_admin_actions, bundle);
+                    }*/
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", 1);
                     Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_admin_actions, bundle);
                 } else if (actionCode == 10) {
-                    //TODO добавить предмет (пока с 1 группой) к преподавателю
-                    /*getArguments().getString("subjectTitle")*/
+                    //searchAllGroupsViewModel.addAvailableSubject(professorId, subjectId, allGroups.get(position).getId());
+
                     Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_profile);
                 } else if (actionCode == 11) {
-                    //TODO добавить группу в предмет к преподавателю
-                    /*getArguments().getString("subjectTitle")*/
+                    //searchAllGroupsViewModel.addGroupInAvailableSubject(professorId, allGroups.get(position).getId(), subjectId);
+
                     Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_profile);
                 }
             };

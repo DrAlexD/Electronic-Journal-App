@@ -62,14 +62,14 @@ public class GroupPerformanceFragment extends Fragment {
                 Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_event_adding, bundle);
             });
 
-            //TODO при обновлении студентов обновляются ли автоматически и оценки по мероприятиям
-            groupPerformanceViewModel.getStudentsInGroup().observe(getViewLifecycleOwner(), students -> {
+            //FIXME при обновлении студентов обновляются ли автоматически и оценки по мероприятиям
+/*            groupPerformanceViewModel.getStudentsInGroup().observe(getViewLifecycleOwner(), students -> {
                 if (students == null) {
                     return;
                 }
 
                 generateEventsTable(root, students, groupPerformanceViewModel.getStudentsEvents().getValue());
-            });
+            });*/
 
             groupPerformanceViewModel.getStudentsEvents().observe(getViewLifecycleOwner(), studentsEvents -> {
                 if (studentsEvents == null) {
@@ -80,7 +80,7 @@ public class GroupPerformanceFragment extends Fragment {
             });
         } else {
             int page = getArguments() != null ? getArguments().getInt("openPage") : 0;
-            //TODO фрагменты-дети не удаляются, при этом создаются лишние
+            //FIXME фрагменты-дети не удаляются, при этом создаются лишние
             ModulesPagerAdapter modulesPagerAdapter = new ModulesPagerAdapter(this);
             ViewPager2 viewPager = root.findViewById(R.id.modules_pager);
             viewPager.setAdapter(modulesPagerAdapter);
@@ -135,7 +135,7 @@ public class GroupPerformanceFragment extends Fragment {
                 bundle.putString("subject", subject);
                 bundle.putString("group", group);
                 bundle.putString("eventTitle", event.getTitle());
-                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_event_info, bundle);
+                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_event_editing, bundle);
             });
             eventsRow.addView(eventView);
         }
@@ -178,7 +178,7 @@ public class GroupPerformanceFragment extends Fragment {
                 bundle.putString("group", group);
                 bundle.putString("earnedPoints", String.valueOf(studentEvent.getPoints()));
                 bundle.putString("eventTitle", studentEvent.getTitle());
-                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_event_performance, bundle);
+                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_student_event, bundle);
             });
             pointsRow.addView(pointsView);
         }

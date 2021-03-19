@@ -19,4 +19,8 @@ public class SearchAllStudentsViewModel extends ViewModel {
     public void downloadAllStudents() {
         this.allStudents.setValue(Repository.getInstance().getAllStudents());
     }
+
+    public void deleteStudent(int studentId) {
+        Repository.getInstance().deleteStudent(studentId);
+    }
 }

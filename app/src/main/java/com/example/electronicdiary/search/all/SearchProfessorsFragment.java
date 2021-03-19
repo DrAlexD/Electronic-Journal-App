@@ -44,7 +44,7 @@ public class SearchProfessorsFragment extends Fragment {
                     bundle.putString("professor", professors.get(position).getFullName());
                     Navigation.findNavController(view).navigate(R.id.action_search_professors_to_dialog_professor_editing, bundle);
                 } else if (actionCode == 2) {
-                    //TODO удаление преподавателя из базы
+                    searchProfessorsViewModel.deleteProfessor(professors.get(position).getId());
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", 2);

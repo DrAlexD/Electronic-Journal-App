@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
@@ -28,6 +29,7 @@ public class SemesterAddingDialogFragment extends DialogFragment {
         SemesterAddingViewModel semesterAddingViewModel = new ViewModelProvider(this).get(SemesterAddingViewModel.class);
 
         EditText semesterYear = root.findViewById(R.id.semesterYearAdding);
+        CheckBox isFirstHalf = root.findViewById(R.id.isSemesterFirstHalfAdding);
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -46,22 +48,22 @@ public class SemesterAddingDialogFragment extends DialogFragment {
         };
         semesterYear.addTextChangedListener(afterTextChangedListener);
 
-        semesterAddingViewModel.getSemesterAddingFormState().observe(this, semesterAddingFormState -> {
-            if (semesterAddingFormState == null) {
+        semesterAddingViewModel.getSemesterFormState().observe(this, semesterFormState -> {
+            if (semesterFormState == null) {
                 return;
             }
 
-            semesterYear.setError(semesterAddingFormState.getSemesterYearError() != null ?
-                    getString(semesterAddingFormState.getSemesterYearError()) : null);
+            semesterYear.setError(semesterFormState.getSemesterYearError() != null ?
+                    getString(semesterFormState.getSemesterYearError()) : null);
 
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(semesterAddingFormState.isDataValid());
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(semesterFormState.isDataValid());
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
                 .setTitle("Введите данные семестра")
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    semesterAddingViewModel.addSemester(semesterYear.getText().toString());
+                    semesterAddingViewModel.addSemester(semesterYear.getText().toString(), isFirstHalf.isChecked());
                     dismiss();
                 }).create();
 

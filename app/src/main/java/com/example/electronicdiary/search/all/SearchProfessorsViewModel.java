@@ -19,4 +19,8 @@ public class SearchProfessorsViewModel extends ViewModel {
     public void downloadProfessors() {
         this.professors.setValue(Repository.getInstance().getProfessors());
     }
+
+    public void deleteProfessor(int professorId) {
+        Repository.getInstance().deleteProfessor(professorId);
+    }
 }

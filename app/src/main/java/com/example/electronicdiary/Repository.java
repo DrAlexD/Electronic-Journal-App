@@ -12,14 +12,14 @@ public class Repository {
     private static volatile Repository repository;
     private final Webservice webservice = new Retrofit.Builder().baseUrl("https://api.github.com/").
             addConverterFactory(GsonConverterFactory.create()).build().create(Webservice.class);
+    public boolean allStudentsUpdate = false;
+    public boolean professorsUpdate = false;
+    public boolean allGroupsUpdate = false;
+    public boolean allSubjectsUpdate = false;
+    public boolean semestersUpdate = false;
+    public boolean availableStudentsUpdate = false;
     public boolean availableSubjectsUpdate = false;
     public boolean availableSubjectsWithGroupsUpdate = false;
-    public boolean semestersUpdate = false;
-    public boolean allGroupsUpdate = false;
-    public boolean allStudentsUpdate = false;
-    public boolean allSubjectsUpdate = false;
-    public boolean availableStudentsUpdate = false;
-    public boolean professorsUpdate = false;
     public boolean lastStudentIdUpdate = false;
     public boolean lastProfessorIdUpdate = false;
 
@@ -39,9 +39,11 @@ public class Repository {
         return cache.getUser();
     }
 
-    public void setLastLoggedInUser(int userId) {
-        //TODO поиск пользователя по id в таблицах студентов и преподавателей
-        cache.setUser(new Professor(userId, "xelagurd", "xelagurd"));
+    public void setLastLoggedInUser(int userId, boolean isUserProfessor) {
+        if (isUserProfessor)
+            cache.setUser(getProfessorById(userId));
+        else
+            cache.setUser(getStudentById(userId));
     }
 
     public void logout() {
@@ -72,6 +74,141 @@ public class Repository {
         modules.add("Модуль 3");
 
         return modules;
+    }
+
+    public int getLastStudentId() {
+        Integer cached = cache.getLastStudentId();
+        if (cached != null && !lastStudentIdUpdate) {
+            return cached;
+        }
+
+        int lastStudentId = new Random().nextInt(1000);
+        cache.setLastStudentId(lastStudentId);
+        return lastStudentId;
+    }
+
+    public int getLastProfessorId() {
+        Integer cached = cache.getLastProfessorId();
+        if (cached != null && !lastProfessorIdUpdate) {
+            return cached;
+        }
+
+        int lastProfessorId = new Random().nextInt(1000);
+        cache.setLastProfessorId(lastProfessorId);
+        return lastProfessorId;
+    }
+
+    public ArrayList<Student> getAllStudents() {
+        ArrayList<Student> cached = cache.getAllStudents();
+        if (cached != null && !allStudentsUpdate) {
+            return cached;
+        }
+
+        ArrayList<Student> allStudents = new ArrayList<>();
+        allStudents.add(new Student(1, "1ИУ9-11", "1Александр", "1Другаков"));
+        allStudents.add(new Student(2, "2ИУ9-21", "2Александр", "2Другаков"));
+        allStudents.add(new Student(3, "3ИУ9-31", "3Александр", "3Другаков"));
+        allStudents.add(new Student(4, "4ИУ9-41", "4Александр", "4Другаков"));
+        allStudents.add(new Student(5, "5ИУ9-51", "5Александр", "5Другаков"));
+        allStudents.add(new Student(6, "6ИУ9-61", "6Александр", "6Другаков"));
+        allStudents.add(new Student(7, "7ИУ9-71", "7Александр", "7Другаков"));
+        allStudents.add(new Student(8, "8ИУ9-81", "8Александр", "8Другаков"));
+        allStudents.add(new Student(9, "9ИУ9-91", "9Александр", "9Другаков"));
+
+        cache.setAllStudents(allStudents);
+        return allStudents;
+    }
+
+    public ArrayList<Professor> getProfessors() {
+        ArrayList<Professor> cached = cache.getProfessors();
+        if (cached != null && !professorsUpdate) {
+            return cached;
+        }
+
+        ArrayList<Professor> professors = new ArrayList<>();
+        professors.add(new Professor(1, "Александр", "Коновалов"));
+        professors.add(new Professor(2, "Сергей", "Скоробогатов"));
+        professors.add(new Professor(3, "Анна", "Домрачева"));
+        professors.add(new Professor(4, "Александр", "Дубанов"));
+        professors.add(new Professor(5, "Юрий", "Каганов"));
+
+        cache.setProfessors(professors);
+        return professors;
+    }
+
+    public ArrayList<String> getAllGroups() {
+        ArrayList<String> cached = cache.getAllGroups();
+        if (cached != null && !allGroupsUpdate) {
+            return cached;
+        }
+
+        ArrayList<String> allGroups = new ArrayList<>();
+        allGroups.add("1ИУ9-11");
+        allGroups.add("2ИУ9-21");
+        allGroups.add("3ИУ9-31");
+        allGroups.add("4ИУ9-41");
+        allGroups.add("5ИУ9-51");
+        allGroups.add("6ИУ9-61");
+        allGroups.add("7ИУ9-71");
+        allGroups.add("8ИУ9-81");
+        allGroups.add("9ИУ9-91");
+
+        cache.setAllGroups(allGroups);
+        return allGroups;
+    }
+
+    public ArrayList<String> getAllSubjects() {
+        ArrayList<String> cached = cache.getAllSubjects();
+        if (cached != null && !allSubjectsUpdate) {
+            return cached;
+        }
+
+        ArrayList<String> allSubjects = new ArrayList<>();
+        allSubjects.add("Матан");
+        allSubjects.add("Мобилки");
+        allSubjects.add("Алгебра");
+        allSubjects.add("Операционки");
+        allSubjects.add("Моделирование");
+        allSubjects.add("Методы оптимизации");
+
+        cache.setAllSubjects(allSubjects);
+        return allSubjects;
+    }
+
+    public ArrayList<Semester> getSemesters() {
+        ArrayList<Semester> cached = cache.getSemesters();
+        if (cached != null && !semestersUpdate) {
+            return cached;
+        }
+
+        ArrayList<Semester> semesters = new ArrayList<>();
+        semesters.add(new Semester(2018, true));
+        semesters.add(new Semester(2018, false));
+        semesters.add(new Semester(2019, true));
+        semesters.add(new Semester(2019, false));
+        semesters.add(new Semester(2020, true));
+        semesters.add(new Semester(2020, false));
+        semesters.add(new Semester(2021, true));
+
+        cache.setSemesters(semesters);
+        return semesters;
+    }
+
+    public ArrayList<Student> getAvailableStudents() {
+        ArrayList<Student> cached = cache.getAvailableStudents();
+        if (cached != null && !availableStudentsUpdate) {
+            return cached;
+        }
+
+        ArrayList<Student> availableStudents = new ArrayList<>();
+        availableStudents.add(new Student(1, "1ИУ9-11", "1Александр", "1Другаков"));
+        availableStudents.add(new Student(2, "2ИУ9-21", "2Александр", "2Другаков"));
+        availableStudents.add(new Student(3, "3ИУ9-31", "3Александр", "3Другаков"));
+        availableStudents.add(new Student(4, "4ИУ9-41", "4Александр", "4Другаков"));
+        availableStudents.add(new Student(5, "5ИУ9-51", "5Александр", "5Другаков"));
+
+        cache.setAvailableStudents(availableStudents);
+        return availableStudents;
     }
 
     public ArrayList<String> getAvailableSubjects() {
@@ -113,119 +250,6 @@ public class Repository {
 
         cache.setAvailableSubjectsWithGroups(availableSubjectsWithGroups);
         return availableSubjectsWithGroups;
-    }
-
-    public ArrayList<Semester> getSemesters() {
-        ArrayList<Semester> cached = cache.getSemesters();
-        if (cached != null && !semestersUpdate) {
-            return cached;
-        }
-
-        ArrayList<Semester> semesters = new ArrayList<>();
-        semesters.add(new Semester(2018, true));
-        semesters.add(new Semester(2018, false));
-        semesters.add(new Semester(2019, true));
-        semesters.add(new Semester(2019, false));
-        semesters.add(new Semester(2020, true));
-        semesters.add(new Semester(2020, false));
-        semesters.add(new Semester(2021, true));
-
-        cache.setSemesters(semesters);
-        return semesters;
-    }
-
-    public ArrayList<String> getAllGroups() {
-        ArrayList<String> cached = cache.getAllGroups();
-        if (cached != null && !allGroupsUpdate) {
-            return cached;
-        }
-
-        ArrayList<String> allGroups = new ArrayList<>();
-        allGroups.add("1ИУ9-11");
-        allGroups.add("2ИУ9-21");
-        allGroups.add("3ИУ9-31");
-        allGroups.add("4ИУ9-41");
-        allGroups.add("5ИУ9-51");
-        allGroups.add("6ИУ9-61");
-        allGroups.add("7ИУ9-71");
-        allGroups.add("8ИУ9-81");
-        allGroups.add("9ИУ9-91");
-
-        cache.setAllGroups(allGroups);
-        return allGroups;
-    }
-
-    public ArrayList<Student> getAllStudents() {
-        ArrayList<Student> cached = cache.getAllStudents();
-        if (cached != null && !allStudentsUpdate) {
-            return cached;
-        }
-
-        ArrayList<Student> allStudents = new ArrayList<>();
-        allStudents.add(new Student(1, "1ИУ9-11", "1Александр", "1Другаков"));
-        allStudents.add(new Student(2, "2ИУ9-21", "2Александр", "2Другаков"));
-        allStudents.add(new Student(3, "3ИУ9-31", "3Александр", "3Другаков"));
-        allStudents.add(new Student(4, "4ИУ9-41", "4Александр", "4Другаков"));
-        allStudents.add(new Student(5, "5ИУ9-51", "5Александр", "5Другаков"));
-        allStudents.add(new Student(6, "6ИУ9-61", "6Александр", "6Другаков"));
-        allStudents.add(new Student(7, "7ИУ9-71", "7Александр", "7Другаков"));
-        allStudents.add(new Student(8, "8ИУ9-81", "8Александр", "8Другаков"));
-        allStudents.add(new Student(9, "9ИУ9-91", "9Александр", "9Другаков"));
-
-        cache.setAllStudents(allStudents);
-        return allStudents;
-    }
-
-    public ArrayList<String> getAllSubjects() {
-        ArrayList<String> cached = cache.getAllSubjects();
-        if (cached != null && !allSubjectsUpdate) {
-            return cached;
-        }
-
-        ArrayList<String> allSubjects = new ArrayList<>();
-        allSubjects.add("Матан");
-        allSubjects.add("Мобилки");
-        allSubjects.add("Алгебра");
-        allSubjects.add("Операционки");
-        allSubjects.add("Моделирование");
-        allSubjects.add("Методы оптимизации");
-
-        cache.setAllSubjects(allSubjects);
-        return allSubjects;
-    }
-
-    public ArrayList<Professor> getProfessors() {
-        ArrayList<Professor> cached = cache.getProfessors();
-        if (cached != null && !professorsUpdate) {
-            return cached;
-        }
-
-        ArrayList<Professor> professors = new ArrayList<>();
-        professors.add(new Professor(1, "Александр", "Коновалов"));
-        professors.add(new Professor(2, "Сергей", "Скоробогатов"));
-        professors.add(new Professor(3, "Анна", "Домрачева"));
-        professors.add(new Professor(4, "Александр", "Дубанов"));
-        professors.add(new Professor(5, "Юрий", "Каганов"));
-
-        cache.setProfessors(professors);
-        return professors;
-    }
-
-    public ArrayList<Student> getAvailableStudents() {
-        ArrayList<Student> cached = cache.getAvailableStudents();
-        if (cached != null && !availableStudentsUpdate) {
-            return cached;
-        }
-
-        ArrayList<Student> availableStudents = new ArrayList<>();
-        availableStudents.add(new Student(1, "1ИУ9-11", "1Александр", "1Другаков"));
-        availableStudents.add(new Student(2, "2ИУ9-21", "2Александр", "2Другаков"));
-        availableStudents.add(new Student(3, "3ИУ9-31", "3Александр", "3Другаков"));
-        availableStudents.add(new Student(4, "4ИУ9-41", "4Александр", "4Другаков"));
-        availableStudents.add(new Student(5, "5ИУ9-51", "5Александр", "5Другаков"));
-
-        cache.setAvailableStudents(availableStudents);
-        return availableStudents;
     }
 
     public ArrayList<String> getAvailableStudentSubjects(String studentName, String group) {
@@ -278,38 +302,6 @@ public class Repository {
         return studentsInGroup;
     }
 
-/*   public ArrayList<String> getEvents(String subject, String group) {
-        ArrayList<String> events = new ArrayList<>();
-        events.add("РК1");
-        events.add("ДЗ1");
-        events.add("РК2");
-        events.add("ДЗ2");
-        events.add("РК3");
-        events.add("ДЗ3");
-
-        return events;
-    }
-
-     public ArrayList<Date> getLessonsInModule(String moduleTitle) {
-        ArrayList<Date> lessonsInModule = new ArrayList<>();
-        lessonsInModule.add(new Date(2019, 0, 1));
-        lessonsInModule.add(new Date(2019, 1, 2));
-        lessonsInModule.add(new Date(2019, 2, 3));
-
-        return lessonsInModule;
-    }
-
-      public HashMap<String, ArrayList<Date>> getLessonsByModules(String subject, String group) {
-        HashMap<String, ArrayList<Date>> lessonsByModules = new HashMap<>();
-        ArrayList<String> modules = getModules();
-        for (int i = 0; i < modules.size(); i++) {
-            ArrayList<Date> lessons = getLessonsInModule(modules.get(i));
-            lessonsByModules.put(modules.get(i), lessons);
-        }
-
-        return lessonsByModules;
-    }*/
-
     public ArrayList<ArrayList<StudentEvent>> getStudentsEvents(String subject, String group) {
         ArrayList<ArrayList<StudentEvent>> studentsEvents = new ArrayList<>();
         ArrayList<Student> students = getStudentsInGroup(group);
@@ -342,15 +334,50 @@ public class Repository {
         return studentsLessonsByModules;
     }
 
-    public void addGroup(String groupTitle) {
-        //
+    public String getGroupById(int groupId) {
+        return "1ИУ9-11";
     }
 
-    public void addSemester(String semesterYear) {
-        //
+    public String getSubjectById(int subjectId) {
+        return "Матан";
     }
 
-    public void addSubject(String subjectTitle) {
+    public Semester getSemesterById(int semesterId) {
+        return new Semester(2020, true);
+    }
+
+    public Student getStudentById(int studentId) {
+        return new Student(studentId, "1ИУ9-11", "1Александр", "1Другаков");
+    }
+
+    public Professor getProfessorById(int professorId) {
+        return new Professor(professorId, "Александр", "Коновалов");
+    }
+
+    public String getEventById(int eventId) {
+        return "РК1";
+    }
+
+    public Date getLessonById(int lessonId) {
+        return new Date(2015, 0, 1);
+    }
+
+    public StudentEvent getStudentEventById(int studentEventId) {
+        return new StudentEvent("РК1", 5);
+    }
+
+    public StudentLesson getStudentLessonById(int studentLessonId) {
+        return new StudentLesson(new Date(2015, 0, 1), 1);
+    }
+
+    public void changeStudentGroup(int studentId, int newStudentGroupId) {
+        Repository.getInstance().deleteStudent(studentId);
+        Student student = getStudentById(studentId);
+        Repository.getInstance().addStudent(student.getFirstName(), student.getSecondName(), newStudentGroupId,
+                student.getLogin(), student.getPassword());
+    }
+
+    public void addStudent(String studentName, String studentSecondName, int groupId, String studentLogin, String studentPassword) {
         //
     }
 
@@ -358,25 +385,119 @@ public class Repository {
         //
     }
 
-    public Integer getLastStudentId() {
-        Integer cached = cache.getLastStudentId();
-        if (cached != null && !lastStudentIdUpdate) {
-            return cached;
-        }
-
-        Integer lastStudentId = new Random().nextInt(1000);
-        cache.setLastStudentId(lastStudentId);
-        return lastStudentId;
+    public void addGroup(String groupTitle) {
+        //
     }
 
-    public Integer getLastProfessorId() {
-        Integer cached = cache.getLastProfessorId();
-        if (cached != null && !lastProfessorIdUpdate) {
-            return cached;
-        }
+    public void addSubject(String subjectTitle) {
+        //
+    }
 
-        Integer lastProfessorId = new Random().nextInt(1000);
-        cache.setLastProfessorId(lastProfessorId);
-        return lastProfessorId;
+    public void addAvailableSubject(int professorId, int subjectId, int groupId) {
+        //
+    }
+
+    public void addGroupInAvailableSubject(int professorId, int groupId, int subjectId) {
+        //
+    }
+
+    public void addSemester(String semesterYear, boolean isFirstHalf) {
+        //
+    }
+
+    public void addEvent(String eventMinPoints, int eventType) {
+        //
+    }
+
+    public void addLesson(String lessonDate, String lessonAttendPoints) {
+        //
+    }
+
+    public void addStudentEvent(String studentEventEarnedPoints) {
+        //
+    }
+
+    public void addStudentLesson(String studentLessonEarnedPoints) {
+        //
+    }
+
+    public void editStudent(String studentName, String studentSecondName, String studentLogin, String studentPassword) {
+        //
+    }
+
+    public void editProfessor(String professorName, String professorSecondName, String professorLogin, String professorPassword) {
+        //
+    }
+
+    public void editGroup(String groupTitle) {
+        //
+    }
+
+    public void editSubject(String subjectTitle) {
+        //
+    }
+
+    public void editSemester(String semesterYear, boolean isFirstHalf) {
+        //
+    }
+
+    public void editEvent(String eventMinPoints) {
+        //
+    }
+
+    public void editLesson(String lessonAttendPoints) {
+        //
+    }
+
+    public void editStudentEvent(String studentEventEarnedPoints) {
+        //
+    }
+
+    public void editStudentLesson(String studentLessonEarnedPoints) {
+        //
+    }
+
+    public void deleteStudent(int studentId) {
+        //
+    }
+
+    public void deleteProfessor(int professorId) {
+        //
+    }
+
+    public void deleteGroup(int groupId) {
+        //
+    }
+
+    public void deleteSubject(int subjectId) {
+        //
+    }
+
+    public void deleteAvailableSubject(int professorId, int subjectId) {
+        //
+    }
+
+    public void deleteGroupInAvailableSubject(int professorId, int groupId, int subjectId) {
+        //
+    }
+
+    public void deleteSemester(int semesterId) {
+        //
+    }
+
+    public void deleteEvent(int eventId) {
+        //
+    }
+
+    public void deleteLesson(int lessonId) {
+        //
+    }
+
+    public void deleteStudentEvent(int studentEventId) {
+        //
+    }
+
+    public void deleteStudentLesson(int studentLessonId) {
+        //
     }
 }

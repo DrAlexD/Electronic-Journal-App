@@ -56,14 +56,14 @@ public class ModuleFragment extends Fragment {
             Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_lesson_adding, bundle);
         });
 
-        //TODO при обновлении студентов обновляются ли автоматически и баллы за посещения
-        groupPerformanceViewModel.getStudentsInGroup().observe(getViewLifecycleOwner(), students -> {
+        //FIXME при обновлении студентов обновляются ли автоматически и баллы за посещения
+        /*groupPerformanceViewModel.getStudentsInGroup().observe(getViewLifecycleOwner(), students -> {
             if (students == null) {
                 return;
             }
 
             generateLessonsTable(root, students, groupPerformanceViewModel.getStudentsLessonsByModules().getValue());
-        });
+        });*/
 
         groupPerformanceViewModel.getStudentsLessonsByModules().observe(getViewLifecycleOwner(), studentsLessonsByModules -> {
             if (studentsLessonsByModules == null) {
@@ -119,7 +119,7 @@ public class ModuleFragment extends Fragment {
                 bundle.putString("subject", subject);
                 bundle.putString("group", group);
                 bundle.putString("lessonDate", studentLesson.getDate());
-                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_lesson_info, bundle);
+                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_lesson_editing, bundle);
             });
             //lessonView.setRotation(90);
             lessonsRow.addView(lessonView);
@@ -163,8 +163,8 @@ public class ModuleFragment extends Fragment {
                 bundle.putString("subject", subject);
                 bundle.putString("group", group);
                 bundle.putString("lessonDate", studentLesson.getDate());
-                bundle.putString("isAttended", "true");
-                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_lesson_performance, bundle);
+                bundle.putBoolean("isAttended", true);
+                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_student_lesson, bundle);
             });
             pointsRow.addView(pointsView);
         }

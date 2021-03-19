@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class Professor extends User {
     public Professor(int id, String firstName, String secondName) {
-        super(id, firstName, secondName);
+        super(id, firstName, secondName, true);
     }
 
     @NotNull

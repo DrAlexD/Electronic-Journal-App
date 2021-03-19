@@ -43,7 +43,8 @@ public class LoginActivity extends AppCompatActivity {
         isRememberMe.setChecked(sharedPreferences.getBoolean(getString(R.string.is_remember_me), false));
 
         if (isRememberMe.isChecked()) {
-            Repository.getInstance().setLastLoggedInUser(sharedPreferences.getInt("userId", -1));
+            Repository.getInstance().setLastLoggedInUser(sharedPreferences.getInt("userId", -1),
+                    sharedPreferences.getBoolean("isUserProfessor", true));
             openMainActivity();
         } else {
             initLoginListeners(isRememberMe, sharedPreferences);
@@ -83,6 +84,7 @@ public class LoginActivity extends AppCompatActivity {
             if (user instanceof Result.Success) {
                 sharedPreferences.edit().putBoolean(getString(R.string.is_remember_me), isRememberMe.isChecked()).apply();
                 sharedPreferences.edit().putInt("userId", ((Result.Success<User>) user).getData().getId()).apply();
+                sharedPreferences.edit().putBoolean("isUserProfessor", ((Result.Success<User>) user).getData().isProfessor()).apply();
 
                 openMainActivity();
             } else {

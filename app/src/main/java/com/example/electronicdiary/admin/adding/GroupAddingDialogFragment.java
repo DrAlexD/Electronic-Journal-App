@@ -46,15 +46,15 @@ public class GroupAddingDialogFragment extends DialogFragment {
         };
         groupTitle.addTextChangedListener(afterTextChangedListener);
 
-        groupAddingViewModel.getGroupAddingFormState().observe(this, groupAddingFormState -> {
-            if (groupAddingFormState == null) {
+        groupAddingViewModel.getGroupFormState().observe(this, groupFormState -> {
+            if (groupFormState == null) {
                 return;
             }
 
-            groupTitle.setError(groupAddingFormState.getGroupTitleError() != null ?
-                    getString(groupAddingFormState.getGroupTitleError()) : null);
+            groupTitle.setError(groupFormState.getGroupTitleError() != null ?
+                    getString(groupFormState.getGroupTitleError()) : null);
 
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(groupAddingFormState.isDataValid());
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(groupFormState.isDataValid());
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

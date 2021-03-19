@@ -18,22 +18,32 @@ import com.example.electronicdiary.R;
 
 import org.jetbrains.annotations.NotNull;
 
-public class LessonAddingDialogFragment extends DialogFragment {
+public class LessonEditingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
 
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_lesson_adding, null);
+        View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_lesson_editing, null);
 
-        LessonAddingViewModel lessonAddingViewModel = new ViewModelProvider(this).get(LessonAddingViewModel.class);
+        LessonEditingViewModel lessonEditingViewModel = new ViewModelProvider(this).get(LessonEditingViewModel.class);
+        int lessonId = 1;
+        lessonEditingViewModel.downloadLessonById(lessonId);
 
-        EditText lessonDate = root.findViewById(R.id.lessonDateAdding);
-        EditText lessonAttendPoints = root.findViewById(R.id.lessonAttendPointsAdding);
+        EditText lessonAttendPoints = root.findViewById(R.id.lessonAttendPointsEditing);
+
+        lessonEditingViewModel.getLesson().observe(this, lesson -> {
+            if (lesson == null) {
+                return;
+            }
+
+            lessonAttendPoints.setText("1");
+        });
+
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                lessonAddingViewModel.lessonAddingDataChanged(lessonDate.getText().toString(), lessonAttendPoints.getText().toString());
+                lessonEditingViewModel.lessonEditingDataChanged(lessonAttendPoints.getText().toString());
             }
 
             @Override
@@ -46,16 +56,12 @@ public class LessonAddingDialogFragment extends DialogFragment {
                 // ignore
             }
         };
-        lessonDate.addTextChangedListener(afterTextChangedListener);
         lessonAttendPoints.addTextChangedListener(afterTextChangedListener);
 
-        lessonAddingViewModel.getLessonFormState().observe(this, lessonFormState -> {
+        lessonEditingViewModel.getLessonFormState().observe(this, lessonFormState -> {
             if (lessonFormState == null) {
                 return;
             }
-
-            lessonDate.setError(lessonFormState.getLessonDateError() != null ?
-                    getString(lessonFormState.getLessonDateError()) : null);
 
             lessonAttendPoints.setError(lessonFormState.getLessonAttendPointsError() != null ?
                     getString(lessonFormState.getLessonAttendPointsError()) : null);
@@ -65,19 +71,30 @@ public class LessonAddingDialogFragment extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
-                .setTitle("Введите данные занятия")
+                .setTitle("Изменить данные занятия " + getArguments().getString("lessonDate"))
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    lessonAddingViewModel.addLesson(lessonDate.getText().toString(), lessonAttendPoints.getText().toString());
+                    lessonEditingViewModel.editLesson(lessonAttendPoints.getText().toString());
+
+                    dismiss();
+                })
+                .setNegativeButton("Отменить", (dialog, id) -> {
+                    dismiss();
+                })
+                .setNeutralButton("Удалить", (dialog, id) -> {
+                    lessonEditingViewModel.deleteLesson(lessonId);
 
                     Bundle bundle = new Bundle();
                     bundle.putString("subject", getArguments().getString("subject"));
                     bundle.putString("group", getArguments().getString("group"));
                     bundle.putInt("openPage", getArguments().getInt("position") - 1);
 
-                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_lesson_adding_to_group_performance, bundle);
+                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_lesson_editing_to_group_performance, bundle);
                 }).create();
 
-        dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false));
+        dialog.setOnShowListener(dialog -> {
+            ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.red));
+            ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
+        });
 
         return dialog;
     }

@@ -34,6 +34,7 @@ public class SearchAvailableSubjectsFragment extends Fragment {
             if (availableSubjects == null) {
                 return;
             }
+
             View.OnClickListener onItemClickListener = view -> {
                 RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
                 int position = viewHolder.getAdapterPosition();
@@ -44,7 +45,8 @@ public class SearchAvailableSubjectsFragment extends Fragment {
                     bundle.putString("subjectTitle", availableSubjects.get(position));
                     Navigation.findNavController(view).navigate(R.id.action_search_available_subjects_to_search_all_groups, bundle);
                 } else if (actionCode == 12) {
-                    //TODO удаление предмета из доступных преподавателю
+                    //searchAvailableSubjectsViewModel.deleteAvailableSubject(professorId, availableSubjects.get(position).getId());
+
                     Navigation.findNavController(view).navigate(R.id.action_search_available_subjects_to_profile);
                 } else if (actionCode == 13) {
                     Bundle bundle = new Bundle();

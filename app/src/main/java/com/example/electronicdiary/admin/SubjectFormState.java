@@ -1,15 +1,15 @@
-package com.example.electronicdiary.admin.adding;
+package com.example.electronicdiary.admin;
 
 import androidx.annotation.Nullable;
 
 import com.example.electronicdiary.R;
 
-public class SubjectAddingFormState {
+public class SubjectFormState {
     @Nullable
     private final Integer subjectTitleError;
     private final boolean isDataValid;
 
-    public SubjectAddingFormState(String subjectTitle) {
+    public SubjectFormState(String subjectTitle) {
         boolean isSubjectTitleValid = !subjectTitle.trim().isEmpty();
 
         this.subjectTitleError = !isSubjectTitleValid ? R.string.invalid_empty_field : null;

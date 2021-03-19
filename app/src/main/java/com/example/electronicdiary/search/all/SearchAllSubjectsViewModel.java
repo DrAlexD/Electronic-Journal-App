@@ -18,4 +18,8 @@ public class SearchAllSubjectsViewModel extends ViewModel {
     public void downloadAllSubjects() {
         this.allSubjects.setValue(Repository.getInstance().getAllSubjects());
     }
+
+    public void deleteSubject(int subjectId) {
+        Repository.getInstance().deleteSubject(subjectId);
+    }
 }

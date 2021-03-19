@@ -1,16 +1,16 @@
-package com.example.electronicdiary.admin.adding;
+package com.example.electronicdiary.admin;
 
 import androidx.annotation.Nullable;
 
 import com.example.electronicdiary.R;
 
-public class SemesterAddingFormState {
+public class SemesterFormState {
     @Nullable
     private final Integer semesterYearError;
     private final boolean isDataValid;
 
-    public SemesterAddingFormState(String semesterYear) {
-        boolean isSemesterYearValid = semesterYear.trim().length() != 4;
+    public SemesterFormState(String semesterYear) {
+        boolean isSemesterYearValid = semesterYear.trim().length() == 4;
 
         this.semesterYearError = !isSemesterYearValid ? R.string.invalid_semester_year : null;
         this.isDataValid = isSemesterYearValid;

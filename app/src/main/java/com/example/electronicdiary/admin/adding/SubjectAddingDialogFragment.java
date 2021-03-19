@@ -46,23 +46,22 @@ public class SubjectAddingDialogFragment extends DialogFragment {
         };
         subjectTitle.addTextChangedListener(afterTextChangedListener);
 
-        subjectAddingViewModel.getSubjectAddingFormState().observe(this, subjectAddingFormState -> {
-            if (subjectAddingFormState == null) {
+        subjectAddingViewModel.getSubjectFormState().observe(this, subjectFormState -> {
+            if (subjectFormState == null) {
                 return;
             }
 
-            subjectTitle.setError(subjectAddingFormState.getSubjectTitleError() != null ?
-                    getString(subjectAddingFormState.getSubjectTitleError()) : null);
+            subjectTitle.setError(subjectFormState.getSubjectTitleError() != null ?
+                    getString(subjectFormState.getSubjectTitleError()) : null);
 
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(subjectAddingFormState.isDataValid());
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(subjectFormState.isDataValid());
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
                 .setTitle("Введите название предмета")
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-
-                    //TODO добавление предмета в базу
+                    subjectAddingViewModel.addSubject(subjectTitle.getText().toString());
                     dismiss();
                 }).create();
 

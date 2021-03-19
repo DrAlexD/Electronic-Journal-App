@@ -12,7 +12,7 @@
         android:paddingEnd="32dp">
 
         <TextView
-            android:id="@+id/eventAddingTypeText"
+            android:id="@+id/eventTypeTextAdding"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
@@ -21,7 +21,7 @@
             android:textSize="20sp" />
 
         <Spinner
-            android:id="@+id/eventAddingType"
+            android:id="@+id/eventTypeAdding"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -38,7 +38,7 @@
         android:paddingEnd="32dp">
 
         <TextView
-            android:id="@+id/eventAddingMinPointsText"
+            android:id="@+id/eventMinPointsTextAdding"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
@@ -47,7 +47,7 @@
             android:textSize="20sp" />
 
         <EditText
-            android:id="@+id/eventAddingMinPoints"
+            android:id="@+id/eventMinPointsAdding"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"

@@ -5,16 +5,17 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.electronicdiary.Repository;
+import com.example.electronicdiary.admin.GroupFormState;
 
 public class GroupAddingViewModel extends ViewModel {
-    private final MutableLiveData<GroupAddingFormState> groupAddingFormState = new MutableLiveData<>();
+    private final MutableLiveData<GroupFormState> groupFormState = new MutableLiveData<>();
 
-    LiveData<GroupAddingFormState> getGroupAddingFormState() {
-        return groupAddingFormState;
+    LiveData<GroupFormState> getGroupFormState() {
+        return groupFormState;
     }
 
     public void groupAddingDataChanged(String groupTitle) {
-        groupAddingFormState.setValue(new GroupAddingFormState(groupTitle));
+        groupFormState.setValue(new GroupFormState(groupTitle));
     }
 
     public void addGroup(String groupTitle) {

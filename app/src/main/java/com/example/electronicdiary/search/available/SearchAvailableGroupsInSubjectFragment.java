@@ -37,8 +37,7 @@ public class SearchAvailableGroupsInSubjectFragment extends Fragment {
                 RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
                 int position = viewHolder.getAdapterPosition();
 
-                //TODO удалить группу из базы
-                /*getArguments().getString("subjectTitle")*/
+                //searchAvailableGroupsInSubjectViewModel.deleteGroupInAvailableSubject(professorId, availableGroupsInSubject.get(position).getId(), subjectId);
                 Navigation.findNavController(view).navigate(R.id.action_search_available_groups_in_subject_to_profile);
             };
 

@@ -18,4 +18,8 @@ public class SearchAvailableSubjectsViewModel extends ViewModel {
     public void downloadAvailableSubjects() {
         this.availableSubjects.setValue(Repository.getInstance().getAvailableSubjects());
     }
+
+    public void deleteAvailableSubject(int professorId, int subjectId) {
+        Repository.getInstance().deleteAvailableSubject(professorId, subjectId);
+    }
 }

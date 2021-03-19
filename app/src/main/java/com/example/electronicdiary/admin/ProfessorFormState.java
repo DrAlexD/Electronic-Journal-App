@@ -1,10 +1,10 @@
-package com.example.electronicdiary.admin.adding;
+package com.example.electronicdiary.admin;
 
 import androidx.annotation.Nullable;
 
 import com.example.electronicdiary.R;
 
-public class ProfessorAddingFormState {
+public class ProfessorFormState {
     @Nullable
     private final Integer professorNameError;
     @Nullable
@@ -16,8 +16,8 @@ public class ProfessorAddingFormState {
     private final boolean isNameOrSecondNameChanged;
     private final boolean isDataValid;
 
-    public ProfessorAddingFormState(String professorName, String professorSecondName, String professorLogin, String professorPassword,
-                                    boolean isNameOrSecondNameChanged) {
+    public ProfessorFormState(String professorName, String professorSecondName, String professorLogin, String professorPassword,
+                              boolean isNameOrSecondNameChanged) {
         this.isNameOrSecondNameChanged = isNameOrSecondNameChanged;
         boolean isProfessorNameValid = !professorName.trim().isEmpty();
         boolean isProfessorSecondNameValid = !professorSecondName.trim().isEmpty();
