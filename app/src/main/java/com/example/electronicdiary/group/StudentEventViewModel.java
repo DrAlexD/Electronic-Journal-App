@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel;
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.StudentEvent;
 
+import java.util.Date;
+
 public class StudentEventViewModel extends ViewModel {
     private final MutableLiveData<StudentEventFormState> studentEventFormState = new MutableLiveData<>();
     private final MutableLiveData<StudentEvent> event = new MutableLiveData<>();
@@ -23,19 +25,25 @@ public class StudentEventViewModel extends ViewModel {
         studentEventFormState.setValue(new StudentEventFormState(eventEarnedPoints));
     }
 
-    public void downloadStudentEventById(int eventId) {
-        this.event.setValue(Repository.getInstance().getStudentEventById(eventId));
+    public void downloadStudentEventById(int attemptNumber, int eventId, int studentId) {
+        this.event.setValue(Repository.getInstance().getStudentEventById(attemptNumber, eventId, studentId));
     }
 
-    public void addStudentEvent(String eventEarnedPoints) {
-        Repository.getInstance().addStudentEvent(eventEarnedPoints);
+    public void addStudentEvent(int attemptNumber, int eventId, int moduleNumber, int studentId, int groupId, int subjectId,
+                                int lecturerId, int seminarianId, int semesterId, boolean isAttended, int variantNumber) {
+        Repository.getInstance().addStudentEvent(attemptNumber, eventId, moduleNumber, studentId, groupId, subjectId,
+                lecturerId, seminarianId, semesterId, isAttended, variantNumber);
     }
 
-    public void editStudentEvent(String eventEarnedPoints) {
-        Repository.getInstance().editStudentEvent(eventEarnedPoints);
+    public void editStudentEvent(int attemptNumber, int eventId, int moduleNumber, int studentId, int groupId, int subjectId,
+                                 int lecturerId, int seminarianId, int semesterId, boolean isAttended, int variantNumber,
+                                 Date finishDate, int earnedPoints, int bonusPoints, boolean isHaveCredit) {
+        Repository.getInstance().editStudentEvent(attemptNumber, eventId, moduleNumber, studentId, groupId, subjectId,
+                lecturerId, seminarianId, semesterId, isAttended, variantNumber,
+                finishDate, earnedPoints, bonusPoints, isHaveCredit);
     }
 
-    public void deleteStudentEvent(int eventId) {
-        Repository.getInstance().deleteStudentEvent(eventId);
+    public void deleteStudentEvent(int attemptNumber, int eventId, int studentId) {
+        Repository.getInstance().deleteStudentEvent(attemptNumber, eventId, studentId);
     }
 }

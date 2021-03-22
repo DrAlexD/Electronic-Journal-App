@@ -18,7 +18,7 @@ public class GroupPerformanceViewModel extends ViewModel {
 
     private final MutableLiveData<ArrayList<Student>> studentsInGroup = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<ArrayList<StudentEvent>>> studentsEvents = new MutableLiveData<>();
-    private final MutableLiveData<HashMap<String, ArrayList<ArrayList<StudentLesson>>>> studentsLessonsByModules = new MutableLiveData<>();
+    private final MutableLiveData<HashMap<Integer, ArrayList<ArrayList<StudentLesson>>>> studentsLessonsByModules = new MutableLiveData<>();
 
     public LiveData<String> getSubject() {
         return subject;
@@ -44,19 +44,19 @@ public class GroupPerformanceViewModel extends ViewModel {
         return studentsEvents;
     }
 
-    public LiveData<HashMap<String, ArrayList<ArrayList<StudentLesson>>>> getStudentsLessonsByModules() {
+    public LiveData<HashMap<Integer, ArrayList<ArrayList<StudentLesson>>>> getStudentsLessonsByModules() {
         return studentsLessonsByModules;
     }
 
-    public void downloadStudentsInGroup(String group) {
-        this.studentsInGroup.setValue(Repository.getInstance().getStudentsInGroup(group));
+    public void downloadStudentsInGroup(int groupId) {
+        this.studentsInGroup.setValue(Repository.getInstance().getStudentsInGroup(groupId));
     }
 
-    public void downloadStudentsEvents(String subject, String group) {
-        this.studentsEvents.setValue(Repository.getInstance().getStudentsEvents(subject, group));
+    public void downloadStudentsEvents(int groupId, int subjectId, int semesterId) {
+        this.studentsEvents.setValue(Repository.getInstance().getStudentsEvents(groupId, subjectId, semesterId));
     }
 
-    public void downloadStudentsLessonsByModules(String subject, String group) {
-        this.studentsLessonsByModules.setValue(Repository.getInstance().getStudentsLessonsByModules(subject, group));
+    public void downloadStudentsLessonsByModules(int groupId, int subjectId, int semesterId) {
+        this.studentsLessonsByModules.setValue(Repository.getInstance().getStudentsLessonsByModules(groupId, subjectId, semesterId));
     }
 }

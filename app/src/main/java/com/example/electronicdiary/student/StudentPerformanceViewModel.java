@@ -13,21 +13,21 @@ import java.util.HashMap;
 
 public class StudentPerformanceViewModel extends ViewModel {
     private final MutableLiveData<ArrayList<StudentEvent>> studentEvents = new MutableLiveData<>();
-    private final MutableLiveData<HashMap<String, ArrayList<StudentLesson>>> studentLessonsByModules = new MutableLiveData<>();
+    private final MutableLiveData<HashMap<Integer, ArrayList<StudentLesson>>> studentLessonsByModules = new MutableLiveData<>();
 
     public LiveData<ArrayList<StudentEvent>> getStudentEvents() {
         return studentEvents;
     }
 
-    public LiveData<HashMap<String, ArrayList<StudentLesson>>> getStudentLessonsByModules() {
+    public LiveData<HashMap<Integer, ArrayList<StudentLesson>>> getStudentLessonsByModules() {
         return studentLessonsByModules;
     }
 
-    public void downloadStudentEvents(String studentName, String subject, String group) {
-        this.studentEvents.setValue(Repository.getInstance().getStudentEvents(studentName, subject, group));
+    public void downloadStudentEvents(int studentId, int subjectId, int semesterId) {
+        this.studentEvents.setValue(Repository.getInstance().getStudentEvents(studentId, subjectId, semesterId));
     }
 
-    public void downloadStudentLessonsByModules(String studentName, String subject, String group) {
-        this.studentLessonsByModules.setValue(Repository.getInstance().getStudentLessonsByModules(studentName, subject, group));
+    public void downloadStudentLessonsByModules(int studentId, int subjectId, int semesterId) {
+        this.studentLessonsByModules.setValue(Repository.getInstance().getStudentLessonsByModules(studentId, subjectId, semesterId));
     }
 }

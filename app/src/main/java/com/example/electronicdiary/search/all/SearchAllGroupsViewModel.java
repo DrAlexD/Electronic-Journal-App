@@ -4,14 +4,15 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.electronicdiary.Group;
 import com.example.electronicdiary.Repository;
 
 import java.util.ArrayList;
 
 public class SearchAllGroupsViewModel extends ViewModel {
-    private final MutableLiveData<ArrayList<String>> allGroups = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<Group>> allGroups = new MutableLiveData<>();
 
-    public LiveData<ArrayList<String>> getAllGroups() {
+    public LiveData<ArrayList<Group>> getAllGroups() {
         return allGroups;
     }
 
@@ -32,11 +33,11 @@ public class SearchAllGroupsViewModel extends ViewModel {
         Repository.getInstance().changeStudentGroup(studentId, newStudentGroupId);
     }
 
-    public void addAvailableSubject(int professorId, int subjectId, int groupId) {
-        Repository.getInstance().addAvailableSubject(professorId, subjectId, groupId);
+    public void addAvailableSubject(int professorId, boolean isLecturer, int groupId, int subjectId, int semesterId, boolean isExam) {
+        Repository.getInstance().addAvailableSubject(professorId, isLecturer, groupId, subjectId, semesterId, isExam);
     }
 
-    public void addGroupInAvailableSubject(int professorId, int groupId, int subjectId) {
-        Repository.getInstance().addGroupInAvailableSubject(professorId, groupId, subjectId);
+    public void addGroupInAvailableSubject(int lecturerId, int seminarianId, int groupId, int subjectId, int semesterId, boolean isExam) {
+        Repository.getInstance().addGroupInAvailableSubject(lecturerId, seminarianId, groupId, subjectId, semesterId, isExam);
     }
 }

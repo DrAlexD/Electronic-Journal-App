@@ -5,13 +5,14 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.electronicdiary.Repository;
+import com.example.electronicdiary.Subject;
 
 import java.util.ArrayList;
 
 public class SearchAllSubjectsViewModel extends ViewModel {
-    private final MutableLiveData<ArrayList<String>> allSubjects = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<Subject>> allSubjects = new MutableLiveData<>();
 
-    public LiveData<ArrayList<String>> getAllSubjects() {
+    public LiveData<ArrayList<Subject>> getAllSubjects() {
         return allSubjects;
     }
 

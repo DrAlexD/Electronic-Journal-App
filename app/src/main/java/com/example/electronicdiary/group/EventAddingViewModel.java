@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.electronicdiary.Repository;
 
+import java.util.Date;
+
 public class EventAddingViewModel extends ViewModel {
     private final MutableLiveData<EventFormState> eventFormState = new MutableLiveData<>();
 
@@ -17,7 +19,9 @@ public class EventAddingViewModel extends ViewModel {
         eventFormState.setValue(new EventFormState(eventMinPoints));
     }
 
-    public void addEvent(String eventMinPoints, int eventType) {
-        Repository.getInstance().addEvent(eventMinPoints, eventType);
+    public void addEvent(int moduleNumber, int groupId, int subjectId, int lecturerId, int seminarianId, int semesterId,
+                         String type, int number, Date startDate, Date deadlineDate, int minPoints, int maxPoints) {
+        Repository.getInstance().addEvent(moduleNumber, groupId, subjectId, lecturerId, seminarianId, semesterId,
+                type, number, startDate, deadlineDate, minPoints, maxPoints);
     }
 }

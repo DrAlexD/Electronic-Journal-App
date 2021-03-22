@@ -5,17 +5,18 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.electronicdiary.Repository;
+import com.example.electronicdiary.Subject;
 import com.example.electronicdiary.admin.SubjectFormState;
 
 public class SubjectEditingViewModel extends ViewModel {
     private final MutableLiveData<SubjectFormState> subjectFormState = new MutableLiveData<>();
-    private final MutableLiveData<String> subject = new MutableLiveData<>();
+    private final MutableLiveData<Subject> subject = new MutableLiveData<>();
 
     LiveData<SubjectFormState> getSubjectFormState() {
         return subjectFormState;
     }
 
-    public MutableLiveData<String> getSubject() {
+    public MutableLiveData<Subject> getSubject() {
         return subject;
     }
 
@@ -27,7 +28,7 @@ public class SubjectEditingViewModel extends ViewModel {
         this.subject.setValue(Repository.getInstance().getSubjectById(subjectId));
     }
 
-    public void editSubject(String subjectTitle) {
-        Repository.getInstance().editSubject(subjectTitle);
+    public void editSubject(int subjectId, String subjectTitle) {
+        Repository.getInstance().editSubject(subjectId, subjectTitle);
     }
 }

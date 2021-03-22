@@ -17,14 +17,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         SettingsViewModel settingsViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
         settingsViewModel.downloadSemesters();
 
-        ListPreference semesterChoose = findPreference(getString(R.string.semester_choose));
+        ListPreference semesterChoose = findPreference(getString(R.string.current_semester));
         settingsViewModel.getSemesters().observe(this, semesters -> {
             String[] semesterEntries = new String[semesters.size()];
             String[] semesterEntryValues = new String[semesters.size()];
 
             for (int i = 0; i < semesters.size(); i++) {
                 semesterEntries[i] = semesters.get(i).toString();
-                semesterEntryValues[i] = semesters.get(i).getFirstHalf() + "_half_" + semesters.get(i).getYear();
+                semesterEntryValues[i] = String.valueOf(semesters.get(i).getId());
             }
 
             semesterChoose.setEntries(semesterEntries);

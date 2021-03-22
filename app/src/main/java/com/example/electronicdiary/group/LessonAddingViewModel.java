@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.electronicdiary.Repository;
 
+import java.util.Date;
+
 public class LessonAddingViewModel extends ViewModel {
     private final MutableLiveData<LessonFormState> lessonFormState = new MutableLiveData<>();
 
@@ -17,7 +19,9 @@ public class LessonAddingViewModel extends ViewModel {
         lessonFormState.setValue(new LessonFormState(lessonDate, lessonAttendPoints));
     }
 
-    public void addLesson(String lessonDate, String lessonAttendPoints) {
-        Repository.getInstance().addLesson(lessonDate, lessonAttendPoints);
+    public void addLesson(int moduleNumber, int groupId, int subjectId, int lecturerId, int seminarianId, int semesterId,
+                          Date dateAndTime, boolean isLecture, int pointsPerVisit) {
+        Repository.getInstance().addLesson(moduleNumber, groupId, subjectId, lecturerId, seminarianId, semesterId,
+                dateAndTime, isLecture, pointsPerVisit);
     }
 }

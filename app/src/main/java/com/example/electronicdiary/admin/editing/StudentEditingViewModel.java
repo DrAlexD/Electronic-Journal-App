@@ -30,7 +30,7 @@ public class StudentEditingViewModel extends ViewModel {
         this.student.setValue(Repository.getInstance().getStudentById(studentId));
     }
 
-    public void editStudent(String studentName, String studentSecondName, String studentLogin, String studentPassword) {
-        Repository.getInstance().editStudent(studentName, studentSecondName, studentLogin, studentPassword);
+    public void editStudent(int studentId, String studentName, String studentSecondName, String studentLogin, String studentPassword) {
+        Repository.getInstance().editStudent(studentId, studentName, studentSecondName, studentLogin, studentPassword);
     }
 }

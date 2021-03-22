@@ -28,7 +28,7 @@ public class SemesterEditingViewModel extends ViewModel {
         this.semester.setValue(Repository.getInstance().getSemesterById(semesterId));
     }
 
-    public void editSemester(String semesterYear, boolean isFirstHalf) {
-        Repository.getInstance().editSemester(semesterYear, isFirstHalf);
+    public void editSemester(int semesterId, int semesterYear, boolean isFirstHalf) {
+        Repository.getInstance().editSemester(semesterId, semesterYear, isFirstHalf);
     }
 }

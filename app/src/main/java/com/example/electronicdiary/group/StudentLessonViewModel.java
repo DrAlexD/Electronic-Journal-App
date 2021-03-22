@@ -23,19 +23,23 @@ public class StudentLessonViewModel extends ViewModel {
         studentLessonFormState.setValue(new StudentLessonFormState(lessonEarnedPoints));
     }
 
-    public void downloadStudentLessonById(int lessonId) {
-        this.lesson.setValue(Repository.getInstance().getStudentLessonById(lessonId));
+    public void downloadStudentLessonById(int lessonId, int studentId) {
+        this.lesson.setValue(Repository.getInstance().getStudentLessonById(lessonId, studentId));
     }
 
-    public void addStudentLesson(String lessonEarnedPoints) {
-        Repository.getInstance().addStudentLesson(lessonEarnedPoints);
+    public void addStudentLesson(int lessonId, int moduleNumber, int studentId, int groupId, int subjectId, int lecturerId,
+                                 int seminarianId, int semesterId, boolean isAttended) {
+        Repository.getInstance().addStudentLesson(lessonId, moduleNumber, studentId, groupId, subjectId, lecturerId,
+                seminarianId, semesterId, isAttended);
     }
 
-    public void editStudentLesson(String lessonEarnedPoints) {
-        Repository.getInstance().editStudentLesson(lessonEarnedPoints);
+    public void editStudentLesson(int lessonId, int moduleNumber, int studentId, int groupId, int subjectId, int lecturerId,
+                                  int seminarianId, int semesterId, boolean isAttended, int bonusPoints) {
+        Repository.getInstance().editStudentLesson(lessonId, moduleNumber, studentId, groupId, subjectId, lecturerId,
+                seminarianId, semesterId, isAttended, bonusPoints);
     }
 
-    public void deleteStudentLesson(int lessonId) {
-        Repository.getInstance().deleteStudentLesson(lessonId);
+    public void deleteStudentLesson(int lessonId, int studentId) {
+        Repository.getInstance().deleteStudentLesson(lessonId, studentId);
     }
 }

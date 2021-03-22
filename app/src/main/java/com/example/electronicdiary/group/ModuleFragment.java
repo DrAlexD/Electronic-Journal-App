@@ -77,12 +77,12 @@ public class ModuleFragment extends Fragment {
     }
 
     private void generateLessonsTable(View root, ArrayList<Student> students,
-                                      HashMap<String, ArrayList<ArrayList<StudentLesson>>> studentsLessonsByModules) {
+                                      HashMap<Integer, ArrayList<ArrayList<StudentLesson>>> studentsLessonsByModules) {
         TableLayout studentsInModuleLessonsTable = root.findViewById(R.id.studentsInModuleLessonsTable);
         int padding2inDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics());
         int padding5inDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
 
-        ArrayList<String> modules = Repository.getInstance().getModules();
+        ArrayList<Integer> modules = Repository.getInstance().getModules();
         TableRow lessonsRow = generateLessonsRow(padding2inDp, padding5inDp,
                 studentsLessonsByModules.get(modules.get(position - 1)).get(0));
         studentsInModuleLessonsTable.addView(lessonsRow);

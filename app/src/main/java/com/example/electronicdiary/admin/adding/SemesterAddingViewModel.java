@@ -18,7 +18,7 @@ public class SemesterAddingViewModel extends ViewModel {
         semesterFormState.setValue(new SemesterFormState(semesterYear));
     }
 
-    public void addSemester(String semesterYear, boolean isFirstHalf) {
+    public void addSemester(int semesterYear, boolean isFirstHalf) {
         Repository.getInstance().addSemester(semesterYear, isFirstHalf);
     }
 }

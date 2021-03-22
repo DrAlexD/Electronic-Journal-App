@@ -21,7 +21,7 @@
     <string name="is_remember_me">Запомнить меня</string>
     <string name="is_professor_rules">Режим преподавателя</string>
     <string name="is_admin_rules">Режим админа</string>
-    <string name="semester_choose">Выберите семестер</string>
+    <string name="current_semester">Текущий семестр</string>
     <!-- Strings related to search -->
     <string name="student_search_hint">Поиск студента…</string>
     <string name="group_search_hint">Поиск группы…</string>

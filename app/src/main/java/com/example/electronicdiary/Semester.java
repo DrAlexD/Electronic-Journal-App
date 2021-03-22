@@ -1,17 +1,30 @@
 package com.example.electronicdiary;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Semester {
+    private final int id;
     private final int year;
     private final boolean isFirstHalf;
 
-    public Semester(int year, boolean isFirstHalf) {
+    public Semester(int id, int year, boolean isFirstHalf) {
+        this.id = id;
         this.year = year;
         this.isFirstHalf = isFirstHalf;
     }
 
+    @NotNull
     @Override
     public String toString() {
-        return (isFirstHalf ? "1" : "2") + " половина " + year;
+        return "Semester{" + "id=" + id + ", year=" + year + ", isFirstHalf=" + isFirstHalf + '}';
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getYear() {
+        return year;
     }
 
     public boolean isFirstHalf() {
@@ -20,9 +33,5 @@ public class Semester {
 
     public String getFirstHalf() {
         return isFirstHalf ? "1" : "2";
-    }
-
-    public int getYear() {
-        return year;
     }
 }

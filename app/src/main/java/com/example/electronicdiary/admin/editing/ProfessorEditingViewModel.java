@@ -30,7 +30,7 @@ public class ProfessorEditingViewModel extends ViewModel {
         this.professor.setValue(Repository.getInstance().getProfessorById(professorId));
     }
 
-    public void editProfessor(String professorName, String professorSecondName, String professorLogin, String professorPassword) {
-        Repository.getInstance().editProfessor(professorName, professorSecondName, professorLogin, professorPassword);
+    public void editProfessor(int professorId, String professorName, String professorSecondName, String professorLogin, String professorPassword) {
+        Repository.getInstance().editProfessor(professorId, professorName, professorSecondName, professorLogin, professorPassword);
     }
 }

@@ -15,10 +15,10 @@ import java.util.HashMap;
 
 class LessonsAdapter extends BaseExpandableListAdapter {
     private final LayoutInflater inflater;
-    private final ArrayList<String> modules;
-    private final HashMap<String, ArrayList<StudentLesson>> lessonsByModules;
+    private final ArrayList<Integer> modules;
+    private final HashMap<Integer, ArrayList<StudentLesson>> lessonsByModules;
 
-    LessonsAdapter(Context context, ArrayList<String> modules, HashMap<String, ArrayList<StudentLesson>> lessonsByModules) {
+    LessonsAdapter(Context context, ArrayList<Integer> modules, HashMap<Integer, ArrayList<StudentLesson>> lessonsByModules) {
         this.inflater = LayoutInflater.from(context);
         this.modules = modules;
         this.lessonsByModules = lessonsByModules;
@@ -61,7 +61,7 @@ class LessonsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View view, ViewGroup parent) {
-        String moduleTitle = modules.get(groupPosition);
+        String moduleTitle = "Модуль " + modules.get(groupPosition);
         if (view == null) {
             view = inflater.inflate(R.layout.holder_module, null);
         }

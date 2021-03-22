@@ -9,12 +9,12 @@ public class Cache {
     private Integer lastProfessorId = null;
     private ArrayList<Student> allStudents = null;
     private ArrayList<Professor> professors = null;
-    private ArrayList<String> allGroups = null;
-    private ArrayList<String> allSubjects = null;
+    private ArrayList<Group> allGroups = null;
+    private ArrayList<Subject> allSubjects = null;
     private ArrayList<Semester> semesters = null;
     private ArrayList<Student> availableStudents = null;
-    private ArrayList<String> availableSubjects = null;
-    private HashMap<String, ArrayList<String>> availableSubjectsWithGroups = null;
+    private ArrayList<Subject> availableSubjects = null;
+    private HashMap<Subject, ArrayList<Group>> availableSubjectsWithGroups = null;
 
     public User getUser() {
         return user;
@@ -56,19 +56,19 @@ public class Cache {
         this.professors = professors;
     }
 
-    public ArrayList<String> getAllGroups() {
+    public ArrayList<Group> getAllGroups() {
         return allGroups;
     }
 
-    public void setAllGroups(ArrayList<String> allGroups) {
+    public void setAllGroups(ArrayList<Group> allGroups) {
         this.allGroups = allGroups;
     }
 
-    public ArrayList<String> getAllSubjects() {
+    public ArrayList<Subject> getAllSubjects() {
         return allSubjects;
     }
 
-    public void setAllSubjects(ArrayList<String> allSubjects) {
+    public void setAllSubjects(ArrayList<Subject> allSubjects) {
         this.allSubjects = allSubjects;
     }
 
@@ -88,19 +88,19 @@ public class Cache {
         this.availableStudents = availableStudents;
     }
 
-    public ArrayList<String> getAvailableSubjects() {
+    public ArrayList<Subject> getAvailableSubjects() {
         return availableSubjects;
     }
 
-    public void setAvailableSubjects(ArrayList<String> availableSubjects) {
+    public void setAvailableSubjects(ArrayList<Subject> availableSubjects) {
         this.availableSubjects = availableSubjects;
     }
 
-    public HashMap<String, ArrayList<String>> getAvailableSubjectsWithGroups() {
+    public HashMap<Subject, ArrayList<Group>> getAvailableSubjectsWithGroups() {
         return availableSubjectsWithGroups;
     }
 
-    public void setAvailableSubjectsWithGroups(HashMap<String, ArrayList<String>> availableSubjectsWithGroups) {
+    public void setAvailableSubjectsWithGroups(HashMap<Subject, ArrayList<Group>> availableSubjectsWithGroups) {
         this.availableSubjectsWithGroups = availableSubjectsWithGroups;
     }
 }
