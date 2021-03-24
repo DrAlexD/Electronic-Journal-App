@@ -23,8 +23,8 @@ public class ProfileViewModel extends ViewModel {
         return availableSubjectsWithGroups;
     }
 
-    public void downloadAvailableSubjectsWithGroups(int semesterId) {
+    public void downloadAvailableSubjectsWithGroups(int professorId, int semesterId) {
         this.availableSubjects.setValue(Repository.getInstance().getAvailableSubjects(semesterId));
-        this.availableSubjectsWithGroups.setValue(Repository.getInstance().getAvailableSubjectsWithGroups(semesterId));
+        this.availableSubjectsWithGroups.setValue(Repository.getInstance().getAvailableSubjectsWithGroups(professorId, semesterId));
     }
 }

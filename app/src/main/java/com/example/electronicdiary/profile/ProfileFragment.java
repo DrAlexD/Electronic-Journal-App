@@ -23,10 +23,12 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        setPreferences(root);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        int semesterId = Integer.parseInt(sharedPreferences.getString(getString(R.string.current_semester), ""));
+        setPreferences(root, sharedPreferences);
 
         ProfileViewModel profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
-        profileViewModel.downloadAvailableSubjectsWithGroups();
+        profileViewModel.downloadAvailableSubjectsWithGroups(semesterId);
 
         //FIXME при обновлении предметов обновляются ли автоматически и предметы по группам
         final ExpandableListView expandableListView = root.findViewById(R.id.subjectsWithGroupsList);
@@ -55,8 +57,9 @@ public class ProfileFragment extends Fragment {
             expandableListView.setAdapter(subjectsWithGroupsAdapter);
             expandableListView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
                 Bundle bundle = new Bundle();
-                bundle.putString("subject", profileViewModel.getAvailableSubjects().getValue().get(groupPosition));
-                bundle.putString("group", availableSubjectsWithGroups.get(profileViewModel.getAvailableSubjects().getValue().get(groupPosition)).get(childPosition));
+                bundle.putInt("semesterId", semesterId);
+                bundle.putInt("subjectId", profileViewModel.getAvailableSubjects().getValue().get(groupPosition).getId());
+                bundle.putInt("groupId", availableSubjectsWithGroups.get(profileViewModel.getAvailableSubjects().getValue().get(groupPosition)).get(childPosition).getId());
                 Navigation.findNavController(v).navigate(R.id.action_profile_to_group_performance, bundle);
                 return true;
             });
@@ -65,9 +68,8 @@ public class ProfileFragment extends Fragment {
         return root;
     }
 
-    private void setPreferences(View root) {
+    private void setPreferences(View root, SharedPreferences sharedPreferences) {
         //TODO добавить отображение выбранного семестра в профиле преподавателя
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         boolean isProfessorRules = sharedPreferences.getBoolean(getString(R.string.is_professor_rules), false);
 
         TextView userNameView = root.findViewById(R.id.user_name_text);

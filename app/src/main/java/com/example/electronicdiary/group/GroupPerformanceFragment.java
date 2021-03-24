@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.electronicdiary.Event;
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.Student;
 import com.example.electronicdiary.StudentEvent;
@@ -30,22 +31,27 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.ArrayList;
 
 public class GroupPerformanceFragment extends Fragment {
-    private String group;
-    private String subject;
+    private int semesterId;
+    private int groupId;
+    private int subjectId;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_group_performance, container, false);
 
-        group = getArguments().getString("group");
-        subject = getArguments().getString("subject");
+        semesterId = getArguments().getInt("semesterId");
+        groupId = getArguments().getInt("groupId");
+        subjectId = getArguments().getInt("subjectId");
 
         GroupPerformanceViewModel groupPerformanceViewModel = new ViewModelProvider(this).get(GroupPerformanceViewModel.class);
-        groupPerformanceViewModel.setGroup(group);
-        groupPerformanceViewModel.setSubject(subject);
+        groupPerformanceViewModel.setSemesterId(semesterId);
+        groupPerformanceViewModel.setGroupId(groupId);
+        groupPerformanceViewModel.setSubjectId(subjectId);
 
-        groupPerformanceViewModel.downloadStudentsInGroup(group);
-        groupPerformanceViewModel.downloadStudentsEvents(subject, group);
-        groupPerformanceViewModel.downloadStudentsLessonsByModules(subject, group);
+        groupPerformanceViewModel.downloadStudentsInGroup(groupId);
+        groupPerformanceViewModel.downloadEvents(groupId, subjectId, semesterId);
+        groupPerformanceViewModel.downloadLessonsByModules(groupId, subjectId, semesterId);
+        groupPerformanceViewModel.downloadStudentsEvents(groupId, subjectId, semesterId);
+        groupPerformanceViewModel.downloadStudentsLessonsByModules(groupId, subjectId, semesterId);
 
         //TODO подумать как оставлять первую строку и первый столбец на месте при скроллинге
         int orientation = getResources().getConfiguration().orientation;
@@ -57,8 +63,9 @@ public class GroupPerformanceFragment extends Fragment {
             addEventButton.setVisibility(isProfessorRules ? View.VISIBLE : View.GONE);
             addEventButton.setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
-                bundle.putString("subject", subject);
-                bundle.putString("group", group);
+                bundle.putInt("semesterId", semesterId);
+                bundle.putInt("groupId", groupId);
+                bundle.putInt("subjectId", subjectId);
                 Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_event_adding, bundle);
             });
 
@@ -76,7 +83,8 @@ public class GroupPerformanceFragment extends Fragment {
                     return;
                 }
 
-                generateEventsTable(root, groupPerformanceViewModel.getStudentsInGroup().getValue(), studentsEvents);
+                generateEventsTable(root, groupPerformanceViewModel.getStudentsInGroup().getValue(),
+                        groupPerformanceViewModel.getEvents().getValue(), studentsEvents);
             });
         } else {
             int page = getArguments() != null ? getArguments().getInt("openPage") : 0;
@@ -97,21 +105,21 @@ public class GroupPerformanceFragment extends Fragment {
         return root;
     }
 
-    private void generateEventsTable(View root, ArrayList<Student> students, ArrayList<ArrayList<StudentEvent>> studentsEvents) {
+    private void generateEventsTable(View root, ArrayList<Student> students, ArrayList<Event> events, ArrayList<ArrayList<StudentEvent>> studentsEvents) {
         TableLayout studentsInModuleEventsTable = root.findViewById(R.id.studentsInModuleEventsTable);
         int padding2inDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics());
         int padding5inDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
 
-        TableRow eventsRow = generateEventsRow(padding2inDp, padding5inDp, studentsEvents.get(0));
+        TableRow eventsRow = generateEventsRow(padding2inDp, padding5inDp, events);
         studentsInModuleEventsTable.addView(eventsRow);
 
         for (int i = 0; i < students.size(); i++) {
-            TableRow pointsRow = generatePointsRow(padding2inDp, padding5inDp, students.get(i), studentsEvents.get(i));
+            TableRow pointsRow = generatePointsRow(padding2inDp, padding5inDp, students.get(i), events, studentsEvents.get(i));
             studentsInModuleEventsTable.addView(pointsRow);
         }
     }
 
-    private TableRow generateEventsRow(int padding2inDp, int padding5inDp, ArrayList<StudentEvent> studentEvents) {
+    private TableRow generateEventsRow(int padding2inDp, int padding5inDp, ArrayList<Event> events) {
         TableRow eventsRow = new TableRow(getContext());
         eventsRow.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE |
                 LinearLayout.SHOW_DIVIDER_BEGINNING | LinearLayout.SHOW_DIVIDER_END);
@@ -124,7 +132,7 @@ public class GroupPerformanceFragment extends Fragment {
         infoView.setGravity(Gravity.CENTER);
         eventsRow.addView(infoView);
 
-        for (StudentEvent event : studentEvents) {
+        for (Event event : events) {
             TextView eventView = new TextView(getContext());
             eventView.setTextSize(20);
             eventView.setText(event.getTitle());
@@ -132,9 +140,7 @@ public class GroupPerformanceFragment extends Fragment {
             eventView.setGravity(Gravity.CENTER);
             eventView.setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
-                bundle.putString("subject", subject);
-                bundle.putString("group", group);
-                bundle.putString("eventTitle", event.getTitle());
+                bundle.putInt("eventId", event.getId());
                 Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_event_editing, bundle);
             });
             eventsRow.addView(eventView);
@@ -143,7 +149,7 @@ public class GroupPerformanceFragment extends Fragment {
         return eventsRow;
     }
 
-    private TableRow generatePointsRow(int padding2inDp, int padding5inDp, Student student,
+    private TableRow generatePointsRow(int padding2inDp, int padding5inDp, Student student, ArrayList<Event> events,
                                        ArrayList<StudentEvent> studentEvents) {
         TableRow pointsRow = new TableRow(getContext());
         pointsRow.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE |
@@ -157,27 +163,31 @@ public class GroupPerformanceFragment extends Fragment {
         studentView.setGravity(Gravity.CENTER);
         studentView.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
-            bundle.putString("student", ((TextView) view).getText().toString());
-            bundle.putString("group", group);
+            bundle.putInt("studentId", student.getId());
+            bundle.putInt("semesterId", semesterId);
             Navigation.findNavController(view).navigate(R.id.action_group_performance_to_student_profile, bundle);
         });
         pointsRow.addView(studentView);
 
-        for (StudentEvent studentEvent : studentEvents) {
+        for (Event event : events) {
             TextView pointsView = new TextView(getContext());
             pointsView.setTextSize(20);
             pointsView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
-            if (studentEvent.getPoints() != -1)
-                pointsView.setText(String.valueOf(studentEvent.getPoints()));
-            else
-                pointsView.setText("");
+            StudentEvent studentEventChosen = null;
+            int lastAttempt = 0;
+            for (StudentEvent studentEvent : studentEvents) {
+                if (studentEvent.getStudentId() == student.getId() && studentEvent.getEventId() == event.getId()
+                        && studentEvent.getAttemptNumber() > lastAttempt) {
+                    studentEventChosen = studentEvent;
+                    lastAttempt = studentEvent.getAttemptNumber();
+                }
+            }
+            pointsView.setText(lastAttempt == 0 ? "" : String.valueOf(studentEventChosen.getEarnedPoints() + studentEventChosen.getBonusPoints()));
             pointsView.setGravity(Gravity.CENTER);
             pointsView.setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
-                bundle.putString("subject", subject);
-                bundle.putString("group", group);
-                bundle.putString("earnedPoints", String.valueOf(studentEvent.getPoints()));
-                bundle.putString("eventTitle", studentEvent.getTitle());
+                bundle.putInt("studentId", student.getId());
+                bundle.putInt("eventId", event.getId());
                 Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_student_event, bundle);
             });
             pointsRow.addView(pointsView);

@@ -27,7 +27,7 @@ public class SubjectEditingDialogFragment extends DialogFragment {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_subject_editing, null);
 
         SubjectEditingViewModel subjectEditingViewModel = new ViewModelProvider(this).get(SubjectEditingViewModel.class);
-        int subjectId = 1;
+        int subjectId = getArguments().getInt("subjectId");
         subjectEditingViewModel.downloadSubjectById(subjectId);
 
         EditText subjectTitle = root.findViewById(R.id.subjectTitleEditing);
@@ -37,7 +37,7 @@ public class SubjectEditingDialogFragment extends DialogFragment {
                 return;
             }
 
-            subjectTitle.setText(subject);
+            subjectTitle.setText(subject.getTitle());
         });
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
@@ -73,7 +73,7 @@ public class SubjectEditingDialogFragment extends DialogFragment {
         dialog = builder.setView(root)
                 .setTitle("Измените название предмета")
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    subjectEditingViewModel.editSubject(subjectTitle.getText().toString());
+                    subjectEditingViewModel.editSubject(subjectId, subjectTitle.getText().toString());
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", 1);

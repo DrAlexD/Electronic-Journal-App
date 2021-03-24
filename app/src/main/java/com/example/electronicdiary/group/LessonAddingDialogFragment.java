@@ -26,6 +26,10 @@ public class LessonAddingDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_lesson_adding, null);
 
+        int semesterId = getArguments().getInt("semesterId");
+        int groupId = getArguments().getInt("groupId");
+        int subjectId = getArguments().getInt("subjectId");
+
         LessonAddingViewModel lessonAddingViewModel = new ViewModelProvider(this).get(LessonAddingViewModel.class);
 
         EditText lessonDate = root.findViewById(R.id.lessonDateAdding);

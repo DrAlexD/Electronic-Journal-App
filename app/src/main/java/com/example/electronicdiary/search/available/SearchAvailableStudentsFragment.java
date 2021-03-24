@@ -25,7 +25,7 @@ public class SearchAvailableStudentsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_search_available_students, container, false);
 
         SearchAvailableStudentsViewModel searchAvailableStudentsViewModel = new ViewModelProvider(this).get(SearchAvailableStudentsViewModel.class);
-        searchAvailableStudentsViewModel.downloadAvailableStudents();
+        searchAvailableStudentsViewModel.downloadAvailableStudents(getArguments().getInt("semesterId"));
 
         final RecyclerView recyclerView = root.findViewById(R.id.searchedAvailableStudentsList);
         searchAvailableStudentsViewModel.getAvailableStudents().observe(getViewLifecycleOwner(), availableStudents -> {
@@ -38,8 +38,8 @@ public class SearchAvailableStudentsFragment extends Fragment {
                 int position = viewHolder.getAdapterPosition();
 
                 Bundle bundle = new Bundle();
-                bundle.putString("student", availableStudents.get(position).getFullName());
-                bundle.putString("group", availableStudents.get(position).getGroup());
+                bundle.putInt("studentId", availableStudents.get(position).getId());
+                bundle.putInt("groupId", availableStudents.get(position).getGroupId());
                 Navigation.findNavController(view).navigate(R.id.action_search_available_students_to_student_profile, bundle);
             };
 

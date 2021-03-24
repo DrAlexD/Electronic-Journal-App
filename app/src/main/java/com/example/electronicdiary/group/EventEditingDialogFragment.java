@@ -26,8 +26,9 @@ public class EventEditingDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_event_editing, null);
 
+        int eventId = getArguments().getInt("eventId");
+
         EventEditingViewModel eventEditingViewModel = new ViewModelProvider(this).get(EventEditingViewModel.class);
-        int eventId = 1;
         eventEditingViewModel.downloadEventById(eventId);
 
         EditText eventMinPoints = root.findViewById(R.id.eventMinPointsEditing);
@@ -71,7 +72,7 @@ public class EventEditingDialogFragment extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
-                .setTitle("Изменить данные " + getArguments().getString("eventTitle"))
+                .setTitle("Изменить данные " + eventEditingViewModel.getEvent().getValue().getTitle())
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
                     eventEditingViewModel.editEvent(eventMinPoints.getText().toString());
 
@@ -84,8 +85,9 @@ public class EventEditingDialogFragment extends DialogFragment {
                     eventEditingViewModel.deleteEvent(eventId);
 
                     Bundle bundle = new Bundle();
-                    bundle.putString("subject", getArguments().getString("subject"));
-                    bundle.putString("event", getArguments().getString("event"));
+                    bundle.putInt("semesterId", eventEditingViewModel.getEvent().getValue().getSemesterId());
+                    bundle.putInt("groupId", eventEditingViewModel.getEvent().getValue().getGroupId());
+                    bundle.putInt("subjectId", eventEditingViewModel.getEvent().getValue().getSubjectId());
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_event_editing_to_group_performance, bundle);
                 }).create();

@@ -27,7 +27,7 @@ public class GroupEditingDialogFragment extends DialogFragment {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_group_editing, null);
 
         GroupEditingViewModel groupEditingViewModel = new ViewModelProvider(this).get(GroupEditingViewModel.class);
-        int groupId = 1;
+        int groupId = getArguments().getInt("groupId");
         groupEditingViewModel.downloadGroupById(groupId);
 
         EditText groupTitle = root.findViewById(R.id.groupTitleEditing);
@@ -37,7 +37,7 @@ public class GroupEditingDialogFragment extends DialogFragment {
                 return;
             }
 
-            groupTitle.setText(group);
+            groupTitle.setText(group.getTitle());
         });
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
@@ -73,7 +73,7 @@ public class GroupEditingDialogFragment extends DialogFragment {
         dialog = builder.setView(root)
                 .setTitle("Измените название группы")
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    groupEditingViewModel.editGroup(groupTitle.getText().toString());
+                    groupEditingViewModel.editGroup(groupId, groupTitle.getText().toString());
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", 1);

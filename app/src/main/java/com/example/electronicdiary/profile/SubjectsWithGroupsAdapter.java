@@ -7,17 +7,19 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
+import com.example.electronicdiary.Group;
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.Subject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 class SubjectsWithGroupsAdapter extends BaseExpandableListAdapter {
     private final LayoutInflater inflater;
-    private final ArrayList<String> subjects;
-    private final HashMap<String, ArrayList<String>> subjectsWithGroups;
+    private final ArrayList<Subject> subjects;
+    private final HashMap<Subject, ArrayList<Group>> subjectsWithGroups;
 
-    SubjectsWithGroupsAdapter(Context context, ArrayList<String> subjects, HashMap<String, ArrayList<String>> subjectWithGroups) {
+    SubjectsWithGroupsAdapter(Context context, ArrayList<Subject> subjects, HashMap<Subject, ArrayList<Group>> subjectWithGroups) {
         this.inflater = LayoutInflater.from(context);
         this.subjects = subjects;
         this.subjectsWithGroups = subjectWithGroups;
@@ -60,26 +62,26 @@ class SubjectsWithGroupsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View view, ViewGroup parent) {
-        String subjectTitle = subjects.get(groupPosition);
+        Subject subject = subjects.get(groupPosition);
         if (view == null) {
             view = inflater.inflate(R.layout.holder_subject_with_group, null);
         }
 
         TextView subjectTitleView = view.findViewById(R.id.subjectTitle);
-        subjectTitleView.setText(subjectTitle);
+        subjectTitleView.setText(subject.getTitle());
 
         return view;
     }
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isExpanded, View view, ViewGroup parent) {
-        String groupTitle = subjectsWithGroups.get(subjects.get(groupPosition)).get(childPosition);
+        Group group = subjectsWithGroups.get(subjects.get(groupPosition)).get(childPosition);
         if (view == null) {
             view = inflater.inflate(R.layout.holder_group_in_subject, null);
         }
 
         TextView groupTitleView = view.findViewById(R.id.groupTitle);
-        groupTitleView.setText(groupTitle);
+        groupTitleView.setText(group.getTitle());
 
         return view;
     }

@@ -24,22 +24,27 @@ public class SearchAvailableGroupsInSubjectFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_search_available_groups_in_subject, container, false);
 
-        SearchAvailableGroupsInSubjectViewModel searchAvailableGroupsInSubjectViewModel = new ViewModelProvider(this).get(SearchAvailableGroupsInSubjectViewModel.class);
-        searchAvailableGroupsInSubjectViewModel.downloadAvailableGroupsInSubject(getArguments().getString("subjectTitle"));
+        SearchAvailableGroupsInSubjectViewModel searchAvailableGroupsInSubjectViewModel = new ViewModelProvider(this).
+                get(SearchAvailableGroupsInSubjectViewModel.class);
+        searchAvailableGroupsInSubjectViewModel.downloadAvailableGroupsInSubject(getArguments().getInt("professorId"),
+                getArguments().getInt("subjectId"), getArguments().getInt("semesterId"));
 
         final RecyclerView recyclerView = root.findViewById(R.id.searchedAvailableGroupsInSubjectList);
-        searchAvailableGroupsInSubjectViewModel.getAvailableGroupsInSubject().observe(getViewLifecycleOwner(), availableGroupsInSubject -> {
-            if (availableGroupsInSubject == null) {
-                return;
-            }
+        searchAvailableGroupsInSubjectViewModel.getAvailableGroupsInSubject().observe(getViewLifecycleOwner(),
+                availableGroupsInSubject -> {
+                    if (availableGroupsInSubject == null) {
+                        return;
+                    }
 
-            View.OnClickListener onItemClickListener = view -> {
-                RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
-                int position = viewHolder.getAdapterPosition();
+                    View.OnClickListener onItemClickListener = view -> {
+                        RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
+                        int position = viewHolder.getAdapterPosition();
 
-                //searchAvailableGroupsInSubjectViewModel.deleteGroupInAvailableSubject(professorId, availableGroupsInSubject.get(position).getId(), subjectId);
-                Navigation.findNavController(view).navigate(R.id.action_search_available_groups_in_subject_to_profile);
-            };
+                        searchAvailableGroupsInSubjectViewModel.deleteGroupInAvailableSubject(getArguments().getInt("professorId"),
+                                availableGroupsInSubject.get(position).getId(), getArguments().getInt("subjectId"),
+                                getArguments().getInt("semesterId"));
+                        Navigation.findNavController(view).navigate(R.id.action_search_available_groups_in_subject_to_profile);
+                    };
 
             groupsAdapter = new GroupsAdapter(getContext(), availableGroupsInSubject, onItemClickListener);
             recyclerView.setAdapter(groupsAdapter);

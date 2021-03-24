@@ -26,8 +26,9 @@ public class LessonEditingDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_lesson_editing, null);
 
+        int lessonId = getArguments().getInt("lessonId");
+
         LessonEditingViewModel lessonEditingViewModel = new ViewModelProvider(this).get(LessonEditingViewModel.class);
-        int lessonId = 1;
         lessonEditingViewModel.downloadLessonById(lessonId);
 
         EditText lessonAttendPoints = root.findViewById(R.id.lessonAttendPointsEditing);

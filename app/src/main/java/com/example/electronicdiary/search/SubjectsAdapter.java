@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.Subject;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -20,11 +21,11 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.ViewHo
     private final LayoutInflater inflater;
     private final View.OnClickListener onItemClickListener;
 
-    private ArrayList<String> subjects;
+    private ArrayList<Subject> subjects;
 
-    private ArrayList<String> originalSubjects;
+    private ArrayList<Subject> originalSubjects;
 
-    public SubjectsAdapter(Context context, ArrayList<String> subjects, View.OnClickListener onItemClickListener) {
+    public SubjectsAdapter(Context context, ArrayList<Subject> subjects, View.OnClickListener onItemClickListener) {
         this.inflater = LayoutInflater.from(context);
         this.onItemClickListener = onItemClickListener;
         this.subjects = subjects;
@@ -39,9 +40,9 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NotNull SubjectsAdapter.ViewHolder holder, int position) {
-        String subject = subjects.get(position);
+        Subject subject = subjects.get(position);
 
-        holder.subjectTitleView.setText(subject);
+        holder.subjectTitleView.setText(subject.getTitle());
     }
 
     @Override
@@ -55,7 +56,7 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.ViewHo
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults oReturn = new FilterResults();
-                ArrayList<String> filterResults = new ArrayList<>();
+                ArrayList<Subject> filterResults = new ArrayList<>();
 
                 if (originalSubjects == null) {
                     originalSubjects = subjects;
@@ -63,8 +64,8 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.ViewHo
 
                 String findTextChange = constraint.toString();
                 if (!findTextChange.equals("")) {
-                    for (String subject : originalSubjects) {
-                        if ((subject.toLowerCase()).contains(findTextChange.toLowerCase()))
+                    for (Subject subject : originalSubjects) {
+                        if ((subject.getTitle().toLowerCase()).contains(findTextChange.toLowerCase()))
                             filterResults.add(subject);
                     }
                 } else {
@@ -77,7 +78,7 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.ViewHo
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                subjects = (ArrayList<String>) results.values;
+                subjects = (ArrayList<Subject>) results.values;
                 notifyDataSetChanged();
             }
         };

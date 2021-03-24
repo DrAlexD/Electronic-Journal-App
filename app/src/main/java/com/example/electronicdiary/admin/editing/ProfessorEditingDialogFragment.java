@@ -20,7 +20,7 @@ import com.example.electronicdiary.R;
 import org.jetbrains.annotations.NotNull;
 
 public class ProfessorEditingDialogFragment extends DialogFragment {
-    private final int professorId = 1;
+    private int professorId;
 
     private AlertDialog dialog;
     private ProfessorEditingViewModel professorEditingViewModel;
@@ -36,6 +36,7 @@ public class ProfessorEditingDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_professor_editing, null);
 
+        professorId = getArguments().getInt("professorId");
         professorEditingViewModel = new ViewModelProvider(this).get(ProfessorEditingViewModel.class);
         professorEditingViewModel.downloadProfessorById(professorId);
 
@@ -45,7 +46,7 @@ public class ProfessorEditingDialogFragment extends DialogFragment {
         dialog = builder.setView(root)
                 .setTitle("Измените данные преподавателя")
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    professorEditingViewModel.editProfessor(professorName.getText().toString(),
+                    professorEditingViewModel.editProfessor(professorId, professorName.getText().toString(),
                             professorSecondName.getText().toString(), professorLogin.getText().toString(),
                             professorPassword.getText().toString());
 

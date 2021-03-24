@@ -91,6 +91,10 @@
             app:popUpTo="@id/nav_group_performance"
             app:popUpToInclusive="true" />
         <action
+            android:id="@+id/pop_out_dialog_student_event_to_student_performance"
+            app:popUpTo="@id/nav_student_performance"
+            app:popUpToInclusive="true" />
+        <action
             android:id="@+id/action_dialog_student_event_to_group_performance"
             app:destination="@id/nav_group_performance"
             app:popUpTo="@id/nav_group_performance"
@@ -133,6 +137,10 @@
             app:popUpTo="@id/nav_group_performance"
             app:popUpToInclusive="true" />
         <action
+            android:id="@+id/pop_out_dialog_student_lesson_to_student_performance"
+            app:popUpTo="@id/nav_student_performance"
+            app:popUpToInclusive="true" />
+        <action
             android:id="@+id/action_dialog_student_lesson_to_group_performance"
             app:destination="@id/nav_group_performance"
             app:popUpTo="@id/nav_group_performance"
@@ -164,6 +172,12 @@
             android:id="@+id/pop_out_student_performance_to_student_profile"
             app:popUpTo="@id/nav_student_profile"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_student_performance_to_dialog_student_event"
+            app:destination="@id/nav_dialog_student_event" />
+        <action
+            android:id="@+id/action_student_performance_to_dialog_student_lesson"
+            app:destination="@id/nav_dialog_student_lesson" />
     </fragment>
 
     <fragment

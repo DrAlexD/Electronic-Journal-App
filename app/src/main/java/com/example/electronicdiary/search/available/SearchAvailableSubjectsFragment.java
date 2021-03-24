@@ -25,7 +25,7 @@ public class SearchAvailableSubjectsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_search_available_subjects, container, false);
 
         SearchAvailableSubjectsViewModel searchAvailableSubjectsViewModel = new ViewModelProvider(this).get(SearchAvailableSubjectsViewModel.class);
-        searchAvailableSubjectsViewModel.downloadAvailableSubjects();
+        searchAvailableSubjectsViewModel.downloadAvailableSubjects(getArguments().getInt("semesterId"));
 
         int actionCode = getArguments().getInt("actionCode");
 
@@ -42,15 +42,16 @@ public class SearchAvailableSubjectsFragment extends Fragment {
                 if (actionCode == 11) {
                     Bundle bundle = new Bundle();
                     bundle.putInt("actionCode", 11);
-                    bundle.putString("subjectTitle", availableSubjects.get(position));
+                    bundle.putInt("subjectId", availableSubjects.get(position).getId());
                     Navigation.findNavController(view).navigate(R.id.action_search_available_subjects_to_search_all_groups, bundle);
                 } else if (actionCode == 12) {
-                    //searchAvailableSubjectsViewModel.deleteAvailableSubject(professorId, availableSubjects.get(position).getId());
+                    searchAvailableSubjectsViewModel.deleteAvailableSubject(getArguments().getInt("professorId"),
+                            availableSubjects.get(position).getId(), getArguments().getInt("semesterId"));
 
                     Navigation.findNavController(view).navigate(R.id.action_search_available_subjects_to_profile);
                 } else if (actionCode == 13) {
                     Bundle bundle = new Bundle();
-                    bundle.putString("subjectTitle", availableSubjects.get(position));
+                    bundle.putInt("subjectId", availableSubjects.get(position).getId());
                     Navigation.findNavController(view).navigate(R.id.action_search_available_subjects_to_search_available_groups_in_subject, bundle);
                 }
             };

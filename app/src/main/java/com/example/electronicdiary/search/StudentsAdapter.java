@@ -43,7 +43,7 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.ViewHo
         Student student = students.get(position);
 
         holder.studentNameView.setText(student.getFullName());
-        holder.studentGroupView.setText(student.getGroup());
+        holder.studentGroupView.setText(student.getGroupId());
     }
 
     @Override
@@ -67,7 +67,7 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.ViewHo
                 if (!findTextChange.equals("")) {
                     for (Student student : originalStudents) {
                         if ((student.getFullName().toLowerCase()).contains(findTextChange.toLowerCase()) ||
-                                (student.getGroup().toLowerCase()).contains(findTextChange.toLowerCase()))
+                                (student.getGroupId().toLowerCase()).contains(findTextChange.toLowerCase()))
                             filterResults.add(student);
                     }
                 } else {

@@ -19,13 +19,23 @@ public class StudentPerformanceFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_student_performance, container, false);
 
-        String subject = getArguments().getString("subject");
-        String studentName = getArguments().getString("student");
-        String group = getArguments().getString("group");
+        int studentId = getArguments().getInt("studentId");
+        int subjectId = getArguments().getInt("subjectId");
+        int semesterId = getArguments().getInt("semesterId");
 
         StudentPerformanceViewModel studentPerformanceViewModel = new ViewModelProvider(this).get(StudentPerformanceViewModel.class);
-        studentPerformanceViewModel.downloadStudentEvents(studentName, subject, group);
-        studentPerformanceViewModel.downloadStudentLessonsByModules(studentName, subject, group);
+        studentPerformanceViewModel.downloadStudentById(studentId);
+        studentPerformanceViewModel.downloadStudentEvents(studentId, subjectId, semesterId);
+        studentPerformanceViewModel.downloadStudentLessonsByModules(studentId, subjectId, semesterId);
+
+        studentPerformanceViewModel.getStudent().observe(getViewLifecycleOwner(), student -> {
+            if (student == null) {
+                return;
+            }
+
+            studentPerformanceViewModel.downloadEvents(student.getGroupId(), subjectId, semesterId);
+            studentPerformanceViewModel.downloadLessonsByModules(student.getGroupId(), subjectId, semesterId);
+        });
 
         EventsOrLessonsPagerAdapter eventsOrLessonsPagerAdapter = new EventsOrLessonsPagerAdapter(this);
         ViewPager2 viewPager = root.findViewById(R.id.events_or_lessons_pager);
@@ -38,9 +48,9 @@ public class StudentPerformanceFragment extends Fragment {
             if (position == 0)
                 tab.setText("Мероприятия");
             else if (position == 1)
-                tab.setText("Посещаемость (лекция)");
+                tab.setText("Лекции");
             else if (position == 2)
-                tab.setText("Посещаемость (семинар)");
+                tab.setText("Семинары");
         }).attach();
 
         return root;

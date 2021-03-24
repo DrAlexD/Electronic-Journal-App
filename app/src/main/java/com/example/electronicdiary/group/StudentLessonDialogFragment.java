@@ -26,12 +26,16 @@ public class StudentLessonDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_student_lesson, null);
 
+        int position = getArguments().getInt("position");
+        int studentId = getArguments().getInt("studentId");
+        int lessonId = getArguments().getInt("lessonId");
+
         boolean isAttended = getArguments().getBoolean("isAttended");
         StudentLessonViewModel studentLessonViewModel = new ViewModelProvider(this).get(StudentLessonViewModel.class);
 
         EditText lessonEarnedPoints = root.findViewById(R.id.studentLessonEarnedPoints);
 
-        int lessonId;
+        //int lessonId;
         if (isAttended) {
             lessonId = 1;
             studentLessonViewModel.downloadStudentLessonById(lessonId);

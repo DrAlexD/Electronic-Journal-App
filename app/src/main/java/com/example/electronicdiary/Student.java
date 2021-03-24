@@ -10,7 +10,7 @@ public class Student extends User {
         this.groupId = groupId;
     }
 
-    public int getGroup() {
+    public int getGroupId() {
         return groupId;
     }
 

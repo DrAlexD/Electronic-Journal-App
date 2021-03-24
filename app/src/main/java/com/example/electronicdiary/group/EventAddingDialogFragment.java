@@ -27,6 +27,10 @@ public class EventAddingDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_event_adding, null);
 
+        int semesterId = getArguments().getInt("semesterId");
+        int groupId = getArguments().getInt("groupId");
+        int subjectId = getArguments().getInt("subjectId");
+
         EventAddingViewModel eventAddingViewModel = new ViewModelProvider(this).get(EventAddingViewModel.class);
 
         Spinner eventType = root.findViewById(R.id.eventTypeAdding);
@@ -68,8 +72,9 @@ public class EventAddingDialogFragment extends DialogFragment {
                     eventAddingViewModel.addEvent(eventMinPoints.getText().toString(), eventType.getSelectedItemPosition());
 
                     Bundle bundle = new Bundle();
-                    bundle.putString("subject", getArguments().getString("subject"));
-                    bundle.putString("group", getArguments().getString("group"));
+                    bundle.putInt("semesterId", semesterId);
+                    bundle.putInt("groupId", groupId);
+                    bundle.putInt("subjectId", subjectId);
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_event_adding_to_group_performance, bundle);
                 }).create();

@@ -40,38 +40,48 @@ public class SearchAllGroupsFragment extends Fragment {
                 int position = viewHolder.getAdapterPosition();
 
                 if (actionCode == 0) {
-                    //searchAllGroupsViewModel.addStudent(studentName, studentSecondName, allGroups.get(position).getId(), studentLogin, studentPassword);
+                    String studentName = getArguments().getString("studentName");
+                    String studentSecondName = getArguments().getString("studentSecondName");
+                    String studentLogin = getArguments().getString("studentLogin");
+                    String studentPassword = getArguments().getString("studentPassword");
+
+                    searchAllGroupsViewModel.addStudent(studentName, studentSecondName, allGroups.get(position).getId(), studentLogin, studentPassword);
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", actionCode);
                     Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_admin_actions, bundle);
                 } else if (actionCode == 1) {
                     Bundle bundle = new Bundle();
-                    bundle.putString("groupTitle", allGroups.get(position));
+                    bundle.putInt("groupId", allGroups.get(position).getId());
                     Navigation.findNavController(root).navigate(R.id.action_search_all_groups_to_dialog_group_editing, bundle);
                 } else if (actionCode == 2) {
-                    //searchAllGroupsViewModel.deleteGroup(allGroups.get(position).getId());
+                    searchAllGroupsViewModel.deleteGroup(allGroups.get(position).getId());
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", actionCode);
                     Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_admin_actions, bundle);
                 } else if (actionCode == 3) {
-                    /*if (getArguments().getString("groupId") != allGroups.get(position).getId()) {
-                        searchAllGroupsViewModel.changeStudentGroup(studentId, allGroups.get(position).getId());
+                    if (getArguments().getInt("groupId") != allGroups.get(position).getId()) {
+                        searchAllGroupsViewModel.changeStudentGroup(getArguments().getInt("studentId"),
+                                allGroups.get(position).getId());
 
                         Bundle bundle = new Bundle();
                         bundle.putInt("openPage", 1);
                         Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_admin_actions, bundle);
-                    }*/
+                    }
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", 1);
                     Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_admin_actions, bundle);
                 } else if (actionCode == 10) {
-                    //searchAllGroupsViewModel.addAvailableSubject(professorId, subjectId, allGroups.get(position).getId());
+                    searchAllGroupsViewModel.addAvailableSubject(getArguments().getInt("professorId"),
+                            "isLecturer", allGroups.get(position).getId(), getArguments().getInt("subjectId"),
+                            getArguments().getInt("semesterId"), "isExam");
 
                     Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_profile);
                 } else if (actionCode == 11) {
-                    //searchAllGroupsViewModel.addGroupInAvailableSubject(professorId, allGroups.get(position).getId(), subjectId);
+                    searchAllGroupsViewModel.addGroupInAvailableSubject("lecturerId",
+                            "seminarianId", allGroups.get(position).getId(), getArguments().getInt("subjectId"),
+                            getArguments().getInt("semesterId"), "isExam");
 
                     Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_profile);
                 }

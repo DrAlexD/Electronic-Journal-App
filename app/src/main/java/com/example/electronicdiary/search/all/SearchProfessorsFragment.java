@@ -41,7 +41,7 @@ public class SearchProfessorsFragment extends Fragment {
 
                 if (actionCode == 1) {
                     Bundle bundle = new Bundle();
-                    bundle.putString("professor", professors.get(position).getFullName());
+                    bundle.putInt("professorId", professors.get(position).getId());
                     Navigation.findNavController(view).navigate(R.id.action_search_professors_to_dialog_professor_editing, bundle);
                 } else if (actionCode == 2) {
                     searchProfessorsViewModel.deleteProfessor(professors.get(position).getId());

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.electronicdiary.Group;
 import com.example.electronicdiary.R;
 
 import org.jetbrains.annotations.NotNull;
@@ -20,11 +21,11 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.ViewHolder
     private final LayoutInflater inflater;
     private final View.OnClickListener onItemClickListener;
 
-    private ArrayList<String> groups;
+    private ArrayList<Group> groups;
 
-    private ArrayList<String> originalGroups;
+    private ArrayList<Group> originalGroups;
 
-    public GroupsAdapter(Context context, ArrayList<String> groups, View.OnClickListener onItemClickListener) {
+    public GroupsAdapter(Context context, ArrayList<Group> groups, View.OnClickListener onItemClickListener) {
         this.inflater = LayoutInflater.from(context);
         this.onItemClickListener = onItemClickListener;
         this.groups = groups;
@@ -39,9 +40,9 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NotNull GroupsAdapter.ViewHolder holder, int position) {
-        String group = groups.get(position);
+        Group group = groups.get(position);
 
-        holder.groupTitleView.setText(group);
+        holder.groupTitleView.setText(group.getTitle());
     }
 
     @Override
@@ -55,7 +56,7 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.ViewHolder
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults oReturn = new FilterResults();
-                ArrayList<String> filterResults = new ArrayList<>();
+                ArrayList<Group> filterResults = new ArrayList<>();
 
                 if (originalGroups == null) {
                     originalGroups = groups;
@@ -63,8 +64,8 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.ViewHolder
 
                 String findTextChange = constraint.toString();
                 if (!findTextChange.equals("")) {
-                    for (String group : originalGroups) {
-                        if ((group.toLowerCase()).contains(findTextChange.toLowerCase()))
+                    for (Group group : originalGroups) {
+                        if ((group.getTitle().toLowerCase()).contains(findTextChange.toLowerCase()))
                             filterResults.add(group);
                     }
                 } else {
@@ -77,7 +78,7 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.ViewHolder
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                groups = (ArrayList<String>) results.values;
+                groups = (ArrayList<Group>) results.values;
                 notifyDataSetChanged();
             }
         };

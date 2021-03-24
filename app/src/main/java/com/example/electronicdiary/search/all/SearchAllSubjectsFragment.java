@@ -41,10 +41,10 @@ public class SearchAllSubjectsFragment extends Fragment {
 
                 if (actionCode == 1) {
                     Bundle bundle = new Bundle();
-                    bundle.putString("subjectTitle", allSubjects.get(position));
+                    bundle.putInt("subjectId", allSubjects.get(position).getId());
                     Navigation.findNavController(view).navigate(R.id.action_search_all_subjects_to_dialog_subject_editing, bundle);
                 } else if (actionCode == 2) {
-                    //searchAllSubjectsViewModel.deleteSubject(allSubjects.get(position).getId());
+                    searchAllSubjectsViewModel.deleteSubject(allSubjects.get(position).getId());
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", 2);
@@ -52,7 +52,7 @@ public class SearchAllSubjectsFragment extends Fragment {
                 } else if (actionCode == 10) {
                     Bundle bundle = new Bundle();
                     bundle.putInt("actionCode", 10);
-                    bundle.putString("subjectTitle", allSubjects.get(position));
+                    bundle.putInt("subjectId", allSubjects.get(position).getId());
                     Navigation.findNavController(view).navigate(R.id.action_search_all_subjects_to_search_all_groups, bundle);
                 }
             };

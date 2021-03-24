@@ -20,7 +20,7 @@ import com.example.electronicdiary.R;
 import org.jetbrains.annotations.NotNull;
 
 public class StudentEditingDialogFragment extends DialogFragment {
-    private final int studentId = 1;
+    private int studentId;
 
     private AlertDialog dialog;
     private StudentEditingViewModel studentEditingViewModel;
@@ -36,6 +36,7 @@ public class StudentEditingDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_student_editing, null);
 
+        studentId = getArguments().getInt("studentId");
         studentEditingViewModel = new ViewModelProvider(this).get(StudentEditingViewModel.class);
         studentEditingViewModel.downloadStudentById(studentId);
 
@@ -45,7 +46,7 @@ public class StudentEditingDialogFragment extends DialogFragment {
         dialog = builder.setView(root)
                 .setTitle("Измените данные студента")
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    studentEditingViewModel.editStudent(studentName.getText().toString(),
+                    studentEditingViewModel.editStudent(studentId, studentName.getText().toString(),
                             studentSecondName.getText().toString(), studentLogin.getText().toString(),
                             studentPassword.getText().toString());
 

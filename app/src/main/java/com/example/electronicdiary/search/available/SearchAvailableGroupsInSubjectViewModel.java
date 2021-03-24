@@ -16,8 +16,9 @@ public class SearchAvailableGroupsInSubjectViewModel extends ViewModel {
         return availableGroupsInSubject;
     }
 
-    public void downloadAvailableGroupsInSubject(int subjectId, int semesterId) {
-        this.availableGroupsInSubject.setValue(Repository.getInstance().getAvailableGroupsInSubject(subjectId, semesterId));
+    public void downloadAvailableGroupsInSubject(int professorId, int subjectId, int semesterId) {
+        this.availableGroupsInSubject.setValue(Repository.getInstance().
+                getAvailableGroupsInSubject(professorId, subjectId, semesterId));
     }
 
     public void deleteGroupInAvailableSubject(int professorId, int groupId, int subjectId, int semesterId) {

@@ -26,6 +26,9 @@ public class StudentEventDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_student_event, null);
 
+        int studentId = getArguments().getInt("studentId");
+        int eventId = getArguments().getInt("eventId");
+
         boolean isHasData = getArguments().getString("earnedPoints") != null;
         StudentEventViewModel studentEventViewModel = new ViewModelProvider(this).get(StudentEventViewModel.class);
 

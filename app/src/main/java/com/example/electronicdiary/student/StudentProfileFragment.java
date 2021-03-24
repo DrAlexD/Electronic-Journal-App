@@ -1,6 +1,8 @@
 package com.example.electronicdiary.student;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,49 +17,69 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.Repository;
+import com.example.electronicdiary.Subject;
 
 public class StudentProfileFragment extends Fragment {
-    private String studentName;
-    private String group;
+    private int studentId;
+    private int semesterId;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_student_profile, container, false);
 
-        studentName = getArguments().getString("student");
-        group = getArguments().getString("group");
-
-        setPreferences(root);
+        if (getArguments() != null) {
+            studentId = getArguments().getInt("studentId");
+            semesterId = getArguments().getInt("semesterId");
+        } else {
+            studentId = Repository.getInstance().getUser().getId();
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+            semesterId = Integer.parseInt(sharedPreferences.getString(getString(R.string.current_semester), ""));
+        }
 
         StudentProfileViewModel studentProfileViewModel = new ViewModelProvider(this).get(StudentProfileViewModel.class);
-        studentProfileViewModel.downloadAvailableStudentSubjects(studentName, group);
+        studentProfileViewModel.downloadStudentById(studentId);
+        studentProfileViewModel.downloadAvailableStudentSubjects(studentId, semesterId);
+
+        studentProfileViewModel.getStudent().observe(getViewLifecycleOwner(), student -> {
+            if (student == null) {
+                return;
+            }
+
+            //TODO добавить отображение выбранного семестра в профиле студента
+            TextView username = root.findViewById(R.id.user_name_text);
+            username.setText(student.getFullName());
+
+            studentProfileViewModel.downloadGroupById(student.getGroupId());
+        });
+
+        studentProfileViewModel.getGroup().observe(getViewLifecycleOwner(), group -> {
+            if (group == null) {
+                return;
+            }
+
+            TextView userGroup = root.findViewById(R.id.user_group_text);
+            userGroup.setVisibility(View.VISIBLE);
+            userGroup.setText(group.getTitle());
+        });
 
         final ListView listView = root.findViewById(R.id.studentSubjectsList);
         studentProfileViewModel.getAvailableStudentSubjects().observe(getViewLifecycleOwner(), availableStudentSubjects -> {
             if (availableStudentSubjects == null) {
                 return;
             }
-            ArrayAdapter<String> subjectsAdapter = new ArrayAdapter<>(getContext(), R.layout.holder_subject_with_group, R.id.subjectTitle, availableStudentSubjects);
+
+            ArrayAdapter<Subject> subjectsAdapter = new ArrayAdapter<>(getContext(), R.layout.holder_subject_with_group, R.id.subjectTitle, availableStudentSubjects);
             listView.setAdapter(subjectsAdapter);
             listView.setOnItemClickListener((parent, view, position, id) -> {
                 Bundle bundle = new Bundle();
-                bundle.putString("subject", availableStudentSubjects.get(position));
-                bundle.putString("student", studentName);
-                bundle.putString("group", group);
+                bundle.putInt("semesterId", semesterId);
+                bundle.putInt("studentId", studentId);
+                bundle.putInt("subjectId", availableStudentSubjects.get(position).getId());
                 Navigation.findNavController(view).navigate(R.id.action_student_profile_to_student_performance, bundle);
             });
         });
         return root;
-    }
-
-    private void setPreferences(View root) {
-        //TODO добавить отображение выбранного семестра в профиле студента
-        TextView username = root.findViewById(R.id.user_name_text);
-        username.setText(studentName);
-
-        TextView userGroup = root.findViewById(R.id.user_group_text);
-        userGroup.setVisibility(View.VISIBLE);
-        userGroup.setText(group);
     }
 }

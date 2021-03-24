@@ -248,7 +248,7 @@ public class Repository {
         return availableSubjects;
     }
 
-    public ArrayList<Group> getAvailableGroupsInSubject(int subjectId, int semesterId) {
+    public ArrayList<Group> getAvailableGroupsInSubject(int professorId, int subjectId, int semesterId) {
         ArrayList<Group> availableGroupsInSubject = new ArrayList<>();
         if (subjectId == 1) {
             availableGroupsInSubject.add(new Group(1, "1ИУ9-11"));
@@ -267,7 +267,7 @@ public class Repository {
         return availableGroupsInSubject;
     }
 
-    public HashMap<Subject, ArrayList<Group>> getAvailableSubjectsWithGroups(int semesterId) {
+    public HashMap<Subject, ArrayList<Group>> getAvailableSubjectsWithGroups(int professorId, int semesterId) {
         HashMap<Subject, ArrayList<Group>> cached = cache.getAvailableSubjectsWithGroups();
         if (cached != null && !availableSubjectsWithGroupsUpdate) {
             return cached;
@@ -276,7 +276,7 @@ public class Repository {
         HashMap<Subject, ArrayList<Group>> availableSubjectsWithGroups = new HashMap<>();
         ArrayList<Subject> availableSubjects = getAvailableSubjects(semesterId);
         for (int i = 0; i < availableSubjects.size(); i++) {
-            ArrayList<Group> groups = getAvailableGroupsInSubject(availableSubjects.get(i).getId(), semesterId);
+            ArrayList<Group> groups = getAvailableGroupsInSubject(professorId, availableSubjects.get(i).getId(), semesterId);
             availableSubjectsWithGroups.put(availableSubjects.get(i), groups);
         }
 
@@ -300,6 +300,90 @@ public class Repository {
         return availableStudentSubjects;
     }
 
+    public ArrayList<Event> getEvents(int groupId, int subjectId, int semesterId) {
+        ArrayList<Event> events = new ArrayList<>();
+        events.add(new Event(1, 1, 1, 1, 2, 3, 7, "РК",
+                1, new Date(2021, 0, 1), new Date(2021, 1, 1), 10, 20));
+        events.add(new Event(2, 1, 1, 1, 2, 3, 7, "ДЗ",
+                1, new Date(2021, 5, 1), new Date(2021, 6, 1), 10, 20));
+        events.add(new Event(3, 2, 1, 1, 2, 3, 7, "РК",
+                2, new Date(2021, 3, 1), new Date(2021, 4, 1), 10, 20));
+        events.add(new Event(4, 2, 1, 1, 2, 3, 7, "ДЗ",
+                2, new Date(2021, 2, 1), new Date(2021, 3, 1), 10, 20));
+        events.add(new Event(5, 3, 1, 1, 2, 3, 7, "РК",
+                3, new Date(2021, 4, 1), new Date(2021, 5, 1), 10, 20));
+        events.add(new Event(6, 3, 1, 1, 2, 3, 7, "ДЗ",
+                3, new Date(2021, 1, 1), new Date(2021, 2, 1), 10, 20));
+
+        return events;
+    }
+
+    public HashMap<Integer, ArrayList<Lesson>> getLessonsByModules(int groupId, int subjectId, int semesterId) {
+        HashMap<Integer, ArrayList<Lesson>> studentsLessonsByModules = new HashMap<>();
+        ArrayList<Integer> modules = getModules();
+        ArrayList<Lesson> lessons1 = new ArrayList<>();
+        lessons1.add(new Lesson(1, modules.get(0), 1, 1, 2, 3,
+                7, new Date(2021, 0, 15), true, 1));
+        lessons1.add(new Lesson(2, modules.get(0), 1, 1, 2, 3,
+                7, new Date(2021, 1, 15), false, 2));
+        ArrayList<Lesson> lessons2 = new ArrayList<>();
+        lessons2.add(new Lesson(3, modules.get(1), 1, 1, 2, 3,
+                7, new Date(2021, 2, 15), false, 1));
+        lessons2.add(new Lesson(4, modules.get(1), 1, 1, 2, 3,
+                7, new Date(2021, 3, 15), true, 3));
+        ArrayList<Lesson> lessons3 = new ArrayList<>();
+        lessons3.add(new Lesson(5, modules.get(2), 1, 1, 2, 3,
+                7, new Date(2021, 4, 15), true, 4));
+        lessons3.add(new Lesson(6, modules.get(2), 1, 1, 2, 3,
+                7, new Date(2021, 5, 15), true, 1));
+
+        studentsLessonsByModules.put(modules.get(0), lessons1);
+        studentsLessonsByModules.put(modules.get(1), lessons2);
+        studentsLessonsByModules.put(modules.get(2), lessons3);
+        return studentsLessonsByModules;
+    }
+
+    public HashMap<Integer, ArrayList<Lesson>> getLecturesByModules(int groupId, int subjectId, int semesterId) {
+        return getSpecificLessonsByModules(groupId, subjectId, semesterId, true);
+    }
+
+    public HashMap<Integer, ArrayList<Lesson>> getSeminarsByModules(int groupId, int subjectId, int semesterId) {
+        return getSpecificLessonsByModules(groupId, subjectId, semesterId, false);
+    }
+
+    public HashMap<Integer, ArrayList<Lesson>> getSpecificLessonsByModules(int groupId, int subjectId, int semesterId, boolean isLecture) {
+        HashMap<Integer, ArrayList<Lesson>> studentsSpecificLessonsByModules = new HashMap<>();
+        HashMap<Integer, ArrayList<Lesson>> studentsLessonsByModules = getLessonsByModules(groupId, subjectId, semesterId);
+
+        ArrayList<Integer> modules = getModules();
+
+        ArrayList<Lesson> lessons1 = new ArrayList<>();
+        for (Lesson lesson : studentsLessonsByModules.get(modules.get(0))) {
+            if (lesson.isLecture() == isLecture) {
+                lessons1.add(lesson);
+            }
+        }
+
+        ArrayList<Lesson> lessons2 = new ArrayList<>();
+        for (Lesson lesson : studentsLessonsByModules.get(modules.get(1))) {
+            if (lesson.isLecture()) {
+                lessons2.add(lesson);
+            }
+        }
+
+        ArrayList<Lesson> lessons3 = new ArrayList<>();
+        for (Lesson lesson : studentsLessonsByModules.get(modules.get(2))) {
+            if (lesson.isLecture()) {
+                lessons3.add(lesson);
+            }
+        }
+        studentsSpecificLessonsByModules.put(modules.get(0), lessons1);
+        studentsSpecificLessonsByModules.put(modules.get(1), lessons2);
+        studentsSpecificLessonsByModules.put(modules.get(2), lessons3);
+
+        return studentsSpecificLessonsByModules;
+    }
+
     public ArrayList<StudentEvent> getStudentEvents(int studentId, int subjectId, int semesterId) { //moduleNumber?
         ArrayList<StudentEvent> studentEvents = new ArrayList<>();
         if (studentId == 1) {
@@ -317,12 +401,12 @@ public class Repository {
             studentEvents.add(new StudentEvent(1, 5, 3, 2, 1, 1, 2, 3, 7, true, 2));
             studentEvents.add(new StudentEvent(1, 6, 3, 2, 1, 1, 2, 3, 7, true, 2));
         } else if (studentId == 3) {
-            studentEvents.add(new StudentEvent(1, 1, 1, 3, 2, 1, 2, 3, 7, true, 3));
-            studentEvents.add(new StudentEvent(1, 2, 1, 3, 2, 1, 2, 3, 7, true, 3));
-            studentEvents.add(new StudentEvent(1, 3, 2, 3, 2, 1, 2, 3, 7, true, 3));
-            studentEvents.add(new StudentEvent(1, 4, 2, 3, 2, 1, 2, 3, 7, true, 3));
-            studentEvents.add(new StudentEvent(1, 5, 3, 3, 2, 1, 2, 3, 7, true, 3));
-            studentEvents.add(new StudentEvent(1, 6, 3, 3, 2, 1, 2, 3, 7, true, 3));
+            studentEvents.add(new StudentEvent(1, 7, 1, 3, 2, 1, 2, 3, 7, true, 3));
+            studentEvents.add(new StudentEvent(1, 8, 1, 3, 2, 1, 2, 3, 7, true, 3));
+            studentEvents.add(new StudentEvent(1, 9, 2, 3, 2, 1, 2, 3, 7, true, 3));
+            studentEvents.add(new StudentEvent(1, 10, 2, 3, 2, 1, 2, 3, 7, true, 3));
+            studentEvents.add(new StudentEvent(1, 11, 3, 3, 2, 1, 2, 3, 7, true, 3));
+            studentEvents.add(new StudentEvent(1, 12, 3, 3, 2, 1, 2, 3, 7, true, 3));
         }
 
         return studentEvents;

@@ -63,7 +63,7 @@ public class SemesterAddingDialogFragment extends DialogFragment {
         dialog = builder.setView(root)
                 .setTitle("Введите данные семестра")
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    semesterAddingViewModel.addSemester(semesterYear.getText().toString(), isFirstHalf.isChecked());
+                    semesterAddingViewModel.addSemester(Integer.parseInt(semesterYear.getText().toString()), isFirstHalf.isChecked());
                     dismiss();
                 }).create();
 

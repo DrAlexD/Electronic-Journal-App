@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
+import com.example.electronicdiary.Lesson;
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.StudentLesson;
 
@@ -15,13 +16,17 @@ import java.util.HashMap;
 
 class LessonsAdapter extends BaseExpandableListAdapter {
     private final LayoutInflater inflater;
-    private final ArrayList<Integer> modules;
-    private final HashMap<Integer, ArrayList<StudentLesson>> lessonsByModules;
 
-    LessonsAdapter(Context context, ArrayList<Integer> modules, HashMap<Integer, ArrayList<StudentLesson>> lessonsByModules) {
+    private final ArrayList<Integer> modules;
+    private final HashMap<Integer, ArrayList<Lesson>> lessonsByModules;
+    private final HashMap<Integer, ArrayList<StudentLesson>> studentLessonsByModules;
+
+    LessonsAdapter(Context context, ArrayList<Integer> modules, HashMap<Integer, ArrayList<Lesson>> lessonsByModules,
+                   HashMap<Integer, ArrayList<StudentLesson>> studentLessonsByModules) {
         this.inflater = LayoutInflater.from(context);
         this.modules = modules;
         this.lessonsByModules = lessonsByModules;
+        this.studentLessonsByModules = studentLessonsByModules;
     }
 
     @Override
@@ -74,15 +79,39 @@ class LessonsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isExpanded, View view, ViewGroup parent) {
-        StudentLesson studentLesson = lessonsByModules.get(modules.get(groupPosition)).get(childPosition);
+        Lesson lesson = lessonsByModules.get(modules.get(groupPosition)).get(childPosition);
+        ArrayList<StudentLesson> studentLessons = studentLessonsByModules.get(modules.get(groupPosition));
+
+        StudentLesson studentLesson = null;
+        for (int i = 0; i < studentLessons.size(); i++) {
+            if (lesson.getId() == studentLessons.get(i).getLessonId()) {
+                studentLesson = studentLessons.get(i);
+            }
+        }
+
         if (view == null) {
             view = inflater.inflate(R.layout.holder_lesson, null);
         }
 
         TextView lessonDateView = view.findViewById(R.id.lessonDate);
-        TextView lessonPointsView = view.findViewById(R.id.lessonPoints);
-        lessonDateView.setText(studentLesson.getDate());
-        lessonPointsView.setText(String.valueOf(studentLesson.getPoints()));
+        TextView lessonTimeView = view.findViewById(R.id.lessonTime);
+        TextView bonusPointsView = view.findViewById(R.id.bonusPoints);
+
+        if (studentLesson == null) {
+            lessonDateView.setText(lesson.getDateAndTime().getDate());
+            lessonTimeView.setText(lesson.getDateAndTime().getHours() + ":" + lesson.getDateAndTime().getMinutes());
+            bonusPointsView.setText("Нет данных");
+        } else {
+            lessonDateView.setText(lesson.getDateAndTime().getDate());
+            lessonTimeView.setText(lesson.getDateAndTime().getHours() + ":" + lesson.getDateAndTime().getMinutes());
+            lessonDateView.setTextColor(studentLesson.isAttended() ? inflater.getContext().getColor(R.color.green) : inflater.getContext().getColor(R.color.red));
+            lessonTimeView.setTextColor(studentLesson.isAttended() ? inflater.getContext().getColor(R.color.green) : inflater.getContext().getColor(R.color.red));
+            if (studentLesson.getBonusPoints() != 0) {
+                bonusPointsView.setVisibility(View.VISIBLE);
+                bonusPointsView.setText(String.valueOf(studentLesson.getBonusPoints()));
+                bonusPointsView.setTextColor(studentLesson.isAttended() ? inflater.getContext().getColor(R.color.green) : inflater.getContext().getColor(R.color.red));
+            }
+        }
 
         return view;
     }

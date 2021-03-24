@@ -28,7 +28,7 @@ public class SemesterEditingDialogFragment extends DialogFragment {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_semester_editing, null);
 
         SemesterEditingViewModel semesterEditingViewModel = new ViewModelProvider(this).get(SemesterEditingViewModel.class);
-        int semesterId = 1;
+        int semesterId = getArguments().getInt("semesterId");
         semesterEditingViewModel.downloadSemesterById(semesterId);
 
         EditText semesterYear = root.findViewById(R.id.semesterYearEditing);
@@ -76,7 +76,7 @@ public class SemesterEditingDialogFragment extends DialogFragment {
         dialog = builder.setView(root)
                 .setTitle("Измените данные семестра")
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    semesterEditingViewModel.editSemester(semesterYear.getText().toString(), isFirstHalf.isChecked());
+                    semesterEditingViewModel.editSemester(semesterId, Integer.parseInt(semesterYear.getText().toString()), isFirstHalf.isChecked());
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", 1);

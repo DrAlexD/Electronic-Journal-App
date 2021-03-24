@@ -41,11 +41,10 @@ public class SearchSemestersFragment extends Fragment {
 
                 if (actionCode == 1) {
                     Bundle bundle = new Bundle();
-                    bundle.putString("semesterYear", String.valueOf(semesters.get(position).getYear()));
-                    bundle.putBoolean("isFirstHalf", semesters.get(position).isFirstHalf());
+                    bundle.putInt("semesterId", semesters.get(position).getId());
                     Navigation.findNavController(view).navigate(R.id.action_search_semesters_to_dialog_semester_editing, bundle);
                 } else if (actionCode == 2) {
-                    //searchSemestersViewModel.deleteSemester(semesters.get(position).getId());
+                    searchSemestersViewModel.deleteSemester(semesters.get(position).getId());
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", 2);
