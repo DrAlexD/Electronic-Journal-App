@@ -72,18 +72,14 @@ public class SearchAllGroupsFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", 1);
                     Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_admin_actions, bundle);
-                } else if (actionCode == 10) {
-                    searchAllGroupsViewModel.addAvailableSubject(getArguments().getInt("professorId"),
-                            "isLecturer", allGroups.get(position).getId(), getArguments().getInt("subjectId"),
-                            getArguments().getInt("semesterId"), "isExam");
+                } else if (actionCode == 10 || actionCode == 11) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("professorId", getArguments().getInt("professorId"));
+                    bundle.putInt("groupId", allGroups.get(position).getId());
+                    bundle.putInt("subjectId", getArguments().getInt("subjectId"));
+                    bundle.putInt("semesterId", getArguments().getInt("semesterId"));
 
-                    Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_profile);
-                } else if (actionCode == 11) {
-                    searchAllGroupsViewModel.addGroupInAvailableSubject("lecturerId",
-                            "seminarianId", allGroups.get(position).getId(), getArguments().getInt("subjectId"),
-                            getArguments().getInt("semesterId"), "isExam");
-
-                    Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_profile);
+                    Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_dialog_group_info_adding, bundle);
                 }
             };
 

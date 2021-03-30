@@ -48,14 +48,21 @@
     <string name="add_lesson_button">Добавить занятие</string>
     <!-- Strings related to actions in group performance -->
     <string name="event_type_text">Тип</string>
-    <string name="lesson_date_text">Дата занятия</string>
+    <string name="module_text">Модуль</string>
+    <string name="event_start_date_text">Дата выдачи</string>
+    <string name="event_deadline_date_text">Дедлайн</string>
     <string name="event_min_points_text">Мин. баллов</string>
+    <string name="event_max_points_text">Макс. баллов</string>
+    <string name="lesson_date_text">Дата занятия</string>
     <string name="lesson_attend_points_text">Баллов за посещение</string>
     <string name="event_earned_points_text">Получ. баллы</string>
     <string name="lesson_earned_points_text">Получ. баллы</string>
+    <string name="is_lecturer_text">Лектор</string>
+    <string name="is_exam_text">Экзамен по предмету</string>
     <!-- Strings related to form valid -->
     <string name="invalid_username">Неверный логин</string>
     <string name="invalid_empty_field">Пустое поле</string>
+    <string name="invalid_date_field">Формат даты dd.mm.yyyy</string>
     <string name="invalid_password">Пароль должен содежать >5 символов</string>
     <string name="invalid_group_title">Группа должна содежать >4 символов</string>
     <string name="invalid_semester_year">Год должен содержать =4 символа</string>

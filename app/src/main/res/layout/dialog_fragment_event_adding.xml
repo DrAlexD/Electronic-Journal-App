@@ -12,6 +12,32 @@
         android:paddingEnd="32dp">
 
         <TextView
+            android:id="@+id/moduleTextAdding"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="3"
+            android:text="@string/event_max_points_text"
+            android:textSize="20sp" />
+
+        <Spinner
+            android:id="@+id/moduleAdding"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:entries="@array/modules"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp">
+
+        <TextView
             android:id="@+id/eventTypeTextAdding"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -38,6 +64,58 @@
         android:paddingEnd="32dp">
 
         <TextView
+            android:id="@+id/startDateTextAdding"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:text="@string/event_start_date_text"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/startDateAdding"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:inputType="date"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp">
+
+        <TextView
+            android:id="@+id/deadlineDateTextAdding"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:text="@string/event_deadline_date_text"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/deadlineDateAdding"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:inputType="date"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp">
+
+        <TextView
             android:id="@+id/eventMinPointsTextAdding"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -48,6 +126,32 @@
 
         <EditText
             android:id="@+id/eventMinPointsAdding"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:inputType="number"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp">
+
+        <TextView
+            android:id="@+id/eventMaxPointsTextAdding"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="3"
+            android:text="@string/event_max_points_text"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/eventMaxPointsAdding"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"

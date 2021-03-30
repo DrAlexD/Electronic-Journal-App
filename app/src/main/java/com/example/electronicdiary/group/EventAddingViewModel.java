@@ -15,8 +15,8 @@ public class EventAddingViewModel extends ViewModel {
         return eventFormState;
     }
 
-    public void eventAddingDataChanged(String eventMinPoints) {
-        eventFormState.setValue(new EventFormState(eventMinPoints));
+    public void eventAddingDataChanged(String startDate, String deadlineDate, String minPoints, String maxPoints) {
+        eventFormState.setValue(new EventFormState(startDate, deadlineDate, minPoints, maxPoints));
     }
 
     public void addEvent(int moduleNumber, int groupId, int subjectId, int lecturerId, int seminarianId, int semesterId,

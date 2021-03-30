@@ -43,6 +43,9 @@ public class SearchAvailableSubjectsFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putInt("actionCode", 11);
                     bundle.putInt("subjectId", availableSubjects.get(position).getId());
+                    bundle.putInt("professorId", getArguments().getInt("professorId"));
+                    bundle.putInt("semesterId", getArguments().getInt("semesterId"));
+
                     Navigation.findNavController(view).navigate(R.id.action_search_available_subjects_to_search_all_groups, bundle);
                 } else if (actionCode == 12) {
                     searchAvailableSubjectsViewModel.deleteAvailableSubject(getArguments().getInt("professorId"),
@@ -52,6 +55,9 @@ public class SearchAvailableSubjectsFragment extends Fragment {
                 } else if (actionCode == 13) {
                     Bundle bundle = new Bundle();
                     bundle.putInt("subjectId", availableSubjects.get(position).getId());
+                    bundle.putInt("professorId", getArguments().getInt("professorId"));
+                    bundle.putInt("semesterId", getArguments().getInt("semesterId"));
+
                     Navigation.findNavController(view).navigate(R.id.action_search_available_subjects_to_search_available_groups_in_subject, bundle);
                 }
             };

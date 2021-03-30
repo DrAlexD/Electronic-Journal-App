@@ -19,35 +19,23 @@ import com.example.electronicdiary.R;
 import com.example.electronicdiary.Repository;
 
 public class ProfileFragment extends Fragment {
+    private ProfileViewModel profileViewModel;
+    private int semesterId;
+    private int professorId;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        int semesterId = Integer.parseInt(sharedPreferences.getString(getString(R.string.current_semester), ""));
+        semesterId = Integer.parseInt(sharedPreferences.getString(getString(R.string.current_semester), ""));
+        professorId = Repository.getInstance().getUser().getId();
         setPreferences(root, sharedPreferences);
 
-        ProfileViewModel profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
-        profileViewModel.downloadAvailableSubjectsWithGroups(semesterId);
+        profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+        profileViewModel.downloadSemesterById(semesterId);
+        profileViewModel.downloadAvailableSubjectsWithGroups(professorId, semesterId);
 
-        //FIXME при обновлении предметов обновляются ли автоматически и предметы по группам
         final ExpandableListView expandableListView = root.findViewById(R.id.subjectsWithGroupsList);
-        /*profileViewModel.getAvailableSubjects().observe(getViewLifecycleOwner(), availableSubjects -> {
-            if (availableSubjects == null) {
-                return;
-            }
-
-            SubjectsWithGroupsAdapter subjectsWithGroupsAdapter = new SubjectsWithGroupsAdapter(getContext(), availableSubjects, profileViewModel.getAvailableSubjectsWithGroups().getValue());
-            expandableListView.setAdapter(subjectsWithGroupsAdapter);
-            expandableListView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
-                Bundle bundle = new Bundle();
-                bundle.putString("subject", availableSubjects.get(groupPosition));
-                bundle.putString("group", profileViewModel.getAvailableSubjectsWithGroups().getValue().get(availableSubjects.get(groupPosition)).get(childPosition));
-                Navigation.findNavController(v).navigate(R.id.action_profile_to_group_performance, bundle);
-                return true;
-            });
-        });*/
-
         profileViewModel.getAvailableSubjectsWithGroups().observe(getViewLifecycleOwner(), availableSubjectsWithGroups -> {
             if (availableSubjectsWithGroups == null) {
                 return;
@@ -57,9 +45,11 @@ public class ProfileFragment extends Fragment {
             expandableListView.setAdapter(subjectsWithGroupsAdapter);
             expandableListView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
                 Bundle bundle = new Bundle();
-                bundle.putInt("semesterId", semesterId);
+                bundle.putInt("groupId", availableSubjectsWithGroups.get(profileViewModel.getAvailableSubjects().getValue().get(groupPosition)).get(childPosition).getGroup().getId());
                 bundle.putInt("subjectId", profileViewModel.getAvailableSubjects().getValue().get(groupPosition).getId());
-                bundle.putInt("groupId", availableSubjectsWithGroups.get(profileViewModel.getAvailableSubjects().getValue().get(groupPosition)).get(childPosition).getId());
+                bundle.putInt("lecturerId", availableSubjectsWithGroups.get(profileViewModel.getAvailableSubjects().getValue().get(groupPosition)).get(childPosition).getLecturerId());
+                bundle.putInt("seminarianId", availableSubjectsWithGroups.get(profileViewModel.getAvailableSubjects().getValue().get(groupPosition)).get(childPosition).getSeminarianId());
+                bundle.putInt("semesterId", semesterId);
                 Navigation.findNavController(v).navigate(R.id.action_profile_to_group_performance, bundle);
                 return true;
             });
@@ -69,8 +59,16 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setPreferences(View root, SharedPreferences sharedPreferences) {
-        //TODO добавить отображение выбранного семестра в профиле преподавателя
         boolean isProfessorRules = sharedPreferences.getBoolean(getString(R.string.is_professor_rules), false);
+
+        profileViewModel.getSemester().observe(getViewLifecycleOwner(), semester -> {
+            if (semester == null) {
+                return;
+            }
+
+            TextView semesterView = root.findViewById(R.id.semester_text);
+            semesterView.setText(semester.toString());
+        });
 
         TextView userNameView = root.findViewById(R.id.user_name_text);
         userNameView.setText(Repository.getInstance().getUser().getFullName());
@@ -80,6 +78,8 @@ public class ProfileFragment extends Fragment {
         addSubjectButton.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
             bundle.putInt("actionCode", 10);
+            bundle.putInt("professorId", professorId);
+            bundle.putInt("semesterId", semesterId);
             Navigation.findNavController(root).navigate(R.id.action_profile_to_search_all_subjects, bundle);
         });
 
@@ -88,6 +88,8 @@ public class ProfileFragment extends Fragment {
         addGroupButton.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
             bundle.putInt("actionCode", 11);
+            bundle.putInt("professorId", professorId);
+            bundle.putInt("semesterId", semesterId);
             Navigation.findNavController(root).navigate(R.id.action_profile_to_search_available_subjects, bundle);
         });
 
@@ -96,6 +98,8 @@ public class ProfileFragment extends Fragment {
         deleteSubjectButton.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
             bundle.putInt("actionCode", 12);
+            bundle.putInt("professorId", professorId);
+            bundle.putInt("semesterId", semesterId);
             Navigation.findNavController(root).navigate(R.id.action_profile_to_search_available_subjects, bundle);
         });
 
@@ -104,6 +108,8 @@ public class ProfileFragment extends Fragment {
         deleteGroupButton.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
             bundle.putInt("actionCode", 13);
+            bundle.putInt("professorId", professorId);
+            bundle.putInt("semesterId", semesterId);
             Navigation.findNavController(root).navigate(R.id.action_profile_to_search_available_subjects, bundle);
         });
     }

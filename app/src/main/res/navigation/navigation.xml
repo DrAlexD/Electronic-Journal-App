@@ -342,11 +342,23 @@
             android:id="@+id/action_search_all_groups_to_dialog_group_editing"
             app:destination="@id/nav_dialog_group_editing" />
         <action
-            android:id="@+id/action_search_all_groups_to_profile"
+            android:id="@+id/action_search_all_groups_to_dialog_group_info_adding"
+            app:destination="@id/nav_dialog_group_info_adding" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/nav_dialog_group_info_adding"
+        android:name="com.example.electronicdiary.search.all.GroupInfoAddingDialogFragment">
+        <action
+            android:id="@+id/pop_out_dialog_group_info_adding_to_search_all_groups"
+            app:popUpTo="@id/nav_search_all_groups"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_dialog_group_info_adding_to_profile"
             app:destination="@id/nav_profile"
             app:popUpTo="@id/nav_profile"
             app:popUpToInclusive="true" />
-    </fragment>
+    </dialog>
 
     <dialog
         android:id="@+id/nav_dialog_group_editing"

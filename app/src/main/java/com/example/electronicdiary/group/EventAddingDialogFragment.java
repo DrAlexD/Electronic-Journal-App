@@ -33,13 +33,17 @@ public class EventAddingDialogFragment extends DialogFragment {
 
         EventAddingViewModel eventAddingViewModel = new ViewModelProvider(this).get(EventAddingViewModel.class);
 
+        Spinner module = root.findViewById(R.id.moduleAdding);
         Spinner eventType = root.findViewById(R.id.eventTypeAdding);
-
-        EditText eventMinPoints = root.findViewById(R.id.eventMinPointsAdding);
+        EditText startDate = root.findViewById(R.id.startDateAdding);
+        EditText deadlineDate = root.findViewById(R.id.deadlineDateAdding);
+        EditText minPoints = root.findViewById(R.id.eventMinPointsAdding);
+        EditText maxPoints = root.findViewById(R.id.eventMaxPointsAdding);
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                eventAddingViewModel.eventAddingDataChanged(eventMinPoints.getText().toString());
+                eventAddingViewModel.eventAddingDataChanged(startDate.getText().toString(), deadlineDate.getText().toString(),
+                        minPoints.getText().toString(), maxPoints.getText().toString());
             }
 
             @Override
@@ -52,15 +56,24 @@ public class EventAddingDialogFragment extends DialogFragment {
                 // ignore
             }
         };
-        eventMinPoints.addTextChangedListener(afterTextChangedListener);
+        startDate.addTextChangedListener(afterTextChangedListener);
+        deadlineDate.addTextChangedListener(afterTextChangedListener);
+        minPoints.addTextChangedListener(afterTextChangedListener);
+        maxPoints.addTextChangedListener(afterTextChangedListener);
 
         eventAddingViewModel.getEventFormState().observe(this, eventFormState -> {
             if (eventFormState == null) {
                 return;
             }
 
-            eventMinPoints.setError(eventFormState.getEventMinPointsError() != null ?
-                    getString(eventFormState.getEventMinPointsError()) : null);
+            startDate.setError(eventFormState.getStartDateError() != null ?
+                    getString(eventFormState.getStartDateError()) : null);
+            deadlineDate.setError(eventFormState.getDeadlineDateError() != null ?
+                    getString(eventFormState.getDeadlineDateError()) : null);
+            minPoints.setError(eventFormState.getMinPointsError() != null ?
+                    getString(eventFormState.getMinPointsError()) : null);
+            maxPoints.setError(eventFormState.getMaxPointsError() != null ?
+                    getString(eventFormState.getMaxPointsError()) : null);
 
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(eventFormState.isDataValid());
         });
@@ -69,7 +82,8 @@ public class EventAddingDialogFragment extends DialogFragment {
         dialog = builder.setView(root)
                 .setTitle("Введите данные мероприятия")
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    eventAddingViewModel.addEvent(eventMinPoints.getText().toString(), eventType.getSelectedItemPosition());
+                    eventAddingViewModel.addEvent(Integer.parseInt((String) module.getSelectedItem()),
+                            groupId, subjectId, professorId, professorId, eventType.getSelectedItem());
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("semesterId", semesterId);

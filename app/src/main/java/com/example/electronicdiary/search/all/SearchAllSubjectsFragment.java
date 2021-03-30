@@ -53,6 +53,9 @@ public class SearchAllSubjectsFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putInt("actionCode", 10);
                     bundle.putInt("subjectId", allSubjects.get(position).getId());
+                    bundle.putInt("professorId", getArguments().getInt("professorId"));
+                    bundle.putInt("semesterId", getArguments().getInt("semesterId"));
+
                     Navigation.findNavController(view).navigate(R.id.action_search_all_subjects_to_search_all_groups, bundle);
                 }
             };

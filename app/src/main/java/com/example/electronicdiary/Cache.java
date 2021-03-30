@@ -14,7 +14,7 @@ public class Cache {
     private ArrayList<Semester> semesters = null;
     private ArrayList<Student> availableStudents = null;
     private ArrayList<Subject> availableSubjects = null;
-    private HashMap<Subject, ArrayList<Group>> availableSubjectsWithGroups = null;
+    private HashMap<Subject, ArrayList<GroupInfo>> availableSubjectsWithGroups = null;
 
     public User getUser() {
         return user;
@@ -96,11 +96,11 @@ public class Cache {
         this.availableSubjects = availableSubjects;
     }
 
-    public HashMap<Subject, ArrayList<Group>> getAvailableSubjectsWithGroups() {
+    public HashMap<Subject, ArrayList<GroupInfo>> getAvailableSubjectsWithGroups() {
         return availableSubjectsWithGroups;
     }
 
-    public void setAvailableSubjectsWithGroups(HashMap<Subject, ArrayList<Group>> availableSubjectsWithGroups) {
+    public void setAvailableSubjectsWithGroups(HashMap<Subject, ArrayList<GroupInfo>> availableSubjectsWithGroups) {
         this.availableSubjectsWithGroups = availableSubjectsWithGroups;
     }
 }
