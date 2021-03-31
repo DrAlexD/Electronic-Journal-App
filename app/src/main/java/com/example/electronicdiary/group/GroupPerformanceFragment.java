@@ -53,7 +53,7 @@ public class GroupPerformanceFragment extends Fragment {
         seminarianId = getArguments().getInt("seminarianId");
         semesterId = getArguments().getInt("semesterId");
 
-        GroupPerformanceViewModel groupPerformanceViewModel = new ViewModelProvider(this).get(GroupPerformanceViewModel.class);
+        groupPerformanceViewModel = new ViewModelProvider(this).get(GroupPerformanceViewModel.class);
         groupPerformanceViewModel.downloadStudentsEventsAndLessons(groupId, subjectId, lecturerId, seminarianId, semesterId);
 
         //TODO подумать как оставлять первую строку и первый столбец на месте при скроллинге
@@ -66,9 +66,11 @@ public class GroupPerformanceFragment extends Fragment {
             addEventButton.setVisibility(isProfessorRules ? View.VISIBLE : View.GONE);
             addEventButton.setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
-                bundle.putInt("semesterId", semesterId);
                 bundle.putInt("groupId", groupId);
                 bundle.putInt("subjectId", subjectId);
+                bundle.putInt("lecturerId", lecturerId);
+                bundle.putInt("seminarianId", seminarianId);
+                bundle.putInt("semesterId", semesterId);
                 Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_event_adding, bundle);
             });
 

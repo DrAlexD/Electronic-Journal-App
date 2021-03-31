@@ -66,7 +66,7 @@ public class EventsOrLessonsFragment extends Fragment {
 
             ExpandableListView.OnChildClickListener onLectureClickListener = (parent, v, groupPosition, childPosition, id) -> {
                 Bundle bundle = new Bundle();
-                bundle.putInt("position", modules.get(groupPosition));
+                bundle.putInt("moduleNumber", modules.get(groupPosition));
                 bundle.putInt("studentId", studentPerformanceViewModel.getStudent().getValue().getId());
                 bundle.putInt("lessonId", studentPerformanceViewModel.getLecturesByModules().
                         getValue().get(modules.get(groupPosition)).get(childPosition).getId());
@@ -106,7 +106,7 @@ public class EventsOrLessonsFragment extends Fragment {
 
             ExpandableListView.OnChildClickListener onSeminarClickListener = (parent, v, groupPosition, childPosition, id) -> {
                 Bundle bundle = new Bundle();
-                bundle.putInt("position", modules.get(groupPosition));
+                bundle.putInt("moduleNumber", modules.get(groupPosition));
                 bundle.putInt("studentId", studentPerformanceViewModel.getStudent().getValue().getId());
                 bundle.putInt("lessonId", studentPerformanceViewModel.getSeminarsByModules().
                         getValue().get(modules.get(groupPosition)).get(childPosition).getId());

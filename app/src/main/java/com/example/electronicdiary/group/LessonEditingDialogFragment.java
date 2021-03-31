@@ -87,7 +87,7 @@ public class LessonEditingDialogFragment extends DialogFragment {
                     Bundle bundle = new Bundle();
                     bundle.putString("subject", getArguments().getString("subject"));
                     bundle.putString("group", getArguments().getString("group"));
-                    bundle.putInt("openPage", getArguments().getInt("position") - 1);
+                    bundle.putInt("openPage", getArguments().getInt("moduleNumber") - 1);
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_lesson_editing_to_group_performance, bundle);
                 }).create();

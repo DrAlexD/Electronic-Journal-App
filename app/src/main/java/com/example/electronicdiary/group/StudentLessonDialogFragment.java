@@ -26,7 +26,7 @@ public class StudentLessonDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_student_lesson, null);
 
-        int position = getArguments().getInt("position");
+        int moduleNumber = getArguments().getInt("moduleNumber");
         int studentId = getArguments().getInt("studentId");
         int lessonId = getArguments().getInt("lessonId");
 
@@ -89,7 +89,7 @@ public class StudentLessonDialogFragment extends DialogFragment {
                     Bundle bundle = new Bundle();
                     bundle.putString("subject", getArguments().getString("subject"));
                     bundle.putString("group", getArguments().getString("group"));
-                    bundle.putInt("openPage", getArguments().getInt("position") - 1);
+                    bundle.putInt("openPage", getArguments().getInt("moduleNumber") - 1);
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_lesson_to_group_performance, bundle);
                 });
@@ -102,7 +102,7 @@ public class StudentLessonDialogFragment extends DialogFragment {
                 Bundle bundle = new Bundle();
                 bundle.putString("subject", getArguments().getString("subject"));
                 bundle.putString("group", getArguments().getString("group"));
-                bundle.putInt("openPage", getArguments().getInt("position") - 1);
+                bundle.putInt("openPage", getArguments().getInt("moduleNumber") - 1);
 
                 Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_lesson_to_group_performance, bundle);
             });

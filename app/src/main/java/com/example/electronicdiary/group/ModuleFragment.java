@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.example.electronicdiary.GroupInfo;
 import com.example.electronicdiary.Lesson;
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.Repository;
@@ -29,22 +30,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ModuleFragment extends Fragment {
-    private int position;
+    private int moduleNumber;
 
-    private int semesterId;
-    private int groupId;
-    private int subjectId;
+    private GroupPerformanceViewModel groupPerformanceViewModel;
+    private GroupInfo groupInfo;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_module, container, false);
 
-        position = getArguments().getInt("position");
+        moduleNumber = getArguments().getInt("position");
 
-        GroupPerformanceViewModel groupPerformanceViewModel = new ViewModelProvider(getParentFragment()).get(GroupPerformanceViewModel.class);
-        semesterId = groupPerformanceViewModel.getSemesterId().getValue();
-        groupId = groupPerformanceViewModel.getGroupId().getValue();
-        subjectId = groupPerformanceViewModel.getSubjectId().getValue();
+        groupPerformanceViewModel = new ViewModelProvider(getParentFragment()).get(GroupPerformanceViewModel.class);
+        groupInfo = groupPerformanceViewModel.getGroupInfo().getValue();
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         boolean isProfessorRules = sharedPreferences.getBoolean(getString(R.string.is_professor_rules), false);
@@ -53,47 +51,40 @@ public class ModuleFragment extends Fragment {
         addLessonButton.setVisibility(isProfessorRules ? View.VISIBLE : View.GONE);
         addLessonButton.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
-            bundle.putInt("position", position);
-            bundle.putInt("semesterId", semesterId);
-            bundle.putInt("groupId", groupId);
-            bundle.putInt("subjectId", subjectId);
+            bundle.putInt("moduleNumber", moduleNumber);
+            bundle.putInt("groupId", groupInfo.getGroup().getId());
+            bundle.putInt("subjectId", groupInfo.getSubjectId());
+            bundle.putInt("lecturerId", groupInfo.getLecturerId());
+            bundle.putInt("seminarianId", groupInfo.getSeminarianId());
+            bundle.putInt("semesterId", groupInfo.getSemesterId());
             Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_lesson_adding, bundle);
         });
 
-        //FIXME при обновлении студентов обновляются ли автоматически и баллы за посещения
-        /*groupPerformanceViewModel.getStudentsInGroup().observe(getViewLifecycleOwner(), students -> {
-            if (students == null) {
+        groupPerformanceViewModel.getStudentsLessons().observe(getViewLifecycleOwner(), studentsLessons -> {
+            if (studentsLessons == null) {
                 return;
             }
 
-            generateLessonsTable(root, students, groupPerformanceViewModel.getStudentsLessonsByModules().getValue());
-        });*/
-
-        groupPerformanceViewModel.getStudentsLessonsByModules().observe(getViewLifecycleOwner(), studentsLessonsByModules -> {
-            if (studentsLessonsByModules == null) {
-                return;
-            }
-
-            generateLessonsTable(root, groupPerformanceViewModel.getStudentsInGroup().getValue(),
-                    groupPerformanceViewModel.getLessons().getValue(), studentsLessonsByModules);
+            generateLessonsTable(root, studentsLessons);
         });
 
         return root;
     }
 
-    private void generateLessonsTable(View root, ArrayList<Student> students, HashMap<Integer, ArrayList<Lesson>> lessons,
-                                      HashMap<Integer, ArrayList<ArrayList<StudentLesson>>> studentsLessonsByModules) {
+    private void generateLessonsTable(View root, HashMap<Integer, ArrayList<ArrayList<StudentLesson>>> studentsLessons) {
         TableLayout studentsInModuleLessonsTable = root.findViewById(R.id.studentsInModuleLessonsTable);
         int padding2inDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics());
         int padding5inDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
 
         ArrayList<Integer> modules = Repository.getInstance().getModules();
-        TableRow lessonsRow = generateLessonsRow(padding2inDp, padding5inDp, lessons.get(modules.get(position - 1)));
+        ArrayList<Lesson> lessons = groupPerformanceViewModel.getLessons().getValue().get(modules.get(moduleNumber - 1));
+        TableRow lessonsRow = generateLessonsRow(padding2inDp, padding5inDp, lessons);
         studentsInModuleLessonsTable.addView(lessonsRow);
 
+        ArrayList<Student> students = groupPerformanceViewModel.getStudentsInGroup().getValue();
         for (int i = 0; i < students.size(); i++) {
-            TableRow pointsRow = generatePointsRow(padding2inDp, padding5inDp, students.get(i), lessons.get(modules.get(position - 1)),
-                    studentsLessonsByModules.get(modules.get(position - 1)).get(i));
+            TableRow pointsRow = generatePointsRow(padding2inDp, padding5inDp, students.get(i), lessons,
+                    studentsLessons.get(modules.get(moduleNumber - 1)).get(i));
             studentsInModuleLessonsTable.addView(pointsRow);
         }
     }
@@ -119,13 +110,30 @@ public class ModuleFragment extends Fragment {
             lessonView.setGravity(Gravity.CENTER);
             lessonView.setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
-                bundle.putInt("position", position);
+                bundle.putInt("moduleNumber", moduleNumber);
                 bundle.putInt("lessonId", lesson.getId());
                 Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_lesson_editing, bundle);
             });
             //lessonView.setRotation(90);
             lessonsRow.addView(lessonView);
         }
+
+        TextView moduleView = new TextView(getContext());
+        moduleView.setTextSize(20);
+        moduleView.setText("Модуль " + moduleNumber);
+        moduleView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
+        moduleView.setGravity(Gravity.CENTER);
+        moduleView.setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            bundle.putInt("moduleNumber", moduleNumber);
+            bundle.putInt("groupId", groupInfo.getGroup().getId());
+            bundle.putInt("subjectId", groupInfo.getSubjectId());
+            bundle.putInt("lecturerId", groupInfo.getLecturerId());
+            bundle.putInt("seminarianId", groupInfo.getSeminarianId());
+            bundle.putInt("semesterId", groupInfo.getSemesterId());
+            Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_module_info_editing, bundle);
+        });
+        lessonsRow.addView(moduleView);
 
         return lessonsRow;
     }
@@ -145,6 +153,7 @@ public class ModuleFragment extends Fragment {
         studentView.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
             bundle.putInt("studentId", student.getId());
+            bundle.putInt("semesterId", groupInfo.getSemesterId());
             Navigation.findNavController(view).navigate(R.id.action_group_performance_to_student_profile, bundle);
         });
         pointsRow.addView(studentView);
@@ -166,9 +175,14 @@ public class ModuleFragment extends Fragment {
             pointsView.setGravity(Gravity.CENTER);
             pointsView.setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
-                bundle.putInt("position", position);
-                bundle.putInt("studentId", student.getId());
                 bundle.putInt("lessonId", lesson.getId());
+                bundle.putInt("studentId", student.getId());
+                bundle.putInt("moduleNumber", moduleNumber);
+                bundle.putInt("groupId", groupInfo.getGroup().getId());
+                bundle.putInt("subjectId", groupInfo.getSubjectId());
+                bundle.putInt("lecturerId", groupInfo.getLecturerId());
+                bundle.putInt("seminarianId", groupInfo.getSeminarianId());
+                bundle.putInt("semesterId", groupInfo.getSemesterId());
                 Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_student_lesson, bundle);
             });
             pointsRow.addView(pointsView);
