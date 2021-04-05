@@ -32,12 +32,4 @@ public class SearchAllGroupsViewModel extends ViewModel {
     public void changeStudentGroup(int studentId, int newStudentGroupId) {
         Repository.getInstance().changeStudentGroup(studentId, newStudentGroupId);
     }
-
-    public void addAvailableSubject(int professorId, boolean isLecturer, int groupId, int subjectId, int semesterId, boolean isExam) {
-        Repository.getInstance().addAvailableSubject(professorId, isLecturer, groupId, subjectId, semesterId, isExam);
-    }
-
-    public void addGroupInAvailableSubject(int lecturerId, int seminarianId, int groupId, int subjectId, int semesterId, boolean isExam) {
-        Repository.getInstance().addGroupInAvailableSubject(lecturerId, seminarianId, groupId, subjectId, semesterId, isExam);
-    }
 }

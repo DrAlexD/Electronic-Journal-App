@@ -19,12 +19,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import com.example.electronicdiary.GroupInfo;
 import com.example.electronicdiary.Lesson;
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.Student;
 import com.example.electronicdiary.StudentLesson;
+import com.example.electronicdiary.StudentPerformanceInModule;
+import com.example.electronicdiary.SubjectInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +34,7 @@ public class ModuleFragment extends Fragment {
     private int moduleNumber;
 
     private GroupPerformanceViewModel groupPerformanceViewModel;
-    private GroupInfo groupInfo;
+    private SubjectInfo subjectInfo;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,7 +43,7 @@ public class ModuleFragment extends Fragment {
         moduleNumber = getArguments().getInt("position");
 
         groupPerformanceViewModel = new ViewModelProvider(getParentFragment()).get(GroupPerformanceViewModel.class);
-        groupInfo = groupPerformanceViewModel.getGroupInfo().getValue();
+        subjectInfo = groupPerformanceViewModel.getSubjectInfo().getValue();
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         boolean isProfessorRules = sharedPreferences.getBoolean(getString(R.string.is_professor_rules), false);
@@ -52,11 +53,11 @@ public class ModuleFragment extends Fragment {
         addLessonButton.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
             bundle.putInt("moduleNumber", moduleNumber);
-            bundle.putInt("groupId", groupInfo.getGroup().getId());
-            bundle.putInt("subjectId", groupInfo.getSubjectId());
-            bundle.putInt("lecturerId", groupInfo.getLecturerId());
-            bundle.putInt("seminarianId", groupInfo.getSeminarianId());
-            bundle.putInt("semesterId", groupInfo.getSemesterId());
+            bundle.putInt("groupId", subjectInfo.getGroup().getId());
+            bundle.putInt("subjectId", subjectInfo.getSubjectId());
+            bundle.putInt("lecturerId", subjectInfo.getLecturerId());
+            bundle.putInt("seminarianId", subjectInfo.getSeminarianId());
+            bundle.putInt("semesterId", subjectInfo.getSemesterId());
             Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_lesson_adding, bundle);
         });
 
@@ -84,7 +85,8 @@ public class ModuleFragment extends Fragment {
         ArrayList<Student> students = groupPerformanceViewModel.getStudentsInGroup().getValue();
         for (int i = 0; i < students.size(); i++) {
             TableRow pointsRow = generatePointsRow(padding2inDp, padding5inDp, students.get(i), lessons,
-                    studentsLessons.get(modules.get(moduleNumber - 1)).get(i));
+                    studentsLessons.get(modules.get(moduleNumber - 1)).get(i),
+                    groupPerformanceViewModel.getStudentsPerformancesInModules().getValue().get(moduleNumber - 1).get(i));
             studentsInModuleLessonsTable.addView(pointsRow);
         }
     }
@@ -110,7 +112,6 @@ public class ModuleFragment extends Fragment {
             lessonView.setGravity(Gravity.CENTER);
             lessonView.setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
-                bundle.putInt("moduleNumber", moduleNumber);
                 bundle.putInt("lessonId", lesson.getId());
                 Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_lesson_editing, bundle);
             });
@@ -126,11 +127,11 @@ public class ModuleFragment extends Fragment {
         moduleView.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
             bundle.putInt("moduleNumber", moduleNumber);
-            bundle.putInt("groupId", groupInfo.getGroup().getId());
-            bundle.putInt("subjectId", groupInfo.getSubjectId());
-            bundle.putInt("lecturerId", groupInfo.getLecturerId());
-            bundle.putInt("seminarianId", groupInfo.getSeminarianId());
-            bundle.putInt("semesterId", groupInfo.getSemesterId());
+            bundle.putInt("groupId", subjectInfo.getGroup().getId());
+            bundle.putInt("subjectId", subjectInfo.getSubjectId());
+            bundle.putInt("lecturerId", subjectInfo.getLecturerId());
+            bundle.putInt("seminarianId", subjectInfo.getSeminarianId());
+            bundle.putInt("semesterId", subjectInfo.getSemesterId());
             Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_module_info_editing, bundle);
         });
         lessonsRow.addView(moduleView);
@@ -139,7 +140,7 @@ public class ModuleFragment extends Fragment {
     }
 
     private TableRow generatePointsRow(int padding2inDp, int padding5inDp, Student student, ArrayList<Lesson> lessons,
-                                       ArrayList<StudentLesson> studentLessons) {
+                                       ArrayList<StudentLesson> studentLessons, StudentPerformanceInModule studentPerformanceInModule) {
         TableRow pointsRow = new TableRow(getContext());
         pointsRow.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE |
                 LinearLayout.SHOW_DIVIDER_BEGINNING | LinearLayout.SHOW_DIVIDER_END);
@@ -153,7 +154,7 @@ public class ModuleFragment extends Fragment {
         studentView.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
             bundle.putInt("studentId", student.getId());
-            bundle.putInt("semesterId", groupInfo.getSemesterId());
+            bundle.putInt("semesterId", subjectInfo.getSemesterId());
             Navigation.findNavController(view).navigate(R.id.action_group_performance_to_student_profile, bundle);
         });
         pointsRow.addView(studentView);
@@ -162,31 +163,45 @@ public class ModuleFragment extends Fragment {
             TextView pointsView = new TextView(getContext());
             pointsView.setTextSize(20);
             pointsView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
-            boolean flag = true;
+            boolean isHasData = false;
             for (StudentLesson studentLesson : studentLessons) {
                 if (studentLesson.getStudentId() == student.getId() && studentLesson.getLessonId() == lesson.getId()) {
                     pointsView.setText(String.valueOf(lesson.getPointsPerVisit() + studentLesson.getBonusPoints()));
-                    flag = false;
+                    isHasData = true;
                     break;
                 }
             }
-            if (flag)
-                pointsView.setText("");
+            if (!isHasData)
+                pointsView.setText("Н");
             pointsView.setGravity(Gravity.CENTER);
+
+            boolean finalIsHasData = isHasData;
             pointsView.setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
+                bundle.putBoolean("isFromGroupPerformance", true);
+                bundle.putBoolean("isHasData", finalIsHasData);
+                bundle.putString("lessonDate", lesson.getDateAndTime().getDate() + " " +
+                        lesson.getDateAndTime().getHours() + ":" + lesson.getDateAndTime().getMinutes());
                 bundle.putInt("lessonId", lesson.getId());
                 bundle.putInt("studentId", student.getId());
                 bundle.putInt("moduleNumber", moduleNumber);
-                bundle.putInt("groupId", groupInfo.getGroup().getId());
-                bundle.putInt("subjectId", groupInfo.getSubjectId());
-                bundle.putInt("lecturerId", groupInfo.getLecturerId());
-                bundle.putInt("seminarianId", groupInfo.getSeminarianId());
-                bundle.putInt("semesterId", groupInfo.getSemesterId());
+                bundle.putInt("groupId", subjectInfo.getGroup().getId());
+                bundle.putInt("subjectId", subjectInfo.getSubjectId());
+                bundle.putInt("lecturerId", subjectInfo.getLecturerId());
+                bundle.putInt("seminarianId", subjectInfo.getSeminarianId());
+                bundle.putInt("semesterId", subjectInfo.getSemesterId());
                 Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_student_lesson, bundle);
             });
             pointsRow.addView(pointsView);
         }
+
+        TextView moduleView = new TextView(getContext());
+        moduleView.setTextSize(20);
+        moduleView.setText(studentPerformanceInModule.getEarnedPoints());
+        moduleView.setTextColor(studentPerformanceInModule.isHaveCredit() ? getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
+        moduleView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
+        moduleView.setGravity(Gravity.CENTER);
+        pointsRow.addView(moduleView);
 
         return pointsRow;
     }

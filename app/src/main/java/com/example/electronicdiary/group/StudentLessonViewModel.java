@@ -9,22 +9,22 @@ import com.example.electronicdiary.StudentLesson;
 
 public class StudentLessonViewModel extends ViewModel {
     private final MutableLiveData<StudentLessonFormState> studentLessonFormState = new MutableLiveData<>();
-    private final MutableLiveData<StudentLesson> lesson = new MutableLiveData<>();
+    private final MutableLiveData<StudentLesson> studentLesson = new MutableLiveData<>();
 
     LiveData<StudentLessonFormState> getStudentLessonFormState() {
         return studentLessonFormState;
     }
 
-    public MutableLiveData<StudentLesson> getLesson() {
-        return lesson;
+    public MutableLiveData<StudentLesson> getStudentLesson() {
+        return studentLesson;
     }
 
-    public void lessonPerformanceDataChanged(String lessonEarnedPoints) {
-        studentLessonFormState.setValue(new StudentLessonFormState(lessonEarnedPoints));
+    public void lessonPerformanceDataChanged(String bonusPoints) {
+        studentLessonFormState.setValue(new StudentLessonFormState(bonusPoints));
     }
 
     public void downloadStudentLessonById(int lessonId, int studentId) {
-        this.lesson.setValue(Repository.getInstance().getStudentLessonById(lessonId, studentId));
+        this.studentLesson.setValue(Repository.getInstance().getStudentLessonById(lessonId, studentId));
     }
 
     public void addStudentLesson(int lessonId, int moduleNumber, int studentId, int groupId, int subjectId, int lecturerId,
@@ -33,10 +33,8 @@ public class StudentLessonViewModel extends ViewModel {
                 seminarianId, semesterId, isAttended);
     }
 
-    public void editStudentLesson(int lessonId, int moduleNumber, int studentId, int groupId, int subjectId, int lecturerId,
-                                  int seminarianId, int semesterId, boolean isAttended, int bonusPoints) {
-        Repository.getInstance().editStudentLesson(lessonId, moduleNumber, studentId, groupId, subjectId, lecturerId,
-                seminarianId, semesterId, isAttended, bonusPoints);
+    public void editStudentLesson(int lessonId, int studentId, boolean isAttended, int bonusPoints) {
+        Repository.getInstance().editStudentLesson(lessonId, studentId, isAttended, bonusPoints);
     }
 
     public void deleteStudentLesson(int lessonId, int studentId) {

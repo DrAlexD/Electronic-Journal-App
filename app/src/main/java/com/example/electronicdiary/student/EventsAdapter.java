@@ -4,103 +4,151 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.electronicdiary.Event;
+import com.example.electronicdiary.ModuleInfo;
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.StudentEvent;
-
-import org.jetbrains.annotations.NotNull;
+import com.example.electronicdiary.StudentPerformanceInModule;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
+class EventsAdapter extends BaseExpandableListAdapter {
     private final LayoutInflater inflater;
-    private final View.OnClickListener onItemClickListener;
 
-    private final ArrayList<Event> events;
-    private final ArrayList<StudentEvent> studentEvents;
+    private final ArrayList<Integer> modules;
+    private final HashMap<Integer, ModuleInfo> moduleInfoByModules;
+    private final HashMap<Integer, StudentPerformanceInModule> studentPerformanceByModules;
+    private final HashMap<Integer, ArrayList<Event>> eventsByModules;
+    private final HashMap<Integer, ArrayList<StudentEvent>> studentEventsByModules;
 
-    EventsAdapter(Context context, ArrayList<Event> events, ArrayList<StudentEvent> studentEvents,
-                  View.OnClickListener onItemClickListener) {
+    EventsAdapter(Context context, ArrayList<Integer> modules, HashMap<Integer, ModuleInfo> moduleInfoByModules,
+                  HashMap<Integer, StudentPerformanceInModule> studentPerformanceByModules,
+                  HashMap<Integer, ArrayList<Event>> eventsByModules,
+                  HashMap<Integer, ArrayList<StudentEvent>> studentEventsByModules) {
         this.inflater = LayoutInflater.from(context);
-        this.onItemClickListener = onItemClickListener;
-        this.events = events;
-        this.studentEvents = studentEvents;
+        this.modules = modules;
+        this.moduleInfoByModules = moduleInfoByModules;
+        this.studentPerformanceByModules = studentPerformanceByModules;
+        this.eventsByModules = eventsByModules;
+        this.studentEventsByModules = studentEventsByModules;
     }
 
     @Override
-    @NotNull
-    public EventsAdapter.ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.holder_event, parent, false);
-        return new ViewHolder(view);
+    public int getGroupCount() {
+        return modules.size();
     }
 
     @Override
-    public void onBindViewHolder(@NotNull EventsAdapter.ViewHolder holder, int position) {
-        Event event = events.get(position);
-        StudentEvent studentEvent = null;
+    public int getChildrenCount(int groupPosition) {
+        return eventsByModules.get(modules.get(groupPosition)).size();
+    }
+
+    @Override
+    public Object getGroup(int groupPosition) {
+        return modules.get(groupPosition);
+    }
+
+    @Override
+    public Object getChild(int groupPosition, int childPosition) {
+        return eventsByModules.get(modules.get(groupPosition)).get(childPosition);
+    }
+
+    @Override
+    public long getGroupId(int groupPosition) {
+        return groupPosition;
+    }
+
+    @Override
+    public long getChildId(int groupPosition, int childPosition) {
+        return childPosition;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        return false;
+    }
+
+    @Override
+    public View getGroupView(int groupPosition, boolean isExpanded, View view, ViewGroup parent) {
+        String moduleTitle = "Модуль " + modules.get(groupPosition);
+        ModuleInfo moduleInfo = moduleInfoByModules.get(modules.get(groupPosition));
+        StudentPerformanceInModule studentPerformanceInModule = studentPerformanceByModules.get(modules.get(groupPosition));
+
+        if (view == null) {
+            view = inflater.inflate(R.layout.holder_module_performance, null);
+        }
+
+        TextView moduleTitleWithPointsView = view.findViewById(R.id.moduleTitleWithPoints);
+        moduleTitleWithPointsView.setText(moduleTitle + " (" + moduleInfo.getMinPoints() +
+                "-" + moduleInfo.getMaxPoints() + ")");
+        moduleTitleWithPointsView.setTextColor(studentPerformanceInModule.getEarnedPoints() > moduleInfo.getMinPoints() ?
+                inflater.getContext().getColor(R.color.green) : inflater.getContext().getColor(R.color.red));
+
+        TextView earnedModulePointsView = view.findViewById(R.id.earnedModulePoints);
+        earnedModulePointsView.setText(String.valueOf(studentPerformanceInModule.getEarnedPoints()));
+        earnedModulePointsView.setTextColor(studentPerformanceInModule.getEarnedPoints() > moduleInfo.getMinPoints() ?
+                inflater.getContext().getColor(R.color.green) : inflater.getContext().getColor(R.color.red));
+
+        return view;
+    }
+
+    @Override
+    public View getChildView(int groupPosition, int childPosition, boolean isExpanded, View view, ViewGroup parent) {
+        Event event = eventsByModules.get(modules.get(groupPosition)).get(childPosition);
+        ArrayList<StudentEvent> studentEvents = studentEventsByModules.get(modules.get(groupPosition));
+
         int lastAttempt = 0;
+        StudentEvent studentEvent = null;
         for (int i = 0; i < studentEvents.size(); i++) {
-            StudentEvent studentEventTemp = studentEvents.get(i);
-            if (event.getId() == studentEventTemp.getEventId() && studentEventTemp.getAttemptNumber() > lastAttempt) {
-                studentEvent = studentEventTemp;
-                lastAttempt = studentEventTemp.getAttemptNumber();
+            if (event.getId() == studentEvents.get(i).getEventId() && studentEvents.get(i).getAttemptNumber() > lastAttempt) {
+                studentEvent = studentEvents.get(i);
+                lastAttempt = studentEvents.get(i).getAttemptNumber();
             }
         }
+
+        if (view == null) {
+            view = inflater.inflate(R.layout.holder_event_performance, null);
+        }
+
+        TextView eventTitleView = view.findViewById(R.id.eventTitle);
+        TextView attemptNumberView = view.findViewById(R.id.attemptNumber);
+        TextView allPointsView = view.findViewById(R.id.allPoints);
+        TextView finishDateView = view.findViewById(R.id.finishDate);
 
         if (lastAttempt == 0) {
-            holder.eventTitleView.setText(event.getTitle());
-            holder.attemptNumberView.setText("");
-            holder.allPointsView.setText("Нет данных");
-            holder.finishDateView.setText("");
+            eventTitleView.setText(event.getTitle());
+            attemptNumberView.setText("");
+            allPointsView.setText("Нет данных");
+            finishDateView.setText("");
         } else if (!studentEvent.isAttended()) {
-            holder.eventTitleView.setText(event.getTitle());
-            holder.attemptNumberView.setText("");
-            holder.allPointsView.setText("Не посещено");
-            holder.finishDateView.setText("");
+            eventTitleView.setText(event.getTitle());
+            attemptNumberView.setText("");
+            allPointsView.setText("Не посещено");
+            finishDateView.setText("");
         } else {
-            holder.eventTitleView.setText(event.getTitle());
-            holder.attemptNumberView.setText(String.valueOf(studentEvent.getAttemptNumber()));
-            holder.allPointsView.setText(String.valueOf(studentEvent.getEarnedPoints() + studentEvent.getBonusPoints()));
-            holder.finishDateView.setText(studentEvent.getFinishDate().getDate());
+            eventTitleView.setText(event.getTitle());
+            attemptNumberView.setText(String.valueOf(studentEvent.getAttemptNumber()));
+            allPointsView.setText(String.valueOf(studentEvent.getEarnedPoints() + studentEvent.getBonusPoints()));
+            finishDateView.setText(studentEvent.getFinishDate().getDate());
 
-            if (studentEvent.getEarnedPoints() + studentEvent.getBonusPoints() < event.getMinPoints()) {
-                holder.allPointsView.setTextColor(inflater.getContext().getColor(R.color.red));
-            } else {
-                holder.allPointsView.setTextColor(inflater.getContext().getColor(R.color.green));
-            }
-
-            if (studentEvent.getFinishDate().after(event.getDeadlineDate())) {
-                holder.finishDateView.setTextColor(inflater.getContext().getColor(R.color.red));
-            } else {
-                holder.finishDateView.setTextColor(inflater.getContext().getColor(R.color.green));
-            }
+            eventTitleView.setTextColor(inflater.getContext().getColor(studentEvent.isHaveCredit() ? R.color.green : R.color.red));
+            attemptNumberView.setTextColor(inflater.getContext().getColor(studentEvent.isHaveCredit() ? R.color.green : R.color.red));
+            allPointsView.setTextColor(inflater.getContext().getColor(studentEvent.getEarnedPoints() +
+                    studentEvent.getBonusPoints() < event.getMinPoints() ? R.color.red : R.color.green));
+            finishDateView.setTextColor(inflater.getContext().getColor(studentEvent.getFinishDate().after(event.getDeadlineDate())
+                    ? R.color.red : R.color.green));
         }
+
+        return view;
     }
 
     @Override
-    public int getItemCount() {
-        return events.size();
-    }
-
-    class ViewHolder extends RecyclerView.ViewHolder {
-        final TextView eventTitleView;
-        final TextView attemptNumberView;
-        final TextView allPointsView;
-        final TextView finishDateView;
-
-        ViewHolder(View view) {
-            super(view);
-            eventTitleView = view.findViewById(R.id.eventTitle);
-            attemptNumberView = view.findViewById(R.id.attemptNumber);
-            allPointsView = view.findViewById(R.id.allPoints);
-            finishDateView = view.findViewById(R.id.finishDate);
-
-            view.setTag(this);
-            itemView.setOnClickListener(onItemClickListener);
-        }
+    public boolean isChildSelectable(int i, int i1) {
+        return true;
     }
 }
+

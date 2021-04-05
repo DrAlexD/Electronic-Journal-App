@@ -6,35 +6,28 @@ import com.example.electronicdiary.R;
 
 public class LessonFormState {
     @Nullable
-    private final Integer lessonAttendPointsError;
+    private final Integer dateAndTimeError;
+    @Nullable
+    private final Integer pointsPerVisitError;
     private final boolean isDataValid;
-    @Nullable
-    private Integer lessonDateError;
 
-    public LessonFormState(String lessonDate, String lessonAttendPoints) {
-        boolean isLessonDateValid = !lessonDate.trim().isEmpty();
-        boolean isLessonAttendPointsValid = !lessonAttendPoints.trim().isEmpty();
+    public LessonFormState(String dateAndTime, String pointsPerVisit) {
+        boolean isDateAndTimeValid = !dateAndTime.matches("[0-9][0-9]\\.[0-1][0-9]\\.2[0-1][0-9][0-9] [0-2][0-9]:[0-5][0-9]");
+        boolean isPointsPerVisitValid = !pointsPerVisit.trim().isEmpty();
 
-        this.lessonDateError = !isLessonDateValid ? R.string.invalid_empty_field : null;
-        this.lessonAttendPointsError = !isLessonAttendPointsValid ? R.string.invalid_empty_field : null;
-        this.isDataValid = isLessonDateValid && isLessonAttendPointsValid;
-    }
-
-    public LessonFormState(String lessonAttendPoints) {
-        boolean isLessonAttendPointsValid = !lessonAttendPoints.trim().isEmpty();
-
-        this.lessonAttendPointsError = !isLessonAttendPointsValid ? R.string.invalid_empty_field : null;
-        this.isDataValid = isLessonAttendPointsValid;
+        this.dateAndTimeError = !isDateAndTimeValid ? R.string.invalid_date_time_field : null;
+        this.pointsPerVisitError = !isPointsPerVisitValid ? R.string.invalid_empty_field : null;
+        this.isDataValid = isDateAndTimeValid && isPointsPerVisitValid;
     }
 
     @Nullable
-    public Integer getLessonDateError() {
-        return lessonDateError;
+    public Integer getDateAndTimeError() {
+        return dateAndTimeError;
     }
 
     @Nullable
-    public Integer getLessonAttendPointsError() {
-        return lessonAttendPointsError;
+    public Integer getPointsPerVisitError() {
+        return pointsPerVisitError;
     }
 
     public boolean isDataValid() {

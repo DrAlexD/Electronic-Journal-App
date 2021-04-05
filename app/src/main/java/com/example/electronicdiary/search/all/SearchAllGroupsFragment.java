@@ -79,7 +79,7 @@ public class SearchAllGroupsFragment extends Fragment {
                     bundle.putInt("subjectId", getArguments().getInt("subjectId"));
                     bundle.putInt("semesterId", getArguments().getInt("semesterId"));
 
-                    Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_dialog_group_info_adding, bundle);
+                    Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_dialog_subject_info_adding, bundle);
                 }
             };
 

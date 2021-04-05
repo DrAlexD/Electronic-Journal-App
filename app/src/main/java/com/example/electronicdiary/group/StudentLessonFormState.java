@@ -6,19 +6,19 @@ import com.example.electronicdiary.R;
 
 public class StudentLessonFormState {
     @Nullable
-    private final Integer studentLessonEarnedPointsError;
+    private final Integer bonusPointsError;
     private final boolean isDataValid;
 
-    public StudentLessonFormState(String studentLessonEarnedPoints) {
-        boolean isStudentLessonEarnedPointsValid = !studentLessonEarnedPoints.trim().isEmpty();
+    public StudentLessonFormState(String bonusPoints) {
+        boolean isBonusPointsValid = !bonusPoints.trim().isEmpty();
 
-        this.studentLessonEarnedPointsError = !isStudentLessonEarnedPointsValid ? R.string.invalid_empty_field : null;
-        this.isDataValid = isStudentLessonEarnedPointsValid;
+        this.bonusPointsError = !isBonusPointsValid ? R.string.invalid_empty_field : null;
+        this.isDataValid = isBonusPointsValid;
     }
 
     @Nullable
-    public Integer getStudentLessonEarnedPointsError() {
-        return studentLessonEarnedPointsError;
+    public Integer getBonusPointsError() {
+        return bonusPointsError;
     }
 
     public boolean isDataValid() {

@@ -21,18 +21,16 @@ public class EventEditingViewModel extends ViewModel {
         return event;
     }
 
-    public void eventEditingDataChanged(String eventMinPoints) {
-        eventFormState.setValue(new EventFormState(eventMinPoints));
+    public void eventEditingDataChanged(String startDate, String deadlineDate, String minPoints, String maxPoints) {
+        eventFormState.setValue(new EventFormState(startDate, deadlineDate, minPoints, maxPoints));
     }
 
     public void downloadEventById(int eventId) {
         this.event.setValue(Repository.getInstance().getEventById(eventId));
     }
 
-    public void editEvent(int id, int moduleNumber, int groupId, int subjectId, int lecturerId, int seminarianId,
-                          int semesterId, String type, int number, Date startDate, Date deadlineDate, int minPoints, int maxPoints) {
-        Repository.getInstance().editEvent(id, moduleNumber, groupId, subjectId, lecturerId, seminarianId,
-                semesterId, type, number, startDate, deadlineDate, minPoints, maxPoints);
+    public void editEvent(int eventId, Date startDate, Date deadlineDate, int minPoints, int maxPoints) {
+        Repository.getInstance().editEvent(eventId, startDate, deadlineDate, minPoints, maxPoints);
     }
 
     public void deleteEvent(int eventId) {

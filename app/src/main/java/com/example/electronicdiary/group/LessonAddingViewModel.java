@@ -15,8 +15,8 @@ public class LessonAddingViewModel extends ViewModel {
         return lessonFormState;
     }
 
-    public void lessonAddingDataChanged(String lessonDate, String lessonAttendPoints) {
-        lessonFormState.setValue(new LessonFormState(lessonDate, lessonAttendPoints));
+    public void lessonAddingDataChanged(String dateAndTime, String pointsPerVisit) {
+        lessonFormState.setValue(new LessonFormState(dateAndTime, pointsPerVisit));
     }
 
     public void addLesson(int moduleNumber, int groupId, int subjectId, int lecturerId, int seminarianId, int semesterId,

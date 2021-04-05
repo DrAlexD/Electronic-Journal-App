@@ -11,35 +11,37 @@ import java.util.Date;
 
 public class StudentEventViewModel extends ViewModel {
     private final MutableLiveData<StudentEventFormState> studentEventFormState = new MutableLiveData<>();
-    private final MutableLiveData<StudentEvent> event = new MutableLiveData<>();
+    private final MutableLiveData<StudentEvent> studentEvent = new MutableLiveData<>();
 
     LiveData<StudentEventFormState> getStudentEventFormState() {
         return studentEventFormState;
     }
 
-    public MutableLiveData<StudentEvent> getEvent() {
-        return event;
+    public MutableLiveData<StudentEvent> getStudentEvent() {
+        return studentEvent;
     }
 
-    public void eventPerformanceDataChanged(String eventEarnedPoints) {
-        studentEventFormState.setValue(new StudentEventFormState(eventEarnedPoints));
+    public void eventPerformanceDataChanged(String variantNumber) {
+        studentEventFormState.setValue(new StudentEventFormState(variantNumber));
+    }
+
+    public void eventPerformanceDataChanged(String variantNumber, String finishDate, String earnedPoints, String bonusPoints) {
+        studentEventFormState.setValue(new StudentEventFormState(variantNumber, finishDate, earnedPoints, bonusPoints));
     }
 
     public void downloadStudentEventById(int attemptNumber, int eventId, int studentId) {
-        this.event.setValue(Repository.getInstance().getStudentEventById(attemptNumber, eventId, studentId));
+        this.studentEvent.setValue(Repository.getInstance().getStudentEventById(attemptNumber, eventId, studentId));
     }
 
-    public void addStudentEvent(int attemptNumber, int eventId, int moduleNumber, int studentId, int groupId, int subjectId,
+    public void addStudentEvent(int attemptNumber, int eventId, int studentId, int moduleNumber, int groupId, int subjectId,
                                 int lecturerId, int seminarianId, int semesterId, boolean isAttended, int variantNumber) {
-        Repository.getInstance().addStudentEvent(attemptNumber, eventId, moduleNumber, studentId, groupId, subjectId,
+        Repository.getInstance().addStudentEvent(attemptNumber, eventId, studentId, moduleNumber, groupId, subjectId,
                 lecturerId, seminarianId, semesterId, isAttended, variantNumber);
     }
 
-    public void editStudentEvent(int attemptNumber, int eventId, int moduleNumber, int studentId, int groupId, int subjectId,
-                                 int lecturerId, int seminarianId, int semesterId, boolean isAttended, int variantNumber,
+    public void editStudentEvent(int attemptNumber, int eventId, int studentId, boolean isAttended, int variantNumber,
                                  Date finishDate, int earnedPoints, int bonusPoints, boolean isHaveCredit) {
-        Repository.getInstance().editStudentEvent(attemptNumber, eventId, moduleNumber, studentId, groupId, subjectId,
-                lecturerId, seminarianId, semesterId, isAttended, variantNumber,
+        Repository.getInstance().editStudentEvent(attemptNumber, eventId, studentId, isAttended, variantNumber,
                 finishDate, earnedPoints, bonusPoints, isHaveCredit);
     }
 

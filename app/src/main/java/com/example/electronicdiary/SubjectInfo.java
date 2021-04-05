@@ -1,6 +1,6 @@
 package com.example.electronicdiary;
 
-public class GroupInfo {
+public class SubjectInfo {
     private final Group group;
     private final int subjectId;
     private final int lecturerId;
@@ -8,24 +8,28 @@ public class GroupInfo {
     private final int semesterId;
 
     private final boolean isExam;
+    private final boolean isDifferentiatedCredit;
+
     private boolean isQueueAllowed;
 
-    public GroupInfo(Group group, int subjectId, int lecturerId, int seminarianId, int semesterId, boolean isExam) {
+    public SubjectInfo(Group group, int subjectId, int lecturerId, int seminarianId, int semesterId, boolean isExam, boolean isDifferentiatedCredit) {
         this.group = group;
         this.subjectId = subjectId;
         this.lecturerId = lecturerId;
         this.seminarianId = seminarianId;
         this.semesterId = semesterId;
         this.isExam = isExam;
+        this.isDifferentiatedCredit = isDifferentiatedCredit;
     }
 
-    public GroupInfo(Group group, int subjectId, int lecturerId, int seminarianId, int semesterId, boolean isExam, boolean isQueueAllowed) {
+    public SubjectInfo(Group group, int subjectId, int lecturerId, int seminarianId, int semesterId, boolean isExam, boolean isDifferentiatedCredit, boolean isQueueAllowed) {
         this.group = group;
         this.subjectId = subjectId;
         this.lecturerId = lecturerId;
         this.seminarianId = seminarianId;
         this.semesterId = semesterId;
         this.isExam = isExam;
+        this.isDifferentiatedCredit = isDifferentiatedCredit;
         this.isQueueAllowed = isQueueAllowed;
     }
 
@@ -51,6 +55,10 @@ public class GroupInfo {
 
     public boolean isExam() {
         return isExam;
+    }
+
+    public boolean isDifferentiatedCredit() {
+        return isDifferentiatedCredit;
     }
 
     public boolean isQueueAllowed() {

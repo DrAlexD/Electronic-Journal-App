@@ -6,15 +6,22 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.electronicdiary.Group;
 import com.example.electronicdiary.Repository;
+import com.example.electronicdiary.Semester;
 import com.example.electronicdiary.Student;
 import com.example.electronicdiary.Subject;
 
 import java.util.ArrayList;
 
 public class StudentProfileViewModel extends ViewModel {
+    private final MutableLiveData<Semester> semester = new MutableLiveData<>();
     private final MutableLiveData<Student> student = new MutableLiveData<>();
     private final MutableLiveData<Group> group = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<Subject>> availableStudentSubjects = new MutableLiveData<>();
+
+    public MutableLiveData<Semester> getSemester() {
+        return semester;
+    }
+
 
     public MutableLiveData<Student> getStudent() {
         return student;
@@ -26,6 +33,10 @@ public class StudentProfileViewModel extends ViewModel {
 
     public LiveData<ArrayList<Subject>> getAvailableStudentSubjects() {
         return availableStudentSubjects;
+    }
+
+    public void downloadSemesterById(int semesterId) {
+        this.semester.setValue(Repository.getInstance().getSemesterById(semesterId));
     }
 
     public void downloadStudentById(int studentId) {

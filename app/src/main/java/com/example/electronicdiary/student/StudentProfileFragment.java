@@ -40,14 +40,23 @@ public class StudentProfileFragment extends Fragment {
 
         StudentProfileViewModel studentProfileViewModel = new ViewModelProvider(this).get(StudentProfileViewModel.class);
         studentProfileViewModel.downloadStudentById(studentId);
+        studentProfileViewModel.downloadSemesterById(semesterId);
         studentProfileViewModel.downloadAvailableStudentSubjects(studentId, semesterId);
+
+        studentProfileViewModel.getSemester().observe(getViewLifecycleOwner(), semester -> {
+            if (semester == null) {
+                return;
+            }
+
+            TextView semesterView = root.findViewById(R.id.semester_text);
+            semesterView.setText(semester.toString());
+        });
 
         studentProfileViewModel.getStudent().observe(getViewLifecycleOwner(), student -> {
             if (student == null) {
                 return;
             }
 
-            //TODO добавить отображение выбранного семестра в профиле студента
             TextView username = root.findViewById(R.id.user_name_text);
             username.setText(student.getFullName());
 
@@ -74,9 +83,10 @@ public class StudentProfileFragment extends Fragment {
             listView.setAdapter(subjectsAdapter);
             listView.setOnItemClickListener((parent, view, position, id) -> {
                 Bundle bundle = new Bundle();
-                bundle.putInt("semesterId", semesterId);
+                bundle.putInt("openPage", 0);
                 bundle.putInt("studentId", studentId);
                 bundle.putInt("subjectId", availableStudentSubjects.get(position).getId());
+                bundle.putInt("semesterId", semesterId);
                 Navigation.findNavController(view).navigate(R.id.action_student_profile_to_student_performance, bundle);
             });
         });

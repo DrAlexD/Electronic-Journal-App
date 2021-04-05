@@ -7,51 +7,53 @@
     android:paddingRight="32dp">
 
     <EditText
-        android:id="@+id/professorNameAdding"
+        android:id="@+id/studentPerformanceInSubjectEarnedPoints"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:hint="@string/name_form"
-        android:inputType="textPersonName"
+        android:hint="@string/earned_points_text"
+        android:inputType="number"
+        android:maxLength="3"
         android:textSize="20sp" />
 
     <EditText
-        android:id="@+id/professorSecondNameAdding"
+        android:id="@+id/studentPerformanceInSubjectBonusPoints"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:gravity="center"
-        android:hint="@string/second_name_form"
-        android:inputType="textPersonName"
+        android:hint="@string/bonus_points_text"
+        android:inputType="number"
+        android:maxLength="2"
         android:textSize="20sp" />
-
-    <EditText
-        android:id="@+id/professorLoginAdding"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:gravity="center"
-        android:hint="@string/login_form"
-        android:inputType="text"
-        android:textSize="20sp" />
-
-    <EditText
-        android:id="@+id/professorPasswordAdding"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:gravity="center"
-        android:hint="@string/password_form"
-        android:inputType="textVisiblePassword" />
 
     <CheckBox
-        android:id="@+id/professorAddingGenerate"
+        android:id="@+id/studentPerformanceInSubjectIsHaveCreditOrAdmission"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        android:enabled="false"
         android:gravity="center"
-        android:text="@string/login_and_password_generate"
         android:textSize="18sp" />
 
+    <EditText
+        android:id="@+id/studentPerformanceInSubjectExamEarnedPoints"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:hint="@string/exam_earned_points_text"
+        android:inputType="number"
+        android:maxLength="2"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/studentPerformanceInSubjectMark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:hint="@string/mark_text"
+        android:inputType="number"
+        android:maxLength="1"
+        android:textSize="20sp" />
 </LinearLayout>

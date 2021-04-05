@@ -49,20 +49,32 @@
     <!-- Strings related to actions in group performance -->
     <string name="event_type_text">Тип</string>
     <string name="module_text">Модуль</string>
-    <string name="event_start_date_text">Дата выдачи</string>
-    <string name="event_deadline_date_text">Дедлайн</string>
-    <string name="event_min_points_text">Мин. баллов</string>
-    <string name="event_max_points_text">Макс. баллов</string>
-    <string name="lesson_date_text">Дата занятия</string>
-    <string name="lesson_attend_points_text">Баллов за посещение</string>
-    <string name="event_earned_points_text">Получ. баллы</string>
-    <string name="lesson_earned_points_text">Получ. баллы</string>
     <string name="is_lecturer_text">Лектор</string>
-    <string name="is_exam_text">Экзамен по предмету</string>
+    <string name="is_lecture_text">Лекция</string>
+    <string name="is_seminarian_text">Семинарист</string>
+    <string name="is_swap_lecturer_and_seminarian_text">Поменять местами лектора и семинариста</string>
+    <string name="is_for_all_groups_text">Применить для всех групп</string>
+    <string name="lesson_date_time_text">Дата и время занятия</string>
+    <string name="event_start_date_text">Дата выдачи</string>
+    <string name="event_deadline_date_text">Дата дедлайна</string>
+    <string name="student_event_finish_date_text">Дата выполнения</string>
+    <string name="is_attended_text">Посещено</string>
+    <string name="student_event_variant_text">Вариант</string>
+    <string name="min_points_text">Мин. баллов</string>
+    <string name="max_points_text">Макс. баллов</string>
+    <string name="lesson_attend_points_text">Баллов за посещение</string>
+    <string name="earned_points_text">Получ. баллы</string>
+    <string name="bonus_points_text">Бонусные баллы</string>
+    <string name="exam_earned_points_text">Баллы за экзамен</string>
+    <string name="is_have_credit_text">Зачет</string>
+    <string name="is_differentiated_credit_text">Дифферинцированный зачет</string>
+    <string name="is_exam_text">Экзамен</string>
+    <string name="mark_text">Оценка</string>
     <!-- Strings related to form valid -->
-    <string name="invalid_username">Неверный логин</string>
     <string name="invalid_empty_field">Пустое поле</string>
+    <string name="invalid_username">Неверный логин</string>
     <string name="invalid_date_field">Формат даты dd.mm.yyyy</string>
+    <string name="invalid_date_time_field">Формат времени dd.mm.yyyy mm:hh</string>
     <string name="invalid_password">Пароль должен содежать >5 символов</string>
     <string name="invalid_group_title">Группа должна содежать >4 символов</string>
     <string name="invalid_semester_year">Год должен содержать =4 символа</string>

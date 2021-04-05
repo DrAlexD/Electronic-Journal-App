@@ -22,13 +22,13 @@ import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.electronicdiary.Event;
-import com.example.electronicdiary.GroupInfo;
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.Student;
 import com.example.electronicdiary.StudentEvent;
 import com.example.electronicdiary.StudentPerformanceInModule;
 import com.example.electronicdiary.StudentPerformanceInSubject;
+import com.example.electronicdiary.SubjectInfo;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -176,12 +176,12 @@ public class GroupPerformanceFragment extends Fragment {
             bundle.putInt("lecturerId", lecturerId);
             bundle.putInt("seminarianId", seminarianId);
             bundle.putInt("semesterId", semesterId);
-            Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_group_info_editing, bundle);
+            Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_subject_info_editing, bundle);
         });
         eventsRow.addView(resultPointsView);
 
-        GroupInfo groupInfo = groupPerformanceViewModel.getGroupInfo().getValue();
-        if (groupInfo.isExam()) {
+        SubjectInfo subjectInfo = groupPerformanceViewModel.getSubjectInfo().getValue();
+        if (subjectInfo.isExam()) {
             TextView examPointsView = new TextView(getContext());
             examPointsView.setTextSize(20);
             examPointsView.setText("Экзамен");
@@ -194,10 +194,12 @@ public class GroupPerformanceFragment extends Fragment {
                 bundle.putInt("lecturerId", lecturerId);
                 bundle.putInt("seminarianId", seminarianId);
                 bundle.putInt("semesterId", semesterId);
-                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_group_info_editing, bundle);
+                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_subject_info_editing, bundle);
             });
             eventsRow.addView(examPointsView);
+        }
 
+        if (subjectInfo.isExam() || subjectInfo.isDifferentiatedCredit()) {
             TextView markView = new TextView(getContext());
             markView.setTextSize(20);
             markView.setText("Оценка");
@@ -210,7 +212,7 @@ public class GroupPerformanceFragment extends Fragment {
                 bundle.putInt("lecturerId", lecturerId);
                 bundle.putInt("seminarianId", seminarianId);
                 bundle.putInt("semesterId", semesterId);
-                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_group_info_editing, bundle);
+                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_subject_info_editing, bundle);
             });
             eventsRow.addView(markView);
         }
@@ -256,12 +258,19 @@ public class GroupPerformanceFragment extends Fragment {
                     }
                 }
 
-                pointsView.setText(lastAttempt == 0 ? "" : String.valueOf(studentEventChosen.getEarnedPoints() + studentEventChosen.getBonusPoints()));
+                pointsView.setText(lastAttempt == 0 ? "" : (!studentEventChosen.isAttended() ? "Н" : String.valueOf(studentEventChosen.getEarnedPoints() + studentEventChosen.getBonusPoints())));
+                if (lastAttempt != 0) {
+                    pointsView.setTextColor(studentEventChosen.isHaveCredit() ? getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
+                }
                 pointsView.setGravity(Gravity.CENTER);
 
                 int finalLastAttempt = lastAttempt;
                 pointsView.setOnClickListener(view -> {
                     Bundle bundle = new Bundle();
+                    bundle.putBoolean("isFromGroupPerformance", true);
+                    bundle.putInt("eventMinPoints", event.getMinPoints());
+                    bundle.putString("eventDeadlineDate", String.valueOf(event.getDeadlineDate().getDate()));
+                    bundle.putString("eventTitle", event.getTitle());
                     bundle.putInt("attemptNumber", finalLastAttempt);
                     bundle.putInt("eventId", event.getId());
                     bundle.putInt("studentId", student.getId());
@@ -284,17 +293,6 @@ public class GroupPerformanceFragment extends Fragment {
             moduleView.setTextColor(studentPerformanceInModule.isHaveCredit() ? getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
             moduleView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
             moduleView.setGravity(Gravity.CENTER);
-            moduleView.setOnClickListener(view -> {
-                Bundle bundle = new Bundle();
-                bundle.putInt("moduleNumber", moduleNumber);
-                bundle.putInt("studentId", student.getId());
-                bundle.putInt("groupId", groupId);
-                bundle.putInt("subjectId", subjectId);
-                bundle.putInt("lecturerId", lecturerId);
-                bundle.putInt("seminarianId", seminarianId);
-                bundle.putInt("semesterId", semesterId);
-                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_module_performance_editing, bundle);
-            });
             pointsRow.addView(moduleView);
         }
 
@@ -314,12 +312,12 @@ public class GroupPerformanceFragment extends Fragment {
             bundle.putInt("lecturerId", lecturerId);
             bundle.putInt("seminarianId", seminarianId);
             bundle.putInt("semesterId", semesterId);
-            Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_subject_performance_editing, bundle);
+            Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_student_performance_in_subject, bundle);
         });
         pointsRow.addView(resultPointsView);
 
-        GroupInfo groupInfo = groupPerformanceViewModel.getGroupInfo().getValue();
-        if (groupInfo.isExam()) {
+        SubjectInfo subjectInfo = groupPerformanceViewModel.getSubjectInfo().getValue();
+        if (subjectInfo.isExam()) {
             TextView examPointsView = new TextView(getContext());
             examPointsView.setTextSize(20);
             examPointsView.setText(studentPerformanceInSubject.getEarnedExamPoints());
@@ -334,10 +332,12 @@ public class GroupPerformanceFragment extends Fragment {
                 bundle.putInt("lecturerId", lecturerId);
                 bundle.putInt("seminarianId", seminarianId);
                 bundle.putInt("semesterId", semesterId);
-                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_subject_performance_editing, bundle);
+                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_student_performance_in_subject, bundle);
             });
             pointsRow.addView(examPointsView);
+        }
 
+        if (subjectInfo.isExam() || subjectInfo.isDifferentiatedCredit()) {
             TextView markView = new TextView(getContext());
             markView.setTextSize(20);
             markView.setText(studentPerformanceInSubject.getMark());
@@ -351,7 +351,7 @@ public class GroupPerformanceFragment extends Fragment {
                 bundle.putInt("lecturerId", lecturerId);
                 bundle.putInt("seminarianId", seminarianId);
                 bundle.putInt("semesterId", semesterId);
-                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_subject_performance_editing, bundle);
+                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_student_performance_in_subject, bundle);
             });
             pointsRow.addView(markView);
         }

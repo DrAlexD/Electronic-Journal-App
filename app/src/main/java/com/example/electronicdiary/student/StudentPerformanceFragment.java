@@ -19,28 +19,34 @@ public class StudentPerformanceFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_student_performance, container, false);
 
+        int page = getArguments().getInt("openPage");
         int studentId = getArguments().getInt("studentId");
         int subjectId = getArguments().getInt("subjectId");
         int semesterId = getArguments().getInt("semesterId");
 
         StudentPerformanceViewModel studentPerformanceViewModel = new ViewModelProvider(this).get(StudentPerformanceViewModel.class);
         studentPerformanceViewModel.downloadStudentById(studentId);
-        studentPerformanceViewModel.downloadStudentEvents(studentId, subjectId, semesterId);
-        studentPerformanceViewModel.downloadStudentLessonsByModules(studentId, subjectId, semesterId);
 
         studentPerformanceViewModel.getStudent().observe(getViewLifecycleOwner(), student -> {
             if (student == null) {
                 return;
             }
 
-            studentPerformanceViewModel.downloadEvents(student.getGroupId(), subjectId, semesterId);
-            studentPerformanceViewModel.downloadLessonsByModules(student.getGroupId(), subjectId, semesterId);
+            studentPerformanceViewModel.downloadSubjectInfo(student.getGroupId(), subjectId, semesterId);
+            studentPerformanceViewModel.getSubjectInfo().observe(getViewLifecycleOwner(), subjectInfo -> {
+                if (subjectInfo == null) {
+                    return;
+                }
+
+                studentPerformanceViewModel.downloadEventsAndLessons(studentId, student.getGroupId(), subjectId,
+                        subjectInfo.getLecturerId(), subjectInfo.getSeminarianId(), semesterId);
+            });
         });
 
         EventsOrLessonsPagerAdapter eventsOrLessonsPagerAdapter = new EventsOrLessonsPagerAdapter(this);
         ViewPager2 viewPager = root.findViewById(R.id.events_or_lessons_pager);
         viewPager.setAdapter(eventsOrLessonsPagerAdapter);
-        viewPager.setCurrentItem(0, false);
+        viewPager.setCurrentItem(page, false);
         viewPager.setOffscreenPageLimit(2);
 
         TabLayout tabLayout = root.findViewById(R.id.events_or_lessons_tab_layout);

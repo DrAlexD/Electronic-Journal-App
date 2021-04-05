@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
@@ -18,6 +19,8 @@ import com.example.electronicdiary.R;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Date;
+
 public class LessonAddingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
 
@@ -26,18 +29,23 @@ public class LessonAddingDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_lesson_adding, null);
 
-        int semesterId = getArguments().getInt("semesterId");
+        int moduleNumber = getArguments().getInt("moduleNumber");
         int groupId = getArguments().getInt("groupId");
         int subjectId = getArguments().getInt("subjectId");
+        int lecturerId = getArguments().getInt("lecturerId");
+        int seminarianId = getArguments().getInt("seminarianId");
+        int semesterId = getArguments().getInt("semesterId");
 
         LessonAddingViewModel lessonAddingViewModel = new ViewModelProvider(this).get(LessonAddingViewModel.class);
 
-        EditText lessonDate = root.findViewById(R.id.lessonDateAdding);
-        EditText lessonAttendPoints = root.findViewById(R.id.lessonAttendPointsAdding);
+        EditText dateAndTime = root.findViewById(R.id.lessonDateAndTimeAdding);
+        CheckBox isLecture = root.findViewById(R.id.lessonIsLectureAdding);
+        EditText pointsPerVisit = root.findViewById(R.id.lessonPointsPerVisitAdding);
+        pointsPerVisit.setText("1");
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                lessonAddingViewModel.lessonAddingDataChanged(lessonDate.getText().toString(), lessonAttendPoints.getText().toString());
+                lessonAddingViewModel.lessonAddingDataChanged(dateAndTime.getText().toString(), pointsPerVisit.getText().toString());
             }
 
             @Override
@@ -50,19 +58,19 @@ public class LessonAddingDialogFragment extends DialogFragment {
                 // ignore
             }
         };
-        lessonDate.addTextChangedListener(afterTextChangedListener);
-        lessonAttendPoints.addTextChangedListener(afterTextChangedListener);
+        dateAndTime.addTextChangedListener(afterTextChangedListener);
+        pointsPerVisit.addTextChangedListener(afterTextChangedListener);
 
         lessonAddingViewModel.getLessonFormState().observe(this, lessonFormState -> {
             if (lessonFormState == null) {
                 return;
             }
 
-            lessonDate.setError(lessonFormState.getLessonDateError() != null ?
-                    getString(lessonFormState.getLessonDateError()) : null);
+            dateAndTime.setError(lessonFormState.getDateAndTimeError() != null ?
+                    getString(lessonFormState.getDateAndTimeError()) : null);
 
-            lessonAttendPoints.setError(lessonFormState.getLessonAttendPointsError() != null ?
-                    getString(lessonFormState.getLessonAttendPointsError()) : null);
+            pointsPerVisit.setError(lessonFormState.getPointsPerVisitError() != null ?
+                    getString(lessonFormState.getPointsPerVisitError()) : null);
 
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(lessonFormState.isDataValid());
         });
@@ -71,12 +79,22 @@ public class LessonAddingDialogFragment extends DialogFragment {
         dialog = builder.setView(root)
                 .setTitle("Введите данные занятия")
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    lessonAddingViewModel.addLesson(lessonDate.getText().toString(), lessonAttendPoints.getText().toString());
+                    String date = dateAndTime.getText().toString().split(" ")[0];
+                    String time = dateAndTime.getText().toString().split(" ")[1];
+                    String[] splitedDate = date.split("\\.");
+                    String[] splitedTime = time.split(":");
+                    lessonAddingViewModel.addLesson(moduleNumber, groupId, subjectId, lecturerId, seminarianId, semesterId,
+                            new Date(Integer.parseInt(splitedDate[2]), Integer.parseInt(splitedDate[1]) - 1,
+                                    Integer.parseInt(splitedDate[0]), Integer.parseInt(splitedTime[0]), Integer.parseInt(splitedTime[1])),
+                            isLecture.isChecked(), Integer.parseInt(pointsPerVisit.getText().toString()));
 
                     Bundle bundle = new Bundle();
-                    bundle.putString("subject", getArguments().getString("subject"));
-                    bundle.putString("group", getArguments().getString("group"));
-                    bundle.putInt("openPage", getArguments().getInt("moduleNumber") - 1);
+                    bundle.putInt("openPage", moduleNumber - 1);
+                    bundle.putInt("groupId", groupId);
+                    bundle.putInt("subjectId", subjectId);
+                    bundle.putInt("lecturerId", lecturerId);
+                    bundle.putInt("seminarianId", seminarianId);
+                    bundle.putInt("semesterId", semesterId);
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_lesson_adding_to_group_performance, bundle);
                 }).create();

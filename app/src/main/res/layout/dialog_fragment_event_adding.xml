@@ -2,27 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="32dp"
+    android:paddingRight="32dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="32dp"
-        android:paddingEnd="32dp">
+        android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/moduleTextAdding"
-            android:layout_width="0dp"
+            android:id="@+id/eventModuleTextAdding"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
             android:layout_weight="3"
-            android:text="@string/event_max_points_text"
+            android:text="@string/module_text"
             android:textSize="20sp" />
 
         <Spinner
-            android:id="@+id/moduleAdding"
-            android:layout_width="0dp"
+            android:id="@+id/eventModuleAdding"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_weight="1"
@@ -33,13 +33,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="32dp"
-        android:paddingEnd="32dp">
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/eventTypeTextAdding"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
             android:layout_weight="1"
@@ -48,7 +47,7 @@
 
         <Spinner
             android:id="@+id/eventTypeAdding"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_weight="1"
@@ -56,107 +55,47 @@
             android:textSize="20sp" />
     </LinearLayout>
 
-    <LinearLayout
+    <EditText
+        android:id="@+id/eventStartDateAdding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="32dp"
-        android:paddingEnd="32dp">
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:hint="@string/event_start_date_text"
+        android:inputType="date"
+        android:maxLength="10"
+        android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/startDateTextAdding"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:layout_weight="1"
-            android:text="@string/event_start_date_text"
-            android:textSize="20sp" />
-
-        <EditText
-            android:id="@+id/startDateAdding"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_weight="1"
-            android:inputType="date"
-            android:textSize="20sp" />
-    </LinearLayout>
-
-    <LinearLayout
+    <EditText
+        android:id="@+id/eventDeadlineDateAdding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="32dp"
-        android:paddingEnd="32dp">
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:hint="@string/event_deadline_date_text"
+        android:inputType="date"
+        android:maxLength="10"
+        android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/deadlineDateTextAdding"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:layout_weight="1"
-            android:text="@string/event_deadline_date_text"
-            android:textSize="20sp" />
-
-        <EditText
-            android:id="@+id/deadlineDateAdding"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_weight="1"
-            android:inputType="date"
-            android:textSize="20sp" />
-    </LinearLayout>
-
-    <LinearLayout
+    <EditText
+        android:id="@+id/eventMinPointsAdding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="32dp"
-        android:paddingEnd="32dp">
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:hint="@string/min_points_text"
+        android:inputType="number"
+        android:maxLength="2"
+        android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/eventMinPointsTextAdding"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:layout_weight="3"
-            android:text="@string/event_min_points_text"
-            android:textSize="20sp" />
-
-        <EditText
-            android:id="@+id/eventMinPointsAdding"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_weight="1"
-            android:inputType="number"
-            android:textSize="20sp" />
-    </LinearLayout>
-
-    <LinearLayout
+    <EditText
+        android:id="@+id/eventMaxPointsAdding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="32dp"
-        android:paddingEnd="32dp">
-
-        <TextView
-            android:id="@+id/eventMaxPointsTextAdding"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:layout_weight="3"
-            android:text="@string/event_max_points_text"
-            android:textSize="20sp" />
-
-        <EditText
-            android:id="@+id/eventMaxPointsAdding"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_weight="1"
-            android:inputType="number"
-            android:textSize="20sp" />
-    </LinearLayout>
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:hint="@string/max_points_text"
+        android:inputType="number"
+        android:maxLength="2"
+        android:textSize="20sp" />
 </LinearLayout>

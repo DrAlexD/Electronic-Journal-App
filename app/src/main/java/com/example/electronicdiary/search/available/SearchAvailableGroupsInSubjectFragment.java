@@ -13,8 +13,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.electronicdiary.Group;
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.SubjectInfo;
 import com.example.electronicdiary.search.GroupsAdapter;
+
+import java.util.ArrayList;
 
 public class SearchAvailableGroupsInSubjectFragment extends Fragment {
     private GroupsAdapter groupsAdapter;
@@ -41,15 +45,20 @@ public class SearchAvailableGroupsInSubjectFragment extends Fragment {
                         int position = viewHolder.getAdapterPosition();
 
                         searchAvailableGroupsInSubjectViewModel.deleteGroupInAvailableSubject(getArguments().getInt("professorId"),
-                                availableGroupsInSubject.get(position).getId(), getArguments().getInt("subjectId"),
+                                availableGroupsInSubject.get(position).getGroup().getId(), getArguments().getInt("subjectId"),
                                 getArguments().getInt("semesterId"));
                         Navigation.findNavController(view).navigate(R.id.action_search_available_groups_in_subject_to_profile);
                     };
 
-            groupsAdapter = new GroupsAdapter(getContext(), availableGroupsInSubject, onItemClickListener);
-            recyclerView.setAdapter(groupsAdapter);
-            recyclerView.setHasFixedSize(false);
-        });
+                    ArrayList<Group> groups = new ArrayList<>();
+                    for (SubjectInfo subjectInfo : availableGroupsInSubject) {
+                        groups.add(subjectInfo.getGroup());
+                    }
+
+                    groupsAdapter = new GroupsAdapter(getContext(), groups, onItemClickListener);
+                    recyclerView.setAdapter(groupsAdapter);
+                    recyclerView.setHasFixedSize(false);
+                });
 
         final SearchView searchView = root.findViewById(R.id.availableGroupsInSubjectSearch);
         searchView.setSubmitButtonEnabled(true);

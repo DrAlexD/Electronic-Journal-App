@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
@@ -26,92 +27,134 @@ public class StudentLessonDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_student_lesson, null);
 
-        int moduleNumber = getArguments().getInt("moduleNumber");
-        int studentId = getArguments().getInt("studentId");
+        boolean isFromGroupPerformance = getArguments().getBoolean("isFromGroupPerformance");
+        boolean isLecture = true;
+        if (!isFromGroupPerformance)
+            isLecture = getArguments().getBoolean("isLecture");
+        boolean isHasData = getArguments().getBoolean("isHasData");
         int lessonId = getArguments().getInt("lessonId");
+        String lessonDate = getArguments().getString("lessonDate");
+        int studentId = getArguments().getInt("studentId");
+        int moduleNumber = getArguments().getInt("moduleNumber");
+        int groupId = getArguments().getInt("groupId");
+        int subjectId = getArguments().getInt("subjectId");
+        int lecturerId = getArguments().getInt("lecturerId");
+        int seminarianId = getArguments().getInt("seminarianId");
+        int semesterId = getArguments().getInt("semesterId");
 
-        boolean isAttended = getArguments().getBoolean("isAttended");
         StudentLessonViewModel studentLessonViewModel = new ViewModelProvider(this).get(StudentLessonViewModel.class);
 
-        EditText lessonEarnedPoints = root.findViewById(R.id.studentLessonEarnedPoints);
+        CheckBox isAttended = root.findViewById(R.id.studentLessonIsAttended);
+        EditText bonusPoints = root.findViewById(R.id.studentLessonBonusPoints);
 
-        //int lessonId;
-        if (isAttended) {
-            lessonId = 1;
-            studentLessonViewModel.downloadStudentLessonById(lessonId);
-            studentLessonViewModel.getLesson().observe(this, lesson -> {
-                if (lesson == null) {
+        if (isHasData) {
+            studentLessonViewModel.downloadStudentLessonById(lessonId, studentId);
+            studentLessonViewModel.getStudentLesson().observe(this, studentLesson -> {
+                if (studentLesson == null) {
                     return;
                 }
 
-                lessonEarnedPoints.setText(String.valueOf(lesson.getPoints()));
+                isAttended.setChecked(studentLesson.isAttended());
+                bonusPoints.setText(String.valueOf(studentLesson.getBonusPoints()));
             });
-        } else
-            lessonId = -1;
 
-        TextWatcher afterTextChangedListener = new TextWatcher() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                studentLessonViewModel.lessonPerformanceDataChanged(lessonEarnedPoints.getText().toString());
-            }
+            TextWatcher afterTextChangedListener = new TextWatcher() {
+                @Override
+                public void afterTextChanged(Editable s) {
+                    studentLessonViewModel.lessonPerformanceDataChanged(bonusPoints.getText().toString());
+                }
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
-            }
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    // ignore
+                }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
-            }
-        };
-        lessonEarnedPoints.addTextChangedListener(afterTextChangedListener);
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    // ignore
+                }
+            };
+            bonusPoints.addTextChangedListener(afterTextChangedListener);
 
-        studentLessonViewModel.getStudentLessonFormState().observe(this, studentLessonFormState -> {
-            if (studentLessonFormState == null) {
-                return;
-            }
+            studentLessonViewModel.getStudentLessonFormState().observe(this, studentLessonFormState -> {
+                if (studentLessonFormState == null) {
+                    return;
+                }
 
-            lessonEarnedPoints.setError(studentLessonFormState.getStudentLessonEarnedPointsError() != null ?
-                    getString(studentLessonFormState.getStudentLessonEarnedPointsError()) : null);
+                bonusPoints.setError(studentLessonFormState.getBonusPointsError() != null ?
+                        getString(studentLessonFormState.getBonusPointsError()) : null);
 
-            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(studentLessonFormState.isDataValid());
-        });
+                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(studentLessonFormState.isDataValid());
+            });
+        } else {
+            bonusPoints.setVisibility(View.GONE);
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        boolean finalIsLecture = isLecture;
         builder.setView(root)
-                .setTitle("Посещение " + getArguments().getString("lessonDate"))
+                .setTitle("Посещение " + lessonDate)
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    if (isAttended)
-                        studentLessonViewModel.editStudentLesson(lessonEarnedPoints.getText().toString());
+                    if (isHasData)
+                        studentLessonViewModel.editStudentLesson(lessonId, studentId, isAttended.isChecked(),
+                                Integer.parseInt(bonusPoints.getText().toString()));
                     else
-                        studentLessonViewModel.addStudentLesson(lessonEarnedPoints.getText().toString());
-                    Bundle bundle = new Bundle();
-                    bundle.putString("subject", getArguments().getString("subject"));
-                    bundle.putString("group", getArguments().getString("group"));
-                    bundle.putInt("openPage", getArguments().getInt("moduleNumber") - 1);
+                        studentLessonViewModel.addStudentLesson(lessonId, moduleNumber, studentId,
+                                groupId, subjectId, lecturerId, seminarianId, semesterId, isAttended.isChecked());
 
-                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_lesson_to_group_performance, bundle);
+                    if (isFromGroupPerformance) {
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("openPage", moduleNumber - 1);
+                        bundle.putInt("groupId", groupId);
+                        bundle.putInt("subjectId", subjectId);
+                        bundle.putInt("lecturerId", lecturerId);
+                        bundle.putInt("seminarianId", seminarianId);
+                        bundle.putInt("semesterId", semesterId);
+
+                        Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_lesson_to_group_performance, bundle);
+                    } else {
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("openPage", finalIsLecture ? 1 : 2);
+                        bundle.putInt("studentId", studentId);
+                        bundle.putInt("subjectId", subjectId);
+                        bundle.putInt("semesterId", semesterId);
+
+                        Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_lesson_to_student_performance, bundle);
+                    }
                 });
-        if (isAttended) {
+        if (isHasData) {
             builder.setNegativeButton("Отменить", (dialog, id) -> {
                 dismiss();
             }).setNeutralButton("Удалить", (dialog, id) -> {
-                studentLessonViewModel.deleteStudentLesson(lessonId);
+                studentLessonViewModel.deleteStudentLesson(lessonId, studentId);
 
-                Bundle bundle = new Bundle();
-                bundle.putString("subject", getArguments().getString("subject"));
-                bundle.putString("group", getArguments().getString("group"));
-                bundle.putInt("openPage", getArguments().getInt("moduleNumber") - 1);
+                if (isFromGroupPerformance) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("openPage", moduleNumber - 1);
+                    bundle.putInt("groupId", groupId);
+                    bundle.putInt("subjectId", subjectId);
+                    bundle.putInt("lecturerId", lecturerId);
+                    bundle.putInt("seminarianId", seminarianId);
+                    bundle.putInt("semesterId", semesterId);
 
-                Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_lesson_to_group_performance, bundle);
+                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_lesson_to_group_performance, bundle);
+                } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("openPage", finalIsLecture ? 1 : 2);
+                    bundle.putInt("studentId", studentId);
+                    bundle.putInt("subjectId", subjectId);
+                    bundle.putInt("semesterId", semesterId);
+
+                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_lesson_to_student_performance, bundle);
+                }
             });
         }
 
         dialog = builder.create();
         dialog.setOnShowListener(dialog -> {
-            ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.red));
-            ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(isAttended);
+            if (isHasData)
+                ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.red));
+            ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
         });
 
         return dialog;

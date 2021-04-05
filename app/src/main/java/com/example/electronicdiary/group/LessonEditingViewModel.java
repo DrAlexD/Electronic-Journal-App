@@ -21,18 +21,16 @@ public class LessonEditingViewModel extends ViewModel {
         return lesson;
     }
 
-    public void lessonEditingDataChanged(String lessonAttendPoints) {
-        lessonFormState.setValue(new LessonFormState(lessonAttendPoints));
+    public void lessonEditingDataChanged(String dateAndTime, String pointsPerVisit) {
+        lessonFormState.setValue(new LessonFormState(dateAndTime, pointsPerVisit));
     }
 
     public void downloadLessonById(int lessonId) {
         this.lesson.setValue(Repository.getInstance().getLessonById(lessonId));
     }
 
-    public void editLesson(int id, int moduleNumber, int groupId, int subjectId, int lecturerId, int seminarianId,
-                           int semesterId, Date dateAndTime, boolean isLecture, int pointsPerVisit) {
-        Repository.getInstance().editLesson(id, moduleNumber, groupId, subjectId, lecturerId, seminarianId,
-                semesterId, dateAndTime, isLecture, pointsPerVisit);
+    public void editLesson(int lessonId, Date dateAndTime, boolean isLecture, int pointsPerVisit) {
+        Repository.getInstance().editLesson(lessonId, dateAndTime, isLecture, pointsPerVisit);
     }
 
     public void deleteLesson(int lessonId) {

@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
@@ -17,6 +18,8 @@ import androidx.navigation.Navigation;
 import com.example.electronicdiary.R;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Date;
 
 public class LessonEditingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
@@ -31,20 +34,23 @@ public class LessonEditingDialogFragment extends DialogFragment {
         LessonEditingViewModel lessonEditingViewModel = new ViewModelProvider(this).get(LessonEditingViewModel.class);
         lessonEditingViewModel.downloadLessonById(lessonId);
 
-        EditText lessonAttendPoints = root.findViewById(R.id.lessonAttendPointsEditing);
-
+        EditText dateAndTime = root.findViewById(R.id.lessonDateAndTimeEditing);
+        CheckBox isLecture = root.findViewById(R.id.lessonIsLectureEditing);
+        EditText pointsPerVisit = root.findViewById(R.id.lessonPointsPerVisitEditing);
         lessonEditingViewModel.getLesson().observe(this, lesson -> {
             if (lesson == null) {
                 return;
             }
 
-            lessonAttendPoints.setText("1");
+            dateAndTime.setText(lesson.getDateAndTime().getDate() + " " + lesson.getDateAndTime().getHours() + ":" + lesson.getDateAndTime().getMinutes());
+            isLecture.setChecked(lesson.isLecture());
+            pointsPerVisit.setText(String.valueOf(lesson.getPointsPerVisit()));
         });
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-                lessonEditingViewModel.lessonEditingDataChanged(lessonAttendPoints.getText().toString());
+                lessonEditingViewModel.lessonEditingDataChanged(dateAndTime.getText().toString(), pointsPerVisit.getText().toString());
             }
 
             @Override
@@ -57,15 +63,19 @@ public class LessonEditingDialogFragment extends DialogFragment {
                 // ignore
             }
         };
-        lessonAttendPoints.addTextChangedListener(afterTextChangedListener);
+        dateAndTime.addTextChangedListener(afterTextChangedListener);
+        pointsPerVisit.addTextChangedListener(afterTextChangedListener);
 
         lessonEditingViewModel.getLessonFormState().observe(this, lessonFormState -> {
             if (lessonFormState == null) {
                 return;
             }
 
-            lessonAttendPoints.setError(lessonFormState.getLessonAttendPointsError() != null ?
-                    getString(lessonFormState.getLessonAttendPointsError()) : null);
+            dateAndTime.setError(lessonFormState.getDateAndTimeError() != null ?
+                    getString(lessonFormState.getDateAndTimeError()) : null);
+
+            pointsPerVisit.setError(lessonFormState.getPointsPerVisitError() != null ?
+                    getString(lessonFormState.getPointsPerVisitError()) : null);
 
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(lessonFormState.isDataValid());
         });
@@ -74,9 +84,25 @@ public class LessonEditingDialogFragment extends DialogFragment {
         dialog = builder.setView(root)
                 .setTitle("Изменить данные занятия " + getArguments().getString("lessonDate"))
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    lessonEditingViewModel.editLesson(lessonAttendPoints.getText().toString());
+                    String date = dateAndTime.getText().toString().split(" ")[0];
+                    String time = dateAndTime.getText().toString().split(" ")[1];
+                    String[] splitedDate = date.split("\\.");
+                    String[] splitedTime = time.split(":");
 
-                    dismiss();
+                    lessonEditingViewModel.editLesson(lessonId, new Date(Integer.parseInt(splitedDate[2]),
+                                    Integer.parseInt(splitedDate[1]) - 1, Integer.parseInt(splitedDate[0]),
+                                    Integer.parseInt(splitedTime[0]), Integer.parseInt(splitedTime[1])), isLecture.isChecked(),
+                            Integer.parseInt(pointsPerVisit.getText().toString()));
+
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("openPage", lessonEditingViewModel.getLesson().getValue().getModuleNumber() - 1);
+                    bundle.putInt("groupId", lessonEditingViewModel.getLesson().getValue().getGroupId());
+                    bundle.putInt("subjectId", lessonEditingViewModel.getLesson().getValue().getSubjectId());
+                    bundle.putInt("lecturerId", lessonEditingViewModel.getLesson().getValue().getLecturerId());
+                    bundle.putInt("seminarianId", lessonEditingViewModel.getLesson().getValue().getSeminarianId());
+                    bundle.putInt("semesterId", lessonEditingViewModel.getLesson().getValue().getSemesterId());
+
+                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_lesson_editing_to_group_performance, bundle);
                 })
                 .setNegativeButton("Отменить", (dialog, id) -> {
                     dismiss();
@@ -85,9 +111,12 @@ public class LessonEditingDialogFragment extends DialogFragment {
                     lessonEditingViewModel.deleteLesson(lessonId);
 
                     Bundle bundle = new Bundle();
-                    bundle.putString("subject", getArguments().getString("subject"));
-                    bundle.putString("group", getArguments().getString("group"));
-                    bundle.putInt("openPage", getArguments().getInt("moduleNumber") - 1);
+                    bundle.putInt("openPage", lessonEditingViewModel.getLesson().getValue().getModuleNumber() - 1);
+                    bundle.putInt("groupId", lessonEditingViewModel.getLesson().getValue().getGroupId());
+                    bundle.putInt("subjectId", lessonEditingViewModel.getLesson().getValue().getSubjectId());
+                    bundle.putInt("lecturerId", lessonEditingViewModel.getLesson().getValue().getLecturerId());
+                    bundle.putInt("seminarianId", lessonEditingViewModel.getLesson().getValue().getSeminarianId());
+                    bundle.putInt("semesterId", lessonEditingViewModel.getLesson().getValue().getSemesterId());
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_lesson_editing_to_group_performance, bundle);
                 }).create();

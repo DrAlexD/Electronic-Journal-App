@@ -2,31 +2,68 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="32dp"
+    android:paddingRight="32dp">
 
-    <LinearLayout
+    <CheckBox
+        android:id="@+id/studentEventIsAttended"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/is_attended_text"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/studentEventVariantNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="32dp"
-        android:paddingEnd="32dp">
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:hint="@string/student_event_variant_text"
+        android:inputType="number"
+        android:maxLength="2"
+        android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/studentEventEarnedPointsText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:layout_weight="3"
-            android:text="@string/event_earned_points_text"
-            android:textSize="20sp" />
+    <EditText
+        android:id="@+id/studentEventFinishDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:hint="@string/student_event_finish_date_text"
+        android:inputType="date"
+        android:maxLength="10"
+        android:textSize="20sp" />
 
-        <EditText
-            android:id="@+id/studentEventEarnedPoints"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_weight="1"
-            android:inputType="number"
-            android:textSize="20sp" />
-    </LinearLayout>
+    <EditText
+        android:id="@+id/studentEventEarnedPoints"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:hint="@string/earned_points_text"
+        android:inputType="number"
+        android:maxLength="2"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/studentEventBonusPoints"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:hint="@string/bonus_points_text"
+        android:inputType="number"
+        android:maxLength="2"
+        android:textSize="20sp" />
+
+    <CheckBox
+        android:id="@+id/studentEventIsHaveCredit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:gravity="center"
+        android:text="@string/is_have_credit_text"
+        android:textSize="18sp" />
 </LinearLayout>

@@ -77,9 +77,9 @@ public class ProfileFragment extends Fragment {
         addSubjectButton.setVisibility(isProfessorRules ? View.VISIBLE : View.GONE);
         addSubjectButton.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
-            bundle.putInt("actionCode", 10);
             bundle.putInt("professorId", professorId);
             bundle.putInt("semesterId", semesterId);
+            bundle.putInt("actionCode", 10);
             Navigation.findNavController(root).navigate(R.id.action_profile_to_search_all_subjects, bundle);
         });
 
@@ -87,9 +87,9 @@ public class ProfileFragment extends Fragment {
         addGroupButton.setVisibility(isProfessorRules ? View.VISIBLE : View.GONE);
         addGroupButton.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
-            bundle.putInt("actionCode", 11);
             bundle.putInt("professorId", professorId);
             bundle.putInt("semesterId", semesterId);
+            bundle.putInt("actionCode", 11);
             Navigation.findNavController(root).navigate(R.id.action_profile_to_search_available_subjects, bundle);
         });
 
@@ -97,9 +97,9 @@ public class ProfileFragment extends Fragment {
         deleteSubjectButton.setVisibility(isProfessorRules ? View.VISIBLE : View.GONE);
         deleteSubjectButton.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
-            bundle.putInt("actionCode", 12);
             bundle.putInt("professorId", professorId);
             bundle.putInt("semesterId", semesterId);
+            bundle.putInt("actionCode", 12);
             Navigation.findNavController(root).navigate(R.id.action_profile_to_search_available_subjects, bundle);
         });
 
@@ -107,9 +107,9 @@ public class ProfileFragment extends Fragment {
         deleteGroupButton.setVisibility(isProfessorRules ? View.VISIBLE : View.GONE);
         deleteGroupButton.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
-            bundle.putInt("actionCode", 13);
             bundle.putInt("professorId", professorId);
             bundle.putInt("semesterId", semesterId);
+            bundle.putInt("actionCode", 13);
             Navigation.findNavController(root).navigate(R.id.action_profile_to_search_available_subjects, bundle);
         });
     }

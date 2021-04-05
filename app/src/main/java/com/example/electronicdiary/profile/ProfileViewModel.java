@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.electronicdiary.GroupInfo;
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.Semester;
 import com.example.electronicdiary.Subject;
+import com.example.electronicdiary.SubjectInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import java.util.HashMap;
 public class ProfileViewModel extends ViewModel {
     private final MutableLiveData<Semester> semester = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<Subject>> availableSubjects = new MutableLiveData<>();
-    private final MutableLiveData<HashMap<Subject, ArrayList<GroupInfo>>> availableSubjectsWithGroups = new MutableLiveData<>();
+    private final MutableLiveData<HashMap<Subject, ArrayList<SubjectInfo>>> availableSubjectsWithGroups = new MutableLiveData<>();
 
     public MutableLiveData<Semester> getSemester() {
         return semester;
@@ -25,7 +25,7 @@ public class ProfileViewModel extends ViewModel {
         return availableSubjects;
     }
 
-    public LiveData<HashMap<Subject, ArrayList<GroupInfo>>> getAvailableSubjectsWithGroups() {
+    public LiveData<HashMap<Subject, ArrayList<SubjectInfo>>> getAvailableSubjectsWithGroups() {
         return availableSubjectsWithGroups;
     }
 

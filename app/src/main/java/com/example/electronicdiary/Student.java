@@ -3,21 +3,25 @@ package com.example.electronicdiary;
 import org.jetbrains.annotations.NotNull;
 
 public class Student extends User {
-    private final int groupId;
+    private final Group group;
 
-    public Student(int id, String firstName, String secondName, int groupId) {
+    public Student(int id, String firstName, String secondName, Group group) {
         super(id, firstName, secondName, false);
-        this.groupId = groupId;
+        this.group = group;
     }
 
     public int getGroupId() {
-        return groupId;
+        return group.getId();
+    }
+
+    public String getGroupTitle() {
+        return group.getTitle();
     }
 
     @NotNull
     @Override
     public String toString() {
         return "Student{" + "id=" + id + ", firstName='" + firstName + '\'' + ", secondName='" +
-                secondName + '\'' + ", group='" + groupId + '\'' + '}';
+                secondName + '\'' + ", group='" + getGroupTitle() + '\'' + '}';
     }
 }

@@ -42,6 +42,15 @@
             android:id="@+id/action_group_performance_to_dialog_event_editing"
             app:destination="@id/nav_dialog_event_editing" />
         <action
+            android:id="@+id/action_group_performance_to_dialog_module_info_editing"
+            app:destination="@id/nav_dialog_module_info_editing" />
+        <action
+            android:id="@+id/action_group_performance_to_dialog_subject_info_editing"
+            app:destination="@id/nav_dialog_subject_info_editing" />
+        <action
+            android:id="@+id/action_group_performance_to_dialog_student_performance_in_subject"
+            app:destination="@id/nav_dialog_student_performance_in_subject" />
+        <action
             android:id="@+id/action_group_performance_to_dialog_student_event"
             app:destination="@id/nav_dialog_student_event" />
         <action
@@ -84,6 +93,43 @@
     </dialog>
 
     <dialog
+        android:id="@+id/nav_dialog_module_info_editing"
+        android:name="com.example.electronicdiary.group.ModuleInfoEditingDialogFragment">
+        <action
+            android:id="@+id/pop_out_dialog_module_info_editing_to_group_performance"
+            app:popUpTo="@id/nav_group_performance"
+            app:popUpToInclusive="true" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/nav_dialog_subject_info_editing"
+        android:name="com.example.electronicdiary.group.SubjectInfoEditingDialogFragment">
+        <action
+            android:id="@+id/pop_out_dialog_subject_info_editing_to_group_performance"
+            app:popUpTo="@id/nav_group_performance"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_dialog_subject_info_editing_to_group_performance"
+            app:destination="@id/nav_group_performance"
+            app:popUpTo="@id/nav_group_performance"
+            app:popUpToInclusive="true" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/nav_dialog_student_performance_in_subject"
+        android:name="com.example.electronicdiary.group.StudentPerformanceInSubjectDialogFragment">
+        <action
+            android:id="@+id/pop_out_dialog_student_performance_in_subject_to_group_performance"
+            app:popUpTo="@id/nav_group_performance"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_dialog_student_performance_in_subject_to_group_performance"
+            app:destination="@id/nav_group_performance"
+            app:popUpTo="@id/nav_group_performance"
+            app:popUpToInclusive="true" />
+    </dialog>
+
+    <dialog
         android:id="@+id/nav_dialog_student_event"
         android:name="com.example.electronicdiary.group.StudentEventDialogFragment">
         <action
@@ -98,6 +144,11 @@
             android:id="@+id/action_dialog_student_event_to_group_performance"
             app:destination="@id/nav_group_performance"
             app:popUpTo="@id/nav_group_performance"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_dialog_student_event_to_student_performance"
+            app:destination="@id/nav_student_performance"
+            app:popUpTo="@id/nav_student_performance"
             app:popUpToInclusive="true" />
     </dialog>
 
@@ -144,6 +195,11 @@
             android:id="@+id/action_dialog_student_lesson_to_group_performance"
             app:destination="@id/nav_group_performance"
             app:popUpTo="@id/nav_group_performance"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_dialog_student_lesson_to_student_performance"
+            app:destination="@id/nav_student_performance"
+            app:popUpTo="@id/nav_student_performance"
             app:popUpToInclusive="true" />
     </dialog>
 
@@ -342,19 +398,19 @@
             android:id="@+id/action_search_all_groups_to_dialog_group_editing"
             app:destination="@id/nav_dialog_group_editing" />
         <action
-            android:id="@+id/action_search_all_groups_to_dialog_group_info_adding"
-            app:destination="@id/nav_dialog_group_info_adding" />
+            android:id="@+id/action_search_all_groups_to_dialog_subject_info_adding"
+            app:destination="@id/nav_dialog_subject_info_adding" />
     </fragment>
 
     <dialog
-        android:id="@+id/nav_dialog_group_info_adding"
-        android:name="com.example.electronicdiary.search.all.GroupInfoAddingDialogFragment">
+        android:id="@+id/nav_dialog_subject_info_adding"
+        android:name="com.example.electronicdiary.search.all.SubjectInfoAddingDialogFragment">
         <action
-            android:id="@+id/pop_out_dialog_group_info_adding_to_search_all_groups"
+            android:id="@+id/pop_out_dialog_subject_info_adding_to_search_all_groups"
             app:popUpTo="@id/nav_search_all_groups"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_dialog_group_info_adding_to_profile"
+            android:id="@+id/action_dialog_subject_info_adding_to_profile"
             app:destination="@id/nav_profile"
             app:popUpTo="@id/nav_profile"
             app:popUpToInclusive="true" />

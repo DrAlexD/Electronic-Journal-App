@@ -5,13 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.electronicdiary.Event;
+import com.example.electronicdiary.Lesson;
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.Repository;
 
@@ -28,27 +30,66 @@ public class EventsOrLessonsFragment extends Fragment {
 
         StudentPerformanceViewModel studentPerformanceViewModel = new ViewModelProvider(getParentFragment()).get(StudentPerformanceViewModel.class);
 
-        final RecyclerView recyclerView = root.findViewById(R.id.student_events_list);
+        //TODO можно ли создать expandableList с двойной вложенностью?
+        final ExpandableListView expandableListView = root.findViewById(R.id.events_or_lessons_list);
         if (position == 1) {
-            View.OnClickListener onItemClickListener = view -> {
-                RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
-                int pos = viewHolder.getAdapterPosition();
 
+            ExpandableListView.OnChildClickListener onEventClickListener = (parent, v, groupPosition, childPosition, id) -> {
                 Bundle bundle = new Bundle();
+                bundle.putBoolean("isFromGroupPerformance", false);
+                Event event = studentPerformanceViewModel.getEvents().getValue().get(modules.get(groupPosition)).get(childPosition);
+                bundle.putInt("eventMinPoints", event.getMinPoints());
+                bundle.putString("eventDeadlineDate", String.valueOf(event.getDeadlineDate().getDate()));
+                bundle.putString("eventTitle", event.getTitle());
+                TextView attemptNumber = v.findViewById(R.id.attemptNumber);
+                bundle.putInt("attemptNumber", Integer.parseInt(attemptNumber.getText().toString()));
+                bundle.putInt("eventId", event.getId());
                 bundle.putInt("studentId", studentPerformanceViewModel.getStudent().getValue().getId());
-                bundle.putInt("eventId", studentPerformanceViewModel.getEvents().getValue().get(pos).getId());
-                Navigation.findNavController(view).navigate(R.id.action_student_performance_to_dialog_student_event, bundle);
+                bundle.putInt("moduleNumber", modules.get(groupPosition));
+                bundle.putInt("groupId", studentPerformanceViewModel.getStudent().getValue().getGroupId());
+                bundle.putInt("subjectId", studentPerformanceViewModel.getSubjectInfo().getValue().getSubjectId());
+                bundle.putInt("lecturerId", studentPerformanceViewModel.getSubjectInfo().getValue().getLecturerId());
+                bundle.putInt("seminarianId", studentPerformanceViewModel.getSubjectInfo().getValue().getSeminarianId());
+                bundle.putInt("semesterId", studentPerformanceViewModel.getSubjectInfo().getValue().getSemesterId());
+                Navigation.findNavController(v).navigate(R.id.action_student_performance_to_dialog_student_event, bundle);
+                return true;
             };
+
+            studentPerformanceViewModel.getStudentPerformanceInSubject().observe(getViewLifecycleOwner(), studentPerformanceInSubject -> {
+                if (studentPerformanceInSubject == null) {
+                    return;
+                }
+
+                TextView earnedPoints = root.findViewById(R.id.earnedPoints);
+                TextView bonusPoints = root.findViewById(R.id.bonusPoints);
+                TextView mark = root.findViewById(R.id.mark);
+                TextView earnedExamPoints = root.findViewById(R.id.earnedExamPoints);
+
+                earnedPoints.setText(String.valueOf(studentPerformanceInSubject.getEarnedPoints()));
+                bonusPoints.setText(String.valueOf(studentPerformanceInSubject.getBonusPoints()));
+                earnedPoints.setTextColor(getResources().getColor(studentPerformanceInSubject.isHaveCreditOrAdmission() ?
+                        R.color.red : R.color.green));
+                bonusPoints.setTextColor(getResources().getColor(studentPerformanceInSubject.isHaveCreditOrAdmission() ?
+                        R.color.red : R.color.green));
+                mark.setVisibility(studentPerformanceViewModel.getSubjectInfo().getValue().isExam() ||
+                        studentPerformanceViewModel.getSubjectInfo().getValue().isDifferentiatedCredit() ? View.VISIBLE : View.INVISIBLE);
+                mark.setText(studentPerformanceInSubject.getMark());
+                earnedExamPoints.setVisibility(studentPerformanceViewModel.getSubjectInfo().getValue().isExam() ? View.VISIBLE : View.INVISIBLE);
+                earnedExamPoints.setText(studentPerformanceInSubject.getEarnedExamPoints());
+
+            });
 
             studentPerformanceViewModel.getEvents().observe(getViewLifecycleOwner(), events -> {
                 if (events == null) {
                     return;
                 }
 
-                EventsAdapter eventsAdapter = new EventsAdapter(getContext(), events,
-                        studentPerformanceViewModel.getStudentEvents().getValue(), onItemClickListener);
-                recyclerView.setAdapter(eventsAdapter);
-                recyclerView.setHasFixedSize(false);
+                EventsAdapter eventsAdapter = new EventsAdapter(getContext(), modules,
+                        studentPerformanceViewModel.getModuleInfo().getValue(),
+                        studentPerformanceViewModel.getStudentPerformanceInModules().getValue(),
+                        events, studentPerformanceViewModel.getStudentEvents().getValue());
+                expandableListView.setAdapter(eventsAdapter);
+                expandableListView.setOnChildClickListener(onEventClickListener);
             });
 
             studentPerformanceViewModel.getStudentEvents().observe(getViewLifecycleOwner(), studentEvents -> {
@@ -56,26 +97,37 @@ public class EventsOrLessonsFragment extends Fragment {
                     return;
                 }
 
-                EventsAdapter eventsAdapter = new EventsAdapter(getContext(),
-                        studentPerformanceViewModel.getEvents().getValue(), studentEvents, onItemClickListener);
-                recyclerView.setAdapter(eventsAdapter);
-                recyclerView.setHasFixedSize(false);
+                EventsAdapter eventsAdapter = new EventsAdapter(getContext(), modules,
+                        studentPerformanceViewModel.getModuleInfo().getValue(),
+                        studentPerformanceViewModel.getStudentPerformanceInModules().getValue(),
+                        studentPerformanceViewModel.getEvents().getValue(), studentEvents);
+                expandableListView.setAdapter(eventsAdapter);
+                expandableListView.setOnChildClickListener(onEventClickListener);
             });
         } else if (position == 2) {
-            recyclerView.setVisibility(View.GONE);
-
             ExpandableListView.OnChildClickListener onLectureClickListener = (parent, v, groupPosition, childPosition, id) -> {
                 Bundle bundle = new Bundle();
-                bundle.putInt("moduleNumber", modules.get(groupPosition));
+                bundle.putBoolean("isFromGroupPerformance", false);
+                bundle.putBoolean("isLecture", true);
+                TextView bonusPoints = v.findViewById(R.id.bonusPoints);
+                bundle.putBoolean("isHasData", !"Нет данных".equals(bonusPoints.getText().toString()));
+                Lesson lesson = studentPerformanceViewModel.getLecturesByModules().getValue().
+                        get(modules.get(groupPosition)).get(childPosition);
+                bundle.putString("lessonDate", lesson.getDateAndTime().getDate() + " " + lesson.getDateAndTime().getHours() +
+                        ":" + lesson.getDateAndTime().getMinutes());
+                bundle.putInt("lessonId", lesson.getId());
                 bundle.putInt("studentId", studentPerformanceViewModel.getStudent().getValue().getId());
-                bundle.putInt("lessonId", studentPerformanceViewModel.getLecturesByModules().
-                        getValue().get(modules.get(groupPosition)).get(childPosition).getId());
+                bundle.putInt("moduleNumber", modules.get(groupPosition));
+                bundle.putInt("groupId", studentPerformanceViewModel.getStudent().getValue().getGroupId());
+                bundle.putInt("subjectId", studentPerformanceViewModel.getSubjectInfo().getValue().getSubjectId());
+                bundle.putInt("lecturerId", studentPerformanceViewModel.getSubjectInfo().getValue().getLecturerId());
+                bundle.putInt("seminarianId", studentPerformanceViewModel.getSubjectInfo().getValue().getSeminarianId());
+                bundle.putInt("semesterId", studentPerformanceViewModel.getSubjectInfo().getValue().getSemesterId());
+
                 Navigation.findNavController(v).navigate(R.id.action_student_performance_to_dialog_student_lesson, bundle);
                 return true;
             };
 
-            //TODO можно ли создать expandableList с двойной вложенностью?
-            final ExpandableListView expandableListView = root.findViewById(R.id.lessons_by_modules);
             studentPerformanceViewModel.getLecturesByModules().observe(getViewLifecycleOwner(),
                     lecturesByModules -> {
                         if (lecturesByModules == null) {
@@ -83,8 +135,9 @@ public class EventsOrLessonsFragment extends Fragment {
                         }
 
                         LessonsAdapter lessonsAdapter = new LessonsAdapter(getContext(), modules,
+                                studentPerformanceViewModel.getModuleInfo().getValue(),
+                                studentPerformanceViewModel.getStudentPerformanceInModules().getValue(),
                                 lecturesByModules, studentPerformanceViewModel.getStudentLessonsByModules().getValue());
-                        expandableListView.setVisibility(View.VISIBLE);
                         expandableListView.setAdapter(lessonsAdapter);
                         expandableListView.setOnChildClickListener(onLectureClickListener);
                     });
@@ -96,25 +149,36 @@ public class EventsOrLessonsFragment extends Fragment {
                         }
 
                         LessonsAdapter lessonsAdapter = new LessonsAdapter(getContext(), modules,
+                                studentPerformanceViewModel.getModuleInfo().getValue(),
+                                studentPerformanceViewModel.getStudentPerformanceInModules().getValue(),
                                 studentPerformanceViewModel.getLecturesByModules().getValue(), studentLessonsByModules);
-                        expandableListView.setVisibility(View.VISIBLE);
                         expandableListView.setAdapter(lessonsAdapter);
                         expandableListView.setOnChildClickListener(onLectureClickListener);
                     });
         } else if (position == 3) {
-            recyclerView.setVisibility(View.GONE);
-
             ExpandableListView.OnChildClickListener onSeminarClickListener = (parent, v, groupPosition, childPosition, id) -> {
                 Bundle bundle = new Bundle();
-                bundle.putInt("moduleNumber", modules.get(groupPosition));
+                bundle.putBoolean("isFromGroupPerformance", false);
+                bundle.putBoolean("isLecture", false);
+                TextView bonusPoints = v.findViewById(R.id.bonusPoints);
+                bundle.putBoolean("isHasData", !"Нет данных".equals(bonusPoints.getText().toString()));
+                Lesson lesson = studentPerformanceViewModel.getSeminarsByModules().getValue().
+                        get(modules.get(groupPosition)).get(childPosition);
+                bundle.putString("lessonDate", lesson.getDateAndTime().getDate() + " " + lesson.getDateAndTime().getHours() +
+                        ":" + lesson.getDateAndTime().getMinutes());
+                bundle.putInt("lessonId", lesson.getId());
                 bundle.putInt("studentId", studentPerformanceViewModel.getStudent().getValue().getId());
-                bundle.putInt("lessonId", studentPerformanceViewModel.getSeminarsByModules().
-                        getValue().get(modules.get(groupPosition)).get(childPosition).getId());
+                bundle.putInt("moduleNumber", modules.get(groupPosition));
+                bundle.putInt("groupId", studentPerformanceViewModel.getStudent().getValue().getGroupId());
+                bundle.putInt("subjectId", studentPerformanceViewModel.getSubjectInfo().getValue().getSubjectId());
+                bundle.putInt("lecturerId", studentPerformanceViewModel.getSubjectInfo().getValue().getLecturerId());
+                bundle.putInt("seminarianId", studentPerformanceViewModel.getSubjectInfo().getValue().getSeminarianId());
+                bundle.putInt("semesterId", studentPerformanceViewModel.getSubjectInfo().getValue().getSemesterId());
+
                 Navigation.findNavController(v).navigate(R.id.action_student_performance_to_dialog_student_lesson, bundle);
                 return true;
             };
 
-            final ExpandableListView expandableListView = root.findViewById(R.id.lessons_by_modules);
             studentPerformanceViewModel.getSeminarsByModules().observe(getViewLifecycleOwner(),
                     seminarsByModules -> {
                         if (seminarsByModules == null) {
@@ -122,8 +186,9 @@ public class EventsOrLessonsFragment extends Fragment {
                         }
 
                         LessonsAdapter lessonsAdapter = new LessonsAdapter(getContext(), modules,
+                                studentPerformanceViewModel.getModuleInfo().getValue(),
+                                studentPerformanceViewModel.getStudentPerformanceInModules().getValue(),
                                 seminarsByModules, studentPerformanceViewModel.getStudentLessonsByModules().getValue());
-                        expandableListView.setVisibility(View.VISIBLE);
                         expandableListView.setAdapter(lessonsAdapter);
                         expandableListView.setOnChildClickListener(onSeminarClickListener);
                     });
@@ -135,8 +200,9 @@ public class EventsOrLessonsFragment extends Fragment {
                         }
 
                         LessonsAdapter lessonsAdapter = new LessonsAdapter(getContext(), modules,
+                                studentPerformanceViewModel.getModuleInfo().getValue(),
+                                studentPerformanceViewModel.getStudentPerformanceInModules().getValue(),
                                 studentPerformanceViewModel.getSeminarsByModules().getValue(), studentLessonsByModules);
-                        expandableListView.setVisibility(View.VISIBLE);
                         expandableListView.setAdapter(lessonsAdapter);
                         expandableListView.setOnChildClickListener(onSeminarClickListener);
                     });

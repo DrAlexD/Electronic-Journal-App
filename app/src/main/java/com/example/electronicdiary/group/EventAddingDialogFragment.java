@@ -19,6 +19,8 @@ import com.example.electronicdiary.R;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Date;
+
 public class EventAddingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
 
@@ -27,16 +29,18 @@ public class EventAddingDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_event_adding, null);
 
-        int semesterId = getArguments().getInt("semesterId");
         int groupId = getArguments().getInt("groupId");
         int subjectId = getArguments().getInt("subjectId");
+        int lecturerId = getArguments().getInt("lecturerId");
+        int seminarianId = getArguments().getInt("seminarianId");
+        int semesterId = getArguments().getInt("semesterId");
 
         EventAddingViewModel eventAddingViewModel = new ViewModelProvider(this).get(EventAddingViewModel.class);
 
-        Spinner module = root.findViewById(R.id.moduleAdding);
+        Spinner module = root.findViewById(R.id.eventModuleAdding);
         Spinner eventType = root.findViewById(R.id.eventTypeAdding);
-        EditText startDate = root.findViewById(R.id.startDateAdding);
-        EditText deadlineDate = root.findViewById(R.id.deadlineDateAdding);
+        EditText startDate = root.findViewById(R.id.eventStartDateAdding);
+        EditText deadlineDate = root.findViewById(R.id.eventDeadlineDateAdding);
         EditText minPoints = root.findViewById(R.id.eventMinPointsAdding);
         EditText maxPoints = root.findViewById(R.id.eventMaxPointsAdding);
         TextWatcher afterTextChangedListener = new TextWatcher() {
@@ -82,13 +86,21 @@ public class EventAddingDialogFragment extends DialogFragment {
         dialog = builder.setView(root)
                 .setTitle("Введите данные мероприятия")
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
+                    String[] splitedStartDate = startDate.getText().toString().split("\\.");
+                    String[] splitedDeadlineDate = deadlineDate.getText().toString().split("\\.");
                     eventAddingViewModel.addEvent(Integer.parseInt((String) module.getSelectedItem()),
-                            groupId, subjectId, professorId, professorId, eventType.getSelectedItem());
+                            groupId, subjectId, lecturerId, seminarianId, semesterId, (String) eventType.getSelectedItem(),
+                            new Date(Integer.parseInt(splitedStartDate[2]), Integer.parseInt(splitedStartDate[1]) - 1,
+                                    Integer.parseInt(splitedStartDate[0])), new Date(Integer.parseInt(splitedDeadlineDate[2]),
+                                    Integer.parseInt(splitedDeadlineDate[1]) - 1, Integer.parseInt(splitedDeadlineDate[0])),
+                            Integer.parseInt(minPoints.getText().toString()), Integer.parseInt(maxPoints.getText().toString()));
 
                     Bundle bundle = new Bundle();
-                    bundle.putInt("semesterId", semesterId);
                     bundle.putInt("groupId", groupId);
                     bundle.putInt("subjectId", subjectId);
+                    bundle.putInt("lecturerId", lecturerId);
+                    bundle.putInt("seminarianId", seminarianId);
+                    bundle.putInt("semesterId", semesterId);
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_event_adding_to_group_performance, bundle);
                 }).create();

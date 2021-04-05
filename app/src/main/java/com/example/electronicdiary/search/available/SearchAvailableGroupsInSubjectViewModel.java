@@ -4,15 +4,15 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.electronicdiary.Group;
 import com.example.electronicdiary.Repository;
+import com.example.electronicdiary.SubjectInfo;
 
 import java.util.ArrayList;
 
 public class SearchAvailableGroupsInSubjectViewModel extends ViewModel {
-    private final MutableLiveData<ArrayList<Group>> availableGroupsInSubject = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<SubjectInfo>> availableGroupsInSubject = new MutableLiveData<>();
 
-    public LiveData<ArrayList<Group>> getAvailableGroupsInSubject() {
+    public LiveData<ArrayList<SubjectInfo>> getAvailableGroupsInSubject() {
         return availableGroupsInSubject;
     }
 

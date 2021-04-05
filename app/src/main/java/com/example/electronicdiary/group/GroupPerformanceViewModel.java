@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.electronicdiary.Event;
-import com.example.electronicdiary.GroupInfo;
 import com.example.electronicdiary.Lesson;
 import com.example.electronicdiary.ModuleInfo;
 import com.example.electronicdiary.Repository;
@@ -14,12 +13,13 @@ import com.example.electronicdiary.StudentEvent;
 import com.example.electronicdiary.StudentLesson;
 import com.example.electronicdiary.StudentPerformanceInModule;
 import com.example.electronicdiary.StudentPerformanceInSubject;
+import com.example.electronicdiary.SubjectInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GroupPerformanceViewModel extends ViewModel {
-    private final MutableLiveData<GroupInfo> groupInfo = new MutableLiveData<>();
+    private final MutableLiveData<SubjectInfo> subjectInfo = new MutableLiveData<>();
     private final MutableLiveData<HashMap<Integer, ModuleInfo>> moduleInfo = new MutableLiveData<>();
     private final MutableLiveData<HashMap<Integer, ArrayList<Event>>> events = new MutableLiveData<>();
     private final MutableLiveData<HashMap<Integer, ArrayList<Lesson>>> lessons = new MutableLiveData<>();
@@ -29,8 +29,8 @@ public class GroupPerformanceViewModel extends ViewModel {
     private final MutableLiveData<HashMap<Integer, ArrayList<ArrayList<StudentEvent>>>> studentsEvents = new MutableLiveData<>();
     private final MutableLiveData<HashMap<Integer, ArrayList<ArrayList<StudentLesson>>>> studentsLessons = new MutableLiveData<>();
 
-    public LiveData<GroupInfo> getGroupInfo() {
-        return groupInfo;
+    public LiveData<SubjectInfo> getSubjectInfo() {
+        return subjectInfo;
     }
 
     public LiveData<HashMap<Integer, ModuleInfo>> getModuleInfo() {
@@ -66,7 +66,7 @@ public class GroupPerformanceViewModel extends ViewModel {
     }
 
     public void downloadStudentsEventsAndLessons(int groupId, int subjectId, int lecturerId, int seminarianId, int semesterId) {
-        this.groupInfo.setValue(Repository.getInstance().getGroupInfo(groupId, subjectId, lecturerId, seminarianId, semesterId));
+        this.subjectInfo.setValue(Repository.getInstance().getSubjectInfo(groupId, subjectId, lecturerId, seminarianId, semesterId));
         this.moduleInfo.setValue(Repository.getInstance().getModuleInfo(groupId, subjectId, lecturerId, seminarianId, semesterId));
         this.events.setValue(Repository.getInstance().getEvents(groupId, subjectId, lecturerId, seminarianId, semesterId));
         this.lessons.setValue(Repository.getInstance().getLessons(groupId, subjectId, lecturerId, seminarianId, semesterId));

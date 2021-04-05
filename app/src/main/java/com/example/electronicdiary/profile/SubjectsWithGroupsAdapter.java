@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
-import com.example.electronicdiary.GroupInfo;
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.Subject;
+import com.example.electronicdiary.SubjectInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,9 +17,9 @@ import java.util.HashMap;
 class SubjectsWithGroupsAdapter extends BaseExpandableListAdapter {
     private final LayoutInflater inflater;
     private final ArrayList<Subject> subjects;
-    private final HashMap<Subject, ArrayList<GroupInfo>> subjectsWithGroups;
+    private final HashMap<Subject, ArrayList<SubjectInfo>> subjectsWithGroups;
 
-    SubjectsWithGroupsAdapter(Context context, ArrayList<Subject> subjects, HashMap<Subject, ArrayList<GroupInfo>> subjectWithGroups) {
+    SubjectsWithGroupsAdapter(Context context, ArrayList<Subject> subjects, HashMap<Subject, ArrayList<SubjectInfo>> subjectWithGroups) {
         this.inflater = LayoutInflater.from(context);
         this.subjects = subjects;
         this.subjectsWithGroups = subjectWithGroups;
@@ -75,13 +75,13 @@ class SubjectsWithGroupsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isExpanded, View view, ViewGroup parent) {
-        GroupInfo groupInfo = subjectsWithGroups.get(subjects.get(groupPosition)).get(childPosition);
+        SubjectInfo subjectInfo = subjectsWithGroups.get(subjects.get(groupPosition)).get(childPosition);
         if (view == null) {
             view = inflater.inflate(R.layout.holder_group_in_subject, null);
         }
 
         TextView groupTitleView = view.findViewById(R.id.groupTitle);
-        groupTitleView.setText(groupInfo.getGroup().getTitle());
+        groupTitleView.setText(subjectInfo.getGroup().getTitle());
 
         return view;
     }
