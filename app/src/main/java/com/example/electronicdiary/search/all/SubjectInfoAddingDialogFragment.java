@@ -28,16 +28,13 @@ public class SubjectInfoAddingDialogFragment extends DialogFragment {
         CheckBox isSeminarian = root.findViewById(R.id.subjectInfoIsSeminarianAdding);
         CheckBox isExam = root.findViewById(R.id.subjectInfoIsExamAdding);
         CheckBox isDifferentiatedCredit = root.findViewById(R.id.subjectInfoIsDifferentiatedCreditAdding);
+
         isLecturer.setOnClickListener(view -> {
-            if (isLecturer.isChecked() || isSeminarian.isChecked()) {
-                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
-            }
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(isLecturer.isChecked() || isSeminarian.isChecked());
         });
 
         isSeminarian.setOnClickListener(view -> {
-            if (isLecturer.isChecked() || isSeminarian.isChecked()) {
-                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
-            }
+            dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(isLecturer.isChecked() || isSeminarian.isChecked());
         });
 
         isExam.setOnClickListener(view -> {
@@ -55,7 +52,7 @@ public class SubjectInfoAddingDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
         dialog = builder.setView(root)
-                .setTitle("Отметьте доп. информацию по группе")
+                .setTitle("Укажите доп. информацию")
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
                     Repository.getInstance().addAvailableSubject(getArguments().getInt("professorId"),
                             isLecturer.isChecked(), isSeminarian.isChecked(), getArguments().getInt("groupId"), getArguments().getInt("subjectId"),

@@ -19,13 +19,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import com.example.electronicdiary.Lesson;
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.Repository;
-import com.example.electronicdiary.Student;
-import com.example.electronicdiary.StudentLesson;
-import com.example.electronicdiary.StudentPerformanceInModule;
-import com.example.electronicdiary.SubjectInfo;
+import com.example.electronicdiary.data_classes.Lesson;
+import com.example.electronicdiary.data_classes.Student;
+import com.example.electronicdiary.data_classes.StudentLesson;
+import com.example.electronicdiary.data_classes.StudentPerformanceInModule;
+import com.example.electronicdiary.data_classes.SubjectInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,7 +86,7 @@ public class ModuleFragment extends Fragment {
         for (int i = 0; i < students.size(); i++) {
             TableRow pointsRow = generatePointsRow(padding2inDp, padding5inDp, students.get(i), lessons,
                     studentsLessons.get(modules.get(moduleNumber - 1)).get(i),
-                    groupPerformanceViewModel.getStudentsPerformancesInModules().getValue().get(moduleNumber - 1).get(i));
+                    groupPerformanceViewModel.getStudentsPerformancesInModules().getValue().get(moduleNumber).get(i));
             studentsInModuleLessonsTable.addView(pointsRow);
         }
     }
@@ -107,7 +107,10 @@ public class ModuleFragment extends Fragment {
         for (Lesson lesson : lessons) {
             TextView lessonView = new TextView(getContext());
             lessonView.setTextSize(20);
-            lessonView.setText(lesson.getDateAndTime().getDate());
+            lessonView.setText(((lesson.getDateAndTime().getDate()) < 10 ? "0" + (lesson.getDateAndTime().getDate()) :
+                    (lesson.getDateAndTime().getDate())) + "." +
+                    ((lesson.getDateAndTime().getMonth() + 1) < 10 ? "0" + (lesson.getDateAndTime().getMonth() + 1) :
+                            (lesson.getDateAndTime().getMonth() + 1)));
             lessonView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
             lessonView.setGravity(Gravity.CENTER);
             lessonView.setOnClickListener(view -> {
@@ -166,13 +169,20 @@ public class ModuleFragment extends Fragment {
             boolean isHasData = false;
             for (StudentLesson studentLesson : studentLessons) {
                 if (studentLesson.getStudentId() == student.getId() && studentLesson.getLessonId() == lesson.getId()) {
-                    pointsView.setText(String.valueOf(lesson.getPointsPerVisit() + studentLesson.getBonusPoints()));
+                    if (!studentLesson.isAttended()) {
+                        pointsView.setText("Н");
+                    } else {
+                        if (studentLesson.getBonusPoints() == -1)
+                            pointsView.setText(String.valueOf(lesson.getPointsPerVisit()));
+                        else
+                            pointsView.setText(String.valueOf(lesson.getPointsPerVisit() + studentLesson.getBonusPoints()));
+                    }
                     isHasData = true;
                     break;
                 }
             }
             if (!isHasData)
-                pointsView.setText("Н");
+                pointsView.setText("");
             pointsView.setGravity(Gravity.CENTER);
 
             boolean finalIsHasData = isHasData;
@@ -180,8 +190,14 @@ public class ModuleFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("isFromGroupPerformance", true);
                 bundle.putBoolean("isHasData", finalIsHasData);
-                bundle.putString("lessonDate", lesson.getDateAndTime().getDate() + " " +
-                        lesson.getDateAndTime().getHours() + ":" + lesson.getDateAndTime().getMinutes());
+                bundle.putString("lessonDate", ((lesson.getDateAndTime().getDate()) < 10 ? "0" + (lesson.getDateAndTime().getDate()) :
+                        (lesson.getDateAndTime().getDate())) + "." +
+                        ((lesson.getDateAndTime().getMonth() + 1) < 10 ? "0" + (lesson.getDateAndTime().getMonth() + 1) :
+                                (lesson.getDateAndTime().getMonth() + 1)) + "." + lesson.getDateAndTime().getYear() + " " +
+                        ((lesson.getDateAndTime().getHours()) < 10 ? "0" + (lesson.getDateAndTime().getHours()) :
+                                (lesson.getDateAndTime().getHours())) + ":" +
+                        ((lesson.getDateAndTime().getMinutes()) < 10 ? "0" + (lesson.getDateAndTime().getMinutes()) :
+                                (lesson.getDateAndTime().getMinutes())));
                 bundle.putInt("lessonId", lesson.getId());
                 bundle.putInt("studentId", student.getId());
                 bundle.putInt("moduleNumber", moduleNumber);
@@ -197,8 +213,13 @@ public class ModuleFragment extends Fragment {
 
         TextView moduleView = new TextView(getContext());
         moduleView.setTextSize(20);
-        moduleView.setText(studentPerformanceInModule.getEarnedPoints());
-        moduleView.setTextColor(studentPerformanceInModule.isHaveCredit() ? getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
+        if (studentPerformanceInModule.getEarnedPoints() == -1) {
+            moduleView.setText("-");
+        } else {
+            moduleView.setText(String.valueOf(studentPerformanceInModule.getEarnedPoints()));
+            moduleView.setTextColor(studentPerformanceInModule.isHaveCredit() ?
+                    getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
+        }
         moduleView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
         moduleView.setGravity(Gravity.CENTER);
         pointsRow.addView(moduleView);

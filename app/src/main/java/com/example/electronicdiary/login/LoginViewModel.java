@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.Result;
-import com.example.electronicdiary.User;
+import com.example.electronicdiary.data_classes.User;
 
 public class LoginViewModel extends ViewModel {
     private final MutableLiveData<Result<User>> user = new MutableLiveData<>();

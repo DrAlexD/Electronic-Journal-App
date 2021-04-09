@@ -7,11 +7,11 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
-import com.example.electronicdiary.Event;
-import com.example.electronicdiary.ModuleInfo;
 import com.example.electronicdiary.R;
-import com.example.electronicdiary.StudentEvent;
-import com.example.electronicdiary.StudentPerformanceInModule;
+import com.example.electronicdiary.data_classes.Event;
+import com.example.electronicdiary.data_classes.ModuleInfo;
+import com.example.electronicdiary.data_classes.StudentEvent;
+import com.example.electronicdiary.data_classes.StudentPerformanceInModule;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -132,15 +132,31 @@ class EventsAdapter extends BaseExpandableListAdapter {
         } else {
             eventTitleView.setText(event.getTitle());
             attemptNumberView.setText(String.valueOf(studentEvent.getAttemptNumber()));
-            allPointsView.setText(String.valueOf(studentEvent.getEarnedPoints() + studentEvent.getBonusPoints()));
-            finishDateView.setText(studentEvent.getFinishDate().getDate());
+            if (studentEvent.getEarnedPoints() == -1 && studentEvent.getBonusPoints() == -1) {
+                allPointsView.setText("-");
+            } else if (studentEvent.getEarnedPoints() == -1) {
+                allPointsView.setText(String.valueOf(studentEvent.getBonusPoints()));
+                allPointsView.setTextColor(inflater.getContext().getColor(studentEvent.isHaveCredit() ?
+                        R.color.green : R.color.red));
+            } else if (studentEvent.getBonusPoints() == -1) {
+                allPointsView.setText(String.valueOf(studentEvent.getEarnedPoints()));
+                allPointsView.setTextColor(inflater.getContext().getColor(studentEvent.isHaveCredit() ?
+                        R.color.green : R.color.red));
+            } else {
+                allPointsView.setText(String.valueOf(studentEvent.getEarnedPoints() + studentEvent.getBonusPoints()));
+                allPointsView.setTextColor(inflater.getContext().getColor(studentEvent.isHaveCredit() ?
+                        R.color.green : R.color.red));
+            }
+
+            if (studentEvent.getFinishDate() != null) {
+                finishDateView.setText(studentEvent.getFinishDate().getDate());
+                finishDateView.setTextColor(inflater.getContext().getColor(studentEvent.getFinishDate().after(event.getDeadlineDate())
+                        ? R.color.red : R.color.green));
+            } else
+                finishDateView.setText("-");
 
             eventTitleView.setTextColor(inflater.getContext().getColor(studentEvent.isHaveCredit() ? R.color.green : R.color.red));
             attemptNumberView.setTextColor(inflater.getContext().getColor(studentEvent.isHaveCredit() ? R.color.green : R.color.red));
-            allPointsView.setTextColor(inflater.getContext().getColor(studentEvent.getEarnedPoints() +
-                    studentEvent.getBonusPoints() < event.getMinPoints() ? R.color.red : R.color.green));
-            finishDateView.setTextColor(inflater.getContext().getColor(studentEvent.getFinishDate().after(event.getDeadlineDate())
-                    ? R.color.red : R.color.green));
         }
 
         return view;

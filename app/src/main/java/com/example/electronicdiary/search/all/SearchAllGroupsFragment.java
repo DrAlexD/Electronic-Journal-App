@@ -69,9 +69,6 @@ public class SearchAllGroupsFragment extends Fragment {
                         bundle.putInt("openPage", 1);
                         Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_admin_actions, bundle);
                     }
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("openPage", 1);
-                    Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_admin_actions, bundle);
                 } else if (actionCode == 10 || actionCode == 11) {
                     Bundle bundle = new Bundle();
                     bundle.putInt("professorId", getArguments().getInt("professorId"));

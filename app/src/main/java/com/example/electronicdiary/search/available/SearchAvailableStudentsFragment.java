@@ -1,6 +1,8 @@
 package com.example.electronicdiary.search.available;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +26,16 @@ public class SearchAvailableStudentsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_search_available_students, container, false);
 
+        int semesterId;
+        if (getArguments() != null) {
+            semesterId = getArguments().getInt("semesterId");
+        } else {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+            semesterId = Integer.parseInt(sharedPreferences.getString(getString(R.string.current_semester), ""));
+        }
+
         SearchAvailableStudentsViewModel searchAvailableStudentsViewModel = new ViewModelProvider(this).get(SearchAvailableStudentsViewModel.class);
-        searchAvailableStudentsViewModel.downloadAvailableStudents(getArguments().getInt("semesterId"));
+        searchAvailableStudentsViewModel.downloadAvailableStudents(semesterId);
 
         final RecyclerView recyclerView = root.findViewById(R.id.searchedAvailableStudentsList);
         searchAvailableStudentsViewModel.getAvailableStudents().observe(getViewLifecycleOwner(), availableStudents -> {
@@ -39,7 +49,7 @@ public class SearchAvailableStudentsFragment extends Fragment {
 
                 Bundle bundle = new Bundle();
                 bundle.putInt("studentId", availableStudents.get(position).getId());
-                bundle.putInt("groupId", availableStudents.get(position).getGroupId());
+                bundle.putInt("semesterId", semesterId);
                 Navigation.findNavController(view).navigate(R.id.action_search_available_students_to_student_profile, bundle);
             };
 

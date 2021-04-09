@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.electronicdiary.Group;
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.admin.GroupFormState;
+import com.example.electronicdiary.data_classes.Group;
 
 public class GroupEditingViewModel extends ViewModel {
     private final MutableLiveData<GroupFormState> groupFormState = new MutableLiveData<>();

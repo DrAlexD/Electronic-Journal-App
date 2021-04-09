@@ -13,9 +13,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.electronicdiary.Group;
 import com.example.electronicdiary.R;
-import com.example.electronicdiary.SubjectInfo;
+import com.example.electronicdiary.data_classes.Group;
+import com.example.electronicdiary.data_classes.SubjectInfo;
 import com.example.electronicdiary.search.GroupsAdapter;
 
 import java.util.ArrayList;

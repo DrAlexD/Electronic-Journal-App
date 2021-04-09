@@ -20,7 +20,7 @@ import com.example.electronicdiary.MainActivity;
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.Result;
-import com.example.electronicdiary.User;
+import com.example.electronicdiary.data_classes.User;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -47,6 +47,10 @@ public class LoginActivity extends AppCompatActivity {
                     sharedPreferences.getBoolean("isUserProfessor", true));
             openMainActivity();
         } else {
+            if (sharedPreferences.getInt(getString(R.string.current_semester), -1) == -1)
+                sharedPreferences.edit().putString(getString(R.string.current_semester),
+                        String.valueOf(Repository.getInstance().getLastSemesterId())).apply();
+
             initLoginListeners(isRememberMe, sharedPreferences);
         }
     }

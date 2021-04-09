@@ -38,7 +38,7 @@ public class ProfessorEditingDialogFragment extends DialogFragment {
 
         professorId = getArguments().getInt("professorId");
         professorEditingViewModel = new ViewModelProvider(this).get(ProfessorEditingViewModel.class);
-        professorEditingViewModel.downloadProfessorById(professorId);
+        professorEditingViewModel.downloadProfessorByIdWithLogin(professorId);
 
         setupAutoGenerate(root);
 
@@ -74,6 +74,9 @@ public class ProfessorEditingDialogFragment extends DialogFragment {
 
             professorName.setText(professor.getFirstName());
             professorSecondName.setText(professor.getSecondName());
+            professorLogin.setText(professor.getLogin());
+            professorPassword.setText(professor.getPassword());
+            generateCheckBox.setEnabled(true);
         });
 
         TextWatcher afterNameAndSecondNameChangedListener = new TextWatcher() {

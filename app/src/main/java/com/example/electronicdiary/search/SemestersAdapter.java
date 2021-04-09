@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.electronicdiary.R;
-import com.example.electronicdiary.Semester;
+import com.example.electronicdiary.data_classes.Semester;
 
 import org.jetbrains.annotations.NotNull;
 

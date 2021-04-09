@@ -4,16 +4,16 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.electronicdiary.Event;
-import com.example.electronicdiary.Lesson;
-import com.example.electronicdiary.ModuleInfo;
 import com.example.electronicdiary.Repository;
-import com.example.electronicdiary.Student;
-import com.example.electronicdiary.StudentEvent;
-import com.example.electronicdiary.StudentLesson;
-import com.example.electronicdiary.StudentPerformanceInModule;
-import com.example.electronicdiary.StudentPerformanceInSubject;
-import com.example.electronicdiary.SubjectInfo;
+import com.example.electronicdiary.data_classes.Event;
+import com.example.electronicdiary.data_classes.Lesson;
+import com.example.electronicdiary.data_classes.ModuleInfo;
+import com.example.electronicdiary.data_classes.Student;
+import com.example.electronicdiary.data_classes.StudentEvent;
+import com.example.electronicdiary.data_classes.StudentLesson;
+import com.example.electronicdiary.data_classes.StudentPerformanceInModule;
+import com.example.electronicdiary.data_classes.StudentPerformanceInSubject;
+import com.example.electronicdiary.data_classes.SubjectInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;

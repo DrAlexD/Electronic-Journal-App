@@ -18,7 +18,7 @@ import androidx.navigation.Navigation;
 
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.Repository;
-import com.example.electronicdiary.Subject;
+import com.example.electronicdiary.data_classes.Subject;
 
 public class StudentProfileFragment extends Fragment {
     private int studentId;

@@ -1,5 +1,13 @@
 package com.example.electronicdiary;
 
+import com.example.electronicdiary.data_classes.Group;
+import com.example.electronicdiary.data_classes.Professor;
+import com.example.electronicdiary.data_classes.Semester;
+import com.example.electronicdiary.data_classes.Student;
+import com.example.electronicdiary.data_classes.Subject;
+import com.example.electronicdiary.data_classes.SubjectInfo;
+import com.example.electronicdiary.data_classes.User;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 

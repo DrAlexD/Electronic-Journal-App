@@ -29,11 +29,12 @@ public class ProfileFragment extends Fragment {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         semesterId = Integer.parseInt(sharedPreferences.getString(getString(R.string.current_semester), ""));
         professorId = Repository.getInstance().getUser().getId();
-        setPreferences(root, sharedPreferences);
 
         profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
         profileViewModel.downloadSemesterById(semesterId);
         profileViewModel.downloadAvailableSubjectsWithGroups(professorId, semesterId);
+
+        setPreferences(root, sharedPreferences);
 
         final ExpandableListView expandableListView = root.findViewById(R.id.subjectsWithGroupsList);
         profileViewModel.getAvailableSubjectsWithGroups().observe(getViewLifecycleOwner(), availableSubjectsWithGroups -> {

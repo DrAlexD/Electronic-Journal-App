@@ -20,11 +20,14 @@ public class StudentPerformanceFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_student_performance, container, false);
 
         int page = getArguments().getInt("openPage");
+        int moduleExpand = getArguments().getInt("moduleExpand", -1);
         int studentId = getArguments().getInt("studentId");
         int subjectId = getArguments().getInt("subjectId");
         int semesterId = getArguments().getInt("semesterId");
 
         StudentPerformanceViewModel studentPerformanceViewModel = new ViewModelProvider(this).get(StudentPerformanceViewModel.class);
+        studentPerformanceViewModel.setModuleExpand(moduleExpand);
+        studentPerformanceViewModel.setOpenPage(page);
         studentPerformanceViewModel.downloadStudentById(studentId);
 
         studentPerformanceViewModel.getStudent().observe(getViewLifecycleOwner(), student -> {

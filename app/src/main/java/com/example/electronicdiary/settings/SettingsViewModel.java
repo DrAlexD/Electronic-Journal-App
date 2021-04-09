@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.electronicdiary.Repository;
-import com.example.electronicdiary.Semester;
+import com.example.electronicdiary.data_classes.Semester;
 
 import java.util.ArrayList;
 

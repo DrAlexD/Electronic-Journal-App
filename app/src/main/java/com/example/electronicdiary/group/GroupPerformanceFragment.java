@@ -21,14 +21,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.electronicdiary.Event;
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.Repository;
-import com.example.electronicdiary.Student;
-import com.example.electronicdiary.StudentEvent;
-import com.example.electronicdiary.StudentPerformanceInModule;
-import com.example.electronicdiary.StudentPerformanceInSubject;
-import com.example.electronicdiary.SubjectInfo;
+import com.example.electronicdiary.data_classes.Event;
+import com.example.electronicdiary.data_classes.Student;
+import com.example.electronicdiary.data_classes.StudentEvent;
+import com.example.electronicdiary.data_classes.StudentPerformanceInModule;
+import com.example.electronicdiary.data_classes.StudentPerformanceInSubject;
+import com.example.electronicdiary.data_classes.SubjectInfo;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -132,7 +132,7 @@ public class GroupPerformanceFragment extends Fragment {
         ArrayList<Integer> modules = Repository.getInstance().getModules();
 
         for (int moduleNumber : modules) {
-            for (Event event : events.get(moduleNumber - 1)) {
+            for (Event event : events.get(moduleNumber)) {
                 TextView eventView = new TextView(getContext());
                 eventView.setTextSize(20);
                 eventView.setText(event.getTitle());
@@ -243,14 +243,14 @@ public class GroupPerformanceFragment extends Fragment {
 
         ArrayList<Integer> modules = Repository.getInstance().getModules();
         for (int moduleNumber : modules) {
-            for (Event event : events.get(moduleNumber - 1)) {
+            for (Event event : events.get(moduleNumber)) {
                 TextView pointsView = new TextView(getContext());
                 pointsView.setTextSize(20);
                 pointsView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
 
                 StudentEvent studentEventChosen = null;
                 int lastAttempt = 0;
-                for (StudentEvent studentEvent : studentsEvents.get(moduleNumber - 1).get(i)) {
+                for (StudentEvent studentEvent : studentsEvents.get(moduleNumber).get(i)) {
                     if (studentEvent.getStudentId() == student.getId() && studentEvent.getEventId() == event.getId()
                             && studentEvent.getAttemptNumber() > lastAttempt) {
                         studentEventChosen = studentEvent;
@@ -258,10 +258,28 @@ public class GroupPerformanceFragment extends Fragment {
                     }
                 }
 
-                pointsView.setText(lastAttempt == 0 ? "" : (!studentEventChosen.isAttended() ? "Н" : String.valueOf(studentEventChosen.getEarnedPoints() + studentEventChosen.getBonusPoints())));
                 if (lastAttempt != 0) {
-                    pointsView.setTextColor(studentEventChosen.isHaveCredit() ? getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
-                }
+                    if (!studentEventChosen.isAttended()) {
+                        pointsView.setText("Н");
+                    } else {
+                        if (studentEventChosen.getEarnedPoints() == -1 && studentEventChosen.getBonusPoints() == -1) {
+                            pointsView.setText("-");
+                        } else if (studentEventChosen.getEarnedPoints() == -1) {
+                            pointsView.setText(String.valueOf(studentEventChosen.getBonusPoints()));
+                            pointsView.setTextColor(studentEventChosen.isHaveCredit() ?
+                                    getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
+                        } else if (studentEventChosen.getBonusPoints() == -1) {
+                            pointsView.setText(String.valueOf(studentEventChosen.getEarnedPoints()));
+                            pointsView.setTextColor(studentEventChosen.isHaveCredit() ?
+                                    getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
+                        } else {
+                            pointsView.setText(String.valueOf(studentEventChosen.getEarnedPoints() + studentEventChosen.getBonusPoints()));
+                            pointsView.setTextColor(studentEventChosen.isHaveCredit() ?
+                                    getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
+                        }
+                    }
+                } else
+                    pointsView.setText("");
                 pointsView.setGravity(Gravity.CENTER);
 
                 int finalLastAttempt = lastAttempt;
@@ -269,7 +287,10 @@ public class GroupPerformanceFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putBoolean("isFromGroupPerformance", true);
                     bundle.putInt("eventMinPoints", event.getMinPoints());
-                    bundle.putString("eventDeadlineDate", String.valueOf(event.getDeadlineDate().getDate()));
+                    bundle.putString("eventDeadlineDate", ((event.getDeadlineDate().getDate() + 1) < 10 ? "0" +
+                            (event.getDeadlineDate().getDate() + 1) : (event.getDeadlineDate().getDate() + 1)) + "." +
+                            ((event.getDeadlineDate().getMonth() + 1) < 10 ? "0" + (event.getDeadlineDate().getMonth() + 1) :
+                                    (event.getDeadlineDate().getMonth() + 1)) + "." + event.getDeadlineDate().getYear());
                     bundle.putString("eventTitle", event.getTitle());
                     bundle.putInt("attemptNumber", finalLastAttempt);
                     bundle.putInt("eventId", event.getId());
@@ -286,11 +307,20 @@ public class GroupPerformanceFragment extends Fragment {
             }
 
             StudentPerformanceInModule studentPerformanceInModule = groupPerformanceViewModel.getStudentsPerformancesInModules().
-                    getValue().get(moduleNumber - 1).get(i);
+                    getValue().get(moduleNumber).get(i);
             TextView moduleView = new TextView(getContext());
             moduleView.setTextSize(20);
-            moduleView.setText(studentPerformanceInModule.getEarnedPoints());
-            moduleView.setTextColor(studentPerformanceInModule.isHaveCredit() ? getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
+            if (studentPerformanceInModule != null) {
+                if (studentPerformanceInModule.getEarnedPoints() == -1) {
+                    moduleView.setText("-");
+                } else {
+                    moduleView.setText(String.valueOf(studentPerformanceInModule.getEarnedPoints()));
+                    moduleView.setTextColor(studentPerformanceInModule.isHaveCredit() ?
+                            getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
+                }
+            } else {
+                moduleView.setText("");
+            }
             moduleView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
             moduleView.setGravity(Gravity.CENTER);
             pointsRow.addView(moduleView);
@@ -300,8 +330,21 @@ public class GroupPerformanceFragment extends Fragment {
                 getValue().get(i);
         TextView resultPointsView = new TextView(getContext());
         resultPointsView.setTextSize(20);
-        resultPointsView.setText(studentPerformanceInSubject.getEarnedPoints() + studentPerformanceInSubject.getBonusPoints());
-        resultPointsView.setTextColor(studentPerformanceInSubject.isHaveCreditOrAdmission() ? getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
+        if (studentPerformanceInSubject.getEarnedPoints() == -1 && studentPerformanceInSubject.getBonusPoints() == -1) {
+            resultPointsView.setText("-");
+        } else if (studentPerformanceInSubject.getEarnedPoints() == -1) {
+            resultPointsView.setText(String.valueOf(studentPerformanceInSubject.getBonusPoints()));
+            resultPointsView.setTextColor(studentPerformanceInSubject.isHaveCreditOrAdmission() ?
+                    getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
+        } else if (studentPerformanceInSubject.getBonusPoints() == -1) {
+            resultPointsView.setText(String.valueOf(studentPerformanceInSubject.getEarnedPoints()));
+            resultPointsView.setTextColor(studentPerformanceInSubject.isHaveCreditOrAdmission() ?
+                    getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
+        } else {
+            resultPointsView.setText(String.valueOf(studentPerformanceInSubject.getEarnedPoints() + studentPerformanceInSubject.getBonusPoints()));
+            resultPointsView.setTextColor(studentPerformanceInSubject.isHaveCreditOrAdmission() ?
+                    getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
+        }
         resultPointsView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
         resultPointsView.setGravity(Gravity.CENTER);
         resultPointsView.setOnClickListener(view -> {
@@ -320,8 +363,13 @@ public class GroupPerformanceFragment extends Fragment {
         if (subjectInfo.isExam()) {
             TextView examPointsView = new TextView(getContext());
             examPointsView.setTextSize(20);
-            examPointsView.setText(studentPerformanceInSubject.getEarnedExamPoints());
-            resultPointsView.setTextColor(studentPerformanceInSubject.getEarnedExamPoints() >= 18 ? getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
+            if (studentPerformanceInSubject.getEarnedExamPoints() == -1) {
+                examPointsView.setText("-");
+            } else {
+                examPointsView.setText(String.valueOf(studentPerformanceInSubject.getEarnedExamPoints()));
+                examPointsView.setTextColor(studentPerformanceInSubject.getEarnedExamPoints() >= 18 ?
+                        getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
+            }
             examPointsView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
             examPointsView.setGravity(Gravity.CENTER);
             examPointsView.setOnClickListener(view -> {
@@ -340,7 +388,11 @@ public class GroupPerformanceFragment extends Fragment {
         if (subjectInfo.isExam() || subjectInfo.isDifferentiatedCredit()) {
             TextView markView = new TextView(getContext());
             markView.setTextSize(20);
-            markView.setText(studentPerformanceInSubject.getMark());
+            if (studentPerformanceInSubject.getMark() == -1) {
+                markView.setText("-");
+            } else {
+                markView.setText(String.valueOf(studentPerformanceInSubject.getMark()));
+            }
             markView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
             markView.setGravity(Gravity.CENTER);
             markView.setOnClickListener(view -> {

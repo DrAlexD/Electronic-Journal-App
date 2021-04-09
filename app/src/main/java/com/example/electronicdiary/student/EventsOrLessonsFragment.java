@@ -12,10 +12,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import com.example.electronicdiary.Event;
-import com.example.electronicdiary.Lesson;
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.Repository;
+import com.example.electronicdiary.data_classes.Event;
+import com.example.electronicdiary.data_classes.Lesson;
 
 import java.util.ArrayList;
 
@@ -30,16 +30,21 @@ public class EventsOrLessonsFragment extends Fragment {
 
         StudentPerformanceViewModel studentPerformanceViewModel = new ViewModelProvider(getParentFragment()).get(StudentPerformanceViewModel.class);
 
+        int moduleExpand = studentPerformanceViewModel.getModuleExpand().getValue();
+        int openPage = studentPerformanceViewModel.getOpenPage().getValue() + 1;
+
         //TODO можно ли создать expandableList с двойной вложенностью?
         final ExpandableListView expandableListView = root.findViewById(R.id.events_or_lessons_list);
         if (position == 1) {
-
             ExpandableListView.OnChildClickListener onEventClickListener = (parent, v, groupPosition, childPosition, id) -> {
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("isFromGroupPerformance", false);
                 Event event = studentPerformanceViewModel.getEvents().getValue().get(modules.get(groupPosition)).get(childPosition);
                 bundle.putInt("eventMinPoints", event.getMinPoints());
-                bundle.putString("eventDeadlineDate", String.valueOf(event.getDeadlineDate().getDate()));
+                bundle.putString("eventDeadlineDate", ((event.getDeadlineDate().getDate()) < 10 ? "0" + (event.getDeadlineDate().getDate()) :
+                        (event.getDeadlineDate().getDate())) + "." +
+                        ((event.getDeadlineDate().getMonth() + 1) < 10 ? "0" + (event.getDeadlineDate().getMonth() + 1) :
+                                (event.getDeadlineDate().getMonth() + 1)) + "." + event.getDeadlineDate().getYear());
                 bundle.putString("eventTitle", event.getTitle());
                 TextView attemptNumber = v.findViewById(R.id.attemptNumber);
                 bundle.putInt("attemptNumber", Integer.parseInt(attemptNumber.getText().toString()));
@@ -73,10 +78,9 @@ public class EventsOrLessonsFragment extends Fragment {
                         R.color.red : R.color.green));
                 mark.setVisibility(studentPerformanceViewModel.getSubjectInfo().getValue().isExam() ||
                         studentPerformanceViewModel.getSubjectInfo().getValue().isDifferentiatedCredit() ? View.VISIBLE : View.INVISIBLE);
-                mark.setText(studentPerformanceInSubject.getMark());
+                mark.setText(String.valueOf(studentPerformanceInSubject.getMark()));
                 earnedExamPoints.setVisibility(studentPerformanceViewModel.getSubjectInfo().getValue().isExam() ? View.VISIBLE : View.INVISIBLE);
-                earnedExamPoints.setText(studentPerformanceInSubject.getEarnedExamPoints());
-
+                earnedExamPoints.setText(String.valueOf(studentPerformanceInSubject.getEarnedExamPoints()));
             });
 
             studentPerformanceViewModel.getEvents().observe(getViewLifecycleOwner(), events -> {
@@ -90,6 +94,8 @@ public class EventsOrLessonsFragment extends Fragment {
                         events, studentPerformanceViewModel.getStudentEvents().getValue());
                 expandableListView.setAdapter(eventsAdapter);
                 expandableListView.setOnChildClickListener(onEventClickListener);
+                if (moduleExpand != -1 && openPage == position)
+                    expandableListView.expandGroup(moduleExpand);
             });
 
             studentPerformanceViewModel.getStudentEvents().observe(getViewLifecycleOwner(), studentEvents -> {
@@ -103,6 +109,8 @@ public class EventsOrLessonsFragment extends Fragment {
                         studentPerformanceViewModel.getEvents().getValue(), studentEvents);
                 expandableListView.setAdapter(eventsAdapter);
                 expandableListView.setOnChildClickListener(onEventClickListener);
+                if (moduleExpand != -1 && openPage == position)
+                    expandableListView.expandGroup(moduleExpand);
             });
         } else if (position == 2) {
             ExpandableListView.OnChildClickListener onLectureClickListener = (parent, v, groupPosition, childPosition, id) -> {
@@ -113,8 +121,14 @@ public class EventsOrLessonsFragment extends Fragment {
                 bundle.putBoolean("isHasData", !"Нет данных".equals(bonusPoints.getText().toString()));
                 Lesson lesson = studentPerformanceViewModel.getLecturesByModules().getValue().
                         get(modules.get(groupPosition)).get(childPosition);
-                bundle.putString("lessonDate", lesson.getDateAndTime().getDate() + " " + lesson.getDateAndTime().getHours() +
-                        ":" + lesson.getDateAndTime().getMinutes());
+                bundle.putString("lessonDate", ((lesson.getDateAndTime().getDate()) < 10 ? "0" + (lesson.getDateAndTime().getDate()) :
+                        (lesson.getDateAndTime().getDate())) + "." +
+                        ((lesson.getDateAndTime().getMonth() + 1) < 10 ? "0" + (lesson.getDateAndTime().getMonth() + 1) :
+                                (lesson.getDateAndTime().getMonth() + 1)) + "." + lesson.getDateAndTime().getYear() + " " +
+                        ((lesson.getDateAndTime().getHours()) < 10 ? "0" + (lesson.getDateAndTime().getHours()) :
+                                (lesson.getDateAndTime().getHours())) + ":" +
+                        ((lesson.getDateAndTime().getMinutes()) < 10 ? "0" + (lesson.getDateAndTime().getMinutes()) :
+                                (lesson.getDateAndTime().getMinutes())));
                 bundle.putInt("lessonId", lesson.getId());
                 bundle.putInt("studentId", studentPerformanceViewModel.getStudent().getValue().getId());
                 bundle.putInt("moduleNumber", modules.get(groupPosition));
@@ -140,6 +154,8 @@ public class EventsOrLessonsFragment extends Fragment {
                                 lecturesByModules, studentPerformanceViewModel.getStudentLessonsByModules().getValue());
                         expandableListView.setAdapter(lessonsAdapter);
                         expandableListView.setOnChildClickListener(onLectureClickListener);
+                        if (moduleExpand != -1 && openPage == position)
+                            expandableListView.expandGroup(moduleExpand);
                     });
 
             studentPerformanceViewModel.getStudentLessonsByModules().observe(getViewLifecycleOwner(),
@@ -154,6 +170,8 @@ public class EventsOrLessonsFragment extends Fragment {
                                 studentPerformanceViewModel.getLecturesByModules().getValue(), studentLessonsByModules);
                         expandableListView.setAdapter(lessonsAdapter);
                         expandableListView.setOnChildClickListener(onLectureClickListener);
+                        if (moduleExpand != -1 && openPage == position)
+                            expandableListView.expandGroup(moduleExpand);
                     });
         } else if (position == 3) {
             ExpandableListView.OnChildClickListener onSeminarClickListener = (parent, v, groupPosition, childPosition, id) -> {
@@ -164,8 +182,14 @@ public class EventsOrLessonsFragment extends Fragment {
                 bundle.putBoolean("isHasData", !"Нет данных".equals(bonusPoints.getText().toString()));
                 Lesson lesson = studentPerformanceViewModel.getSeminarsByModules().getValue().
                         get(modules.get(groupPosition)).get(childPosition);
-                bundle.putString("lessonDate", lesson.getDateAndTime().getDate() + " " + lesson.getDateAndTime().getHours() +
-                        ":" + lesson.getDateAndTime().getMinutes());
+                bundle.putString("lessonDate", ((lesson.getDateAndTime().getDate()) < 10 ? "0" + (lesson.getDateAndTime().getDate()) :
+                        (lesson.getDateAndTime().getDate())) + "." +
+                        ((lesson.getDateAndTime().getMonth() + 1) < 10 ? "0" + (lesson.getDateAndTime().getMonth() + 1) :
+                                (lesson.getDateAndTime().getMonth() + 1)) + "." + lesson.getDateAndTime().getYear() + " " +
+                        ((lesson.getDateAndTime().getHours()) < 10 ? "0" + (lesson.getDateAndTime().getHours()) :
+                                (lesson.getDateAndTime().getHours())) + ":" +
+                        ((lesson.getDateAndTime().getMinutes()) < 10 ? "0" + (lesson.getDateAndTime().getMinutes()) :
+                                (lesson.getDateAndTime().getMinutes())));
                 bundle.putInt("lessonId", lesson.getId());
                 bundle.putInt("studentId", studentPerformanceViewModel.getStudent().getValue().getId());
                 bundle.putInt("moduleNumber", modules.get(groupPosition));
@@ -191,6 +215,8 @@ public class EventsOrLessonsFragment extends Fragment {
                                 seminarsByModules, studentPerformanceViewModel.getStudentLessonsByModules().getValue());
                         expandableListView.setAdapter(lessonsAdapter);
                         expandableListView.setOnChildClickListener(onSeminarClickListener);
+                        if (moduleExpand != -1 && openPage == position)
+                            expandableListView.expandGroup(moduleExpand);
                     });
 
             studentPerformanceViewModel.getStudentLessonsByModules().observe(getViewLifecycleOwner(),
@@ -205,6 +231,8 @@ public class EventsOrLessonsFragment extends Fragment {
                                 studentPerformanceViewModel.getSeminarsByModules().getValue(), studentLessonsByModules);
                         expandableListView.setAdapter(lessonsAdapter);
                         expandableListView.setOnChildClickListener(onSeminarClickListener);
+                        if (moduleExpand != -1 && openPage == position)
+                            expandableListView.expandGroup(moduleExpand);
                     });
         }
 

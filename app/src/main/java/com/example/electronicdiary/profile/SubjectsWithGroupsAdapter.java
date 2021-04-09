@@ -8,8 +8,8 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import com.example.electronicdiary.R;
-import com.example.electronicdiary.Subject;
-import com.example.electronicdiary.SubjectInfo;
+import com.example.electronicdiary.data_classes.Subject;
+import com.example.electronicdiary.data_classes.SubjectInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;

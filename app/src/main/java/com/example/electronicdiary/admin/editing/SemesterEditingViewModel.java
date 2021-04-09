@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.electronicdiary.Repository;
-import com.example.electronicdiary.Semester;
 import com.example.electronicdiary.admin.SemesterFormState;
+import com.example.electronicdiary.data_classes.Semester;
 
 public class SemesterEditingViewModel extends ViewModel {
     private final MutableLiveData<SemesterFormState> semesterFormState = new MutableLiveData<>();

@@ -7,11 +7,11 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
-import com.example.electronicdiary.Lesson;
-import com.example.electronicdiary.ModuleInfo;
 import com.example.electronicdiary.R;
-import com.example.electronicdiary.StudentLesson;
-import com.example.electronicdiary.StudentPerformanceInModule;
+import com.example.electronicdiary.data_classes.Lesson;
+import com.example.electronicdiary.data_classes.ModuleInfo;
+import com.example.electronicdiary.data_classes.StudentLesson;
+import com.example.electronicdiary.data_classes.StudentPerformanceInModule;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -116,8 +116,14 @@ class LessonsAdapter extends BaseExpandableListAdapter {
         TextView lessonTimeView = view.findViewById(R.id.lessonTime);
         TextView bonusPointsView = view.findViewById(R.id.bonusPoints);
 
-        lessonDateView.setText(lesson.getDateAndTime().getDate());
-        lessonTimeView.setText(lesson.getDateAndTime().getHours() + ":" + lesson.getDateAndTime().getMinutes());
+        lessonDateView.setText(((lesson.getDateAndTime().getDate()) < 10 ? "0" + (lesson.getDateAndTime().getDate()) :
+                (lesson.getDateAndTime().getDate())) + "." +
+                ((lesson.getDateAndTime().getMonth() + 1) < 10 ? "0" + (lesson.getDateAndTime().getMonth() + 1) :
+                        (lesson.getDateAndTime().getMonth() + 1)) + "." + lesson.getDateAndTime().getYear());
+        lessonTimeView.setText(((lesson.getDateAndTime().getHours()) < 10 ? "0" + (lesson.getDateAndTime().getHours()) :
+                (lesson.getDateAndTime().getHours())) + ":" +
+                ((lesson.getDateAndTime().getMinutes()) < 10 ? "0" + (lesson.getDateAndTime().getMinutes()) :
+                        (lesson.getDateAndTime().getMinutes())));
 
         if (studentLesson == null) {
             bonusPointsView.setText("Нет данных");

@@ -66,7 +66,7 @@
 
     <dialog
         android:id="@+id/nav_dialog_event_adding"
-        android:name="com.example.electronicdiary.group.EventAddingDialogFragment">
+        android:name="com.example.electronicdiary.group.actions.event.EventAddingDialogFragment">
         <action
             android:id="@+id/pop_out_dialog_event_adding_to_group_performance"
             app:popUpTo="@id/nav_group_performance"
@@ -80,7 +80,7 @@
 
     <dialog
         android:id="@+id/nav_dialog_event_editing"
-        android:name="com.example.electronicdiary.group.EventEditingDialogFragment">
+        android:name="com.example.electronicdiary.group.actions.event.EventEditingDialogFragment">
         <action
             android:id="@+id/pop_out_dialog_event_editing_to_group_performance"
             app:popUpTo="@id/nav_group_performance"
@@ -94,7 +94,7 @@
 
     <dialog
         android:id="@+id/nav_dialog_module_info_editing"
-        android:name="com.example.electronicdiary.group.ModuleInfoEditingDialogFragment">
+        android:name="com.example.electronicdiary.group.actions.info.ModuleInfoEditingDialogFragment">
         <action
             android:id="@+id/pop_out_dialog_module_info_editing_to_group_performance"
             app:popUpTo="@id/nav_group_performance"
@@ -103,7 +103,7 @@
 
     <dialog
         android:id="@+id/nav_dialog_subject_info_editing"
-        android:name="com.example.electronicdiary.group.SubjectInfoEditingDialogFragment">
+        android:name="com.example.electronicdiary.group.actions.info.SubjectInfoEditingDialogFragment">
         <action
             android:id="@+id/pop_out_dialog_subject_info_editing_to_group_performance"
             app:popUpTo="@id/nav_group_performance"
@@ -117,7 +117,7 @@
 
     <dialog
         android:id="@+id/nav_dialog_student_performance_in_subject"
-        android:name="com.example.electronicdiary.group.StudentPerformanceInSubjectDialogFragment">
+        android:name="com.example.electronicdiary.group.actions.student_performance.StudentPerformanceInSubjectDialogFragment">
         <action
             android:id="@+id/pop_out_dialog_student_performance_in_subject_to_group_performance"
             app:popUpTo="@id/nav_group_performance"
@@ -131,7 +131,7 @@
 
     <dialog
         android:id="@+id/nav_dialog_student_event"
-        android:name="com.example.electronicdiary.group.StudentEventDialogFragment">
+        android:name="com.example.electronicdiary.group.actions.student_event.StudentEventDialogFragment">
         <action
             android:id="@+id/pop_out_dialog_student_event_to_group_performance"
             app:popUpTo="@id/nav_group_performance"
@@ -154,7 +154,7 @@
 
     <dialog
         android:id="@+id/nav_dialog_lesson_adding"
-        android:name="com.example.electronicdiary.group.LessonAddingDialogFragment">
+        android:name="com.example.electronicdiary.group.actions.lesson.LessonAddingDialogFragment">
         <action
             android:id="@+id/pop_out_dialog_lesson_adding_to_group_performance"
             app:popUpTo="@id/nav_group_performance"
@@ -168,7 +168,7 @@
 
     <dialog
         android:id="@+id/nav_dialog_lesson_editing"
-        android:name="com.example.electronicdiary.group.LessonEditingDialogFragment">
+        android:name="com.example.electronicdiary.group.actions.lesson.LessonEditingDialogFragment">
         <action
             android:id="@+id/pop_out_dialog_lesson_editing_to_group_performance"
             app:popUpTo="@id/nav_group_performance"
@@ -182,7 +182,7 @@
 
     <dialog
         android:id="@+id/nav_dialog_student_lesson"
-        android:name="com.example.electronicdiary.group.StudentLessonDialogFragment">
+        android:name="com.example.electronicdiary.group.actions.student_lesson.StudentLessonDialogFragment">
         <action
             android:id="@+id/pop_out_dialog_student_lesson_to_group_performance"
             app:popUpTo="@id/nav_group_performance"

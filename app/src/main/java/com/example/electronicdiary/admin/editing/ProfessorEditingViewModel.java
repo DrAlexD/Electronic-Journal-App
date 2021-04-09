@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.electronicdiary.Professor;
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.admin.ProfessorFormState;
+import com.example.electronicdiary.data_classes.Professor;
 
 public class ProfessorEditingViewModel extends ViewModel {
     private final MutableLiveData<ProfessorFormState> professorFormState = new MutableLiveData<>();
@@ -26,8 +26,8 @@ public class ProfessorEditingViewModel extends ViewModel {
                 professorPassword, isNameOrSecondNameChanged));
     }
 
-    public void downloadProfessorById(int professorId) {
-        this.professor.setValue(Repository.getInstance().getProfessorById(professorId));
+    public void downloadProfessorByIdWithLogin(int professorId) {
+        this.professor.setValue(Repository.getInstance().getProfessorByIdWithLogin(professorId));
     }
 
     public void editProfessor(int professorId, String professorName, String professorSecondName, String professorLogin, String professorPassword) {

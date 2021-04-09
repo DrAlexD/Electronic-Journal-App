@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.electronicdiary.Group;
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.data_classes.Group;
 
 import org.jetbrains.annotations.NotNull;
 

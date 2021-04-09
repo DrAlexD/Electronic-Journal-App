@@ -1,5 +1,20 @@
 package com.example.electronicdiary;
 
+import com.example.electronicdiary.data_classes.Event;
+import com.example.electronicdiary.data_classes.Group;
+import com.example.electronicdiary.data_classes.Lesson;
+import com.example.electronicdiary.data_classes.ModuleInfo;
+import com.example.electronicdiary.data_classes.Professor;
+import com.example.electronicdiary.data_classes.Semester;
+import com.example.electronicdiary.data_classes.Student;
+import com.example.electronicdiary.data_classes.StudentEvent;
+import com.example.electronicdiary.data_classes.StudentLesson;
+import com.example.electronicdiary.data_classes.StudentPerformanceInModule;
+import com.example.electronicdiary.data_classes.StudentPerformanceInSubject;
+import com.example.electronicdiary.data_classes.Subject;
+import com.example.electronicdiary.data_classes.SubjectInfo;
+import com.example.electronicdiary.data_classes.User;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -97,6 +112,12 @@ public class Repository {
         int lastProfessorId = professors.get(professors.size() - 1).getId() + 1;
         cache.setLastProfessorId(lastProfessorId);
         return lastProfessorId;
+    }
+
+    public int getLastSemesterId() {
+        ArrayList<Semester> semesters = getSemesters();
+
+        return semesters.get(semesters.size() - 1).getId();
     }
 
     public ArrayList<Student> getAllStudents() {
@@ -342,19 +363,19 @@ public class Repository {
         ArrayList<Integer> modules = getModules();
         ArrayList<Lesson> lessons1 = new ArrayList<>();
         lessons1.add(new Lesson(1, modules.get(0), 1, 1, 2, 3,
-                7, new Date(2021, 0, 15), true, 1));
+                7, new Date(2021, 0, 15, 15, 20), true, 1));
         lessons1.add(new Lesson(2, modules.get(0), 1, 1, 2, 3,
-                7, new Date(2021, 1, 15), false, 2));
+                7, new Date(2021, 1, 15, 15, 20), false, 2));
         ArrayList<Lesson> lessons2 = new ArrayList<>();
         lessons2.add(new Lesson(3, modules.get(1), 1, 1, 2, 3,
-                7, new Date(2021, 2, 15), false, 1));
+                7, new Date(2021, 2, 15, 15, 20), false, 1));
         lessons2.add(new Lesson(4, modules.get(1), 1, 1, 2, 3,
-                7, new Date(2021, 3, 15), true, 3));
+                7, new Date(2021, 3, 15, 15, 20), true, 3));
         ArrayList<Lesson> lessons3 = new ArrayList<>();
         lessons3.add(new Lesson(5, modules.get(2), 1, 1, 2, 3,
-                7, new Date(2021, 4, 15), true, 4));
+                7, new Date(2021, 4, 15, 15, 20), true, 4));
         lessons3.add(new Lesson(6, modules.get(2), 1, 1, 2, 3,
-                7, new Date(2021, 5, 15), true, 1));
+                7, new Date(2021, 5, 15, 15, 20), true, 1));
 
         lessons.put(modules.get(0), lessons1);
         lessons.put(modules.get(1), lessons2);
@@ -630,8 +651,16 @@ public class Repository {
         return new Student(studentId, studentId + "Александр", studentId + "Другаков", new Group(1, "1ИУ9-11"));
     }
 
+    public Student getStudentByIdWithLogin(int studentId) {
+        return new Student(studentId, studentId + "Александр", studentId + "Другаков", new Group(1, "1ИУ9-11"), "fdfdf", "aaaabbb");
+    }
+
     public Professor getProfessorById(int professorId) {
         return new Professor(professorId, "Александр", "Коновалов");
+    }
+
+    public Professor getProfessorByIdWithLogin(int professorId) {
+        return new Professor(professorId, "Александр", "Коновалов", "qwweetrt", "zzzxxx");
     }
 
     public Event getEventById(int eventId) {
@@ -642,7 +671,7 @@ public class Repository {
 
     public Lesson getLessonById(int lessonId) {
         return new Lesson(lessonId, 1, 1, 1, 2, 3,
-                7, new Date(2021, 0, 15), true, 1);
+                7, new Date(2021, 0, 15, 15, 20), true, 1);
     }
 
     public Semester getSemesterById(int semesterId) {

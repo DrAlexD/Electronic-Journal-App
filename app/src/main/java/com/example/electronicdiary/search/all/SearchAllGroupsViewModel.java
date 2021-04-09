@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.electronicdiary.Group;
 import com.example.electronicdiary.Repository;
+import com.example.electronicdiary.data_classes.Group;
 
 import java.util.ArrayList;
 

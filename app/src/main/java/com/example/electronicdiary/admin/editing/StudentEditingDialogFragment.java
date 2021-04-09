@@ -38,7 +38,7 @@ public class StudentEditingDialogFragment extends DialogFragment {
 
         studentId = getArguments().getInt("studentId");
         studentEditingViewModel = new ViewModelProvider(this).get(StudentEditingViewModel.class);
-        studentEditingViewModel.downloadStudentById(studentId);
+        studentEditingViewModel.downloadStudentByIdWithLogin(studentId);
 
         setupAutoGenerate(root);
 
@@ -74,6 +74,9 @@ public class StudentEditingDialogFragment extends DialogFragment {
 
             studentName.setText(student.getFirstName());
             studentSecondName.setText(student.getSecondName());
+            studentLogin.setText(student.getLogin());
+            studentPassword.setText(student.getPassword());
+            generateCheckBox.setEnabled(true);
         });
 
         TextWatcher afterNameAndSecondNameChangedListener = new TextWatcher() {
