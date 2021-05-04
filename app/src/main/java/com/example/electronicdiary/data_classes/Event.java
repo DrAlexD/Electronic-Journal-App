@@ -5,13 +5,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Date;
 
 public class Event {
-    private final int id;
+    private final long id;
     private final int moduleNumber;
-    private final int groupId;
-    private final int subjectId;
-    private final int lecturerId;
-    private final int seminarianId;
-    private final int semesterId;
+    private final long groupId;
+    private final long subjectId;
+    private final long lecturerId;
+    private final long seminarianId;
+    private final long semesterId;
 
     private final String type;
     private final int number;
@@ -20,8 +20,8 @@ public class Event {
     private final int minPoints;
     private final int maxPoints;
 
-    public Event(int id, int moduleNumber, int groupId, int subjectId, int lecturerId, int seminarianId,
-                 int semesterId, String type, int number, Date startDate, Date deadlineDate, int minPoints, int maxPoints) {
+    public Event(long id, int moduleNumber, long groupId, long subjectId, long lecturerId, long seminarianId,
+                 long semesterId, String type, int number, Date startDate, Date deadlineDate, int minPoints, int maxPoints) {
         this.id = id;
         this.moduleNumber = moduleNumber;
         this.groupId = groupId;
@@ -44,7 +44,7 @@ public class Event {
                 ", deadlineDate=" + deadlineDate + ", minPoints=" + minPoints + ", maxPoints=" + maxPoints + '}';
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -52,24 +52,24 @@ public class Event {
         return moduleNumber;
     }
 
-    public int getGroupId() {
+    public long getGroupId() {
         return groupId;
     }
 
 
-    public int getSubjectId() {
+    public long getSubjectId() {
         return subjectId;
     }
 
-    public int getLecturerId() {
+    public long getLecturerId() {
         return lecturerId;
     }
 
-    public int getSeminarianId() {
+    public long getSeminarianId() {
         return seminarianId;
     }
 
-    public int getSemesterId() {
+    public long getSemesterId() {
         return semesterId;
     }
 

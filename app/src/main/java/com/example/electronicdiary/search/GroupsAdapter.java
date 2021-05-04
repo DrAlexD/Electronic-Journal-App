@@ -16,16 +16,17 @@ import com.example.electronicdiary.data_classes.Group;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.ViewHolder> implements Filterable {
     private final LayoutInflater inflater;
     private final View.OnClickListener onItemClickListener;
 
-    private ArrayList<Group> groups;
+    private List<Group> groups;
 
-    private ArrayList<Group> originalGroups;
+    private List<Group> originalGroups;
 
-    public GroupsAdapter(Context context, ArrayList<Group> groups, View.OnClickListener onItemClickListener) {
+    public GroupsAdapter(Context context, List<Group> groups, View.OnClickListener onItemClickListener) {
         this.inflater = LayoutInflater.from(context);
         this.onItemClickListener = onItemClickListener;
         this.groups = groups;
@@ -56,7 +57,7 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.ViewHolder
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults oReturn = new FilterResults();
-                ArrayList<Group> filterResults = new ArrayList<>();
+                List<Group> filterResults = new ArrayList<>();
 
                 if (originalGroups == null) {
                     originalGroups = groups;
@@ -78,7 +79,7 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.ViewHolder
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                groups = (ArrayList<Group>) results.values;
+                groups = (List<Group>) results.values;
                 notifyDataSetChanged();
             }
         };

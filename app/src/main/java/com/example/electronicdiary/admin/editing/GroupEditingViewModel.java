@@ -24,11 +24,11 @@ public class GroupEditingViewModel extends ViewModel {
         groupFormState.setValue(new GroupFormState(groupTitle));
     }
 
-    public void downloadGroupById(int groupId) {
+    public void downloadGroupById(long groupId) {
         this.group.setValue(Repository.getInstance().getGroupById(groupId));
     }
 
-    public void editGroup(int groupId, String groupTitle) {
+    public void editGroup(long groupId, String groupTitle) {
         Repository.getInstance().editGroup(groupId, groupTitle);
     }
 }

@@ -41,7 +41,7 @@ public class SearchAllSubjectsFragment extends Fragment {
 
                 if (actionCode == 1) {
                     Bundle bundle = new Bundle();
-                    bundle.putInt("subjectId", allSubjects.get(position).getId());
+                    bundle.putLong("subjectId", allSubjects.get(position).getId());
                     Navigation.findNavController(view).navigate(R.id.action_search_all_subjects_to_dialog_subject_editing, bundle);
                 } else if (actionCode == 2) {
                     searchAllSubjectsViewModel.deleteSubject(allSubjects.get(position).getId());
@@ -52,9 +52,9 @@ public class SearchAllSubjectsFragment extends Fragment {
                 } else if (actionCode == 10) {
                     Bundle bundle = new Bundle();
                     bundle.putInt("actionCode", 10);
-                    bundle.putInt("subjectId", allSubjects.get(position).getId());
-                    bundle.putInt("professorId", getArguments().getInt("professorId"));
-                    bundle.putInt("semesterId", getArguments().getInt("semesterId"));
+                    bundle.putLong("subjectId", allSubjects.get(position).getId());
+                    bundle.putLong("professorId", getArguments().getLong("professorId"));
+                    bundle.putLong("semesterId", getArguments().getLong("semesterId"));
 
                     Navigation.findNavController(view).navigate(R.id.action_search_all_subjects_to_search_all_groups, bundle);
                 }

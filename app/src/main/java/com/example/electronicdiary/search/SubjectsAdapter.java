@@ -16,16 +16,17 @@ import com.example.electronicdiary.data_classes.Subject;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.ViewHolder> implements Filterable {
     private final LayoutInflater inflater;
     private final View.OnClickListener onItemClickListener;
 
-    private ArrayList<Subject> subjects;
+    private List<Subject> subjects;
 
-    private ArrayList<Subject> originalSubjects;
+    private List<Subject> originalSubjects;
 
-    public SubjectsAdapter(Context context, ArrayList<Subject> subjects, View.OnClickListener onItemClickListener) {
+    public SubjectsAdapter(Context context, List<Subject> subjects, View.OnClickListener onItemClickListener) {
         this.inflater = LayoutInflater.from(context);
         this.onItemClickListener = onItemClickListener;
         this.subjects = subjects;
@@ -56,7 +57,7 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.ViewHo
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults oReturn = new FilterResults();
-                ArrayList<Subject> filterResults = new ArrayList<>();
+                List<Subject> filterResults = new ArrayList<>();
 
                 if (originalSubjects == null) {
                     originalSubjects = subjects;
@@ -78,7 +79,7 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.ViewHo
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                subjects = (ArrayList<Subject>) results.values;
+                subjects = (List<Subject>) results.values;
                 notifyDataSetChanged();
             }
         };

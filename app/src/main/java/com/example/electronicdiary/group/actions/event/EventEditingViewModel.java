@@ -25,15 +25,15 @@ public class EventEditingViewModel extends ViewModel {
         eventFormState.setValue(new EventFormState(startDate, deadlineDate, minPoints, maxPoints));
     }
 
-    public void downloadEventById(int eventId) {
+    public void downloadEventById(long eventId) {
         this.event.setValue(Repository.getInstance().getEventById(eventId));
     }
 
-    public void editEvent(int eventId, Date startDate, Date deadlineDate, int minPoints, int maxPoints) {
+    public void editEvent(long eventId, Date startDate, Date deadlineDate, int minPoints, int maxPoints) {
         Repository.getInstance().editEvent(eventId, startDate, deadlineDate, minPoints, maxPoints);
     }
 
-    public void deleteEvent(int eventId) {
+    public void deleteEvent(long eventId) {
         Repository.getInstance().deleteEvent(eventId);
     }
 }

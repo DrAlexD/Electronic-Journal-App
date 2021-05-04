@@ -5,17 +5,17 @@ import org.jetbrains.annotations.NotNull;
 public class Student extends User {
     private final Group group;
 
-    public Student(int id, String firstName, String secondName, Group group) {
-        super(id, firstName, secondName, false);
+    public Student(long id, String firstName, String secondName, Group group, String role) {
+        super(id, firstName, secondName, role, false);
         this.group = group;
     }
 
-    public Student(int id, String firstName, String secondName, Group group, String login, String password) {
-        super(id, firstName, secondName, login, password, false);
+    public Student(long id, String firstName, String secondName, Group group, String username, String password, String role) {
+        super(id, firstName, secondName, username, password, role, false);
         this.group = group;
     }
 
-    public int getGroupId() {
+    public long getGroupId() {
         return group.getId();
     }
 

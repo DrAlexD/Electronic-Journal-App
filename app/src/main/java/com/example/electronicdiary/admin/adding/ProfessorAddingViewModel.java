@@ -9,13 +9,13 @@ import com.example.electronicdiary.admin.ProfessorFormState;
 
 public class ProfessorAddingViewModel extends ViewModel {
     private final MutableLiveData<ProfessorFormState> professorFormState = new MutableLiveData<>();
-    private final MutableLiveData<Integer> lastProfessorId = new MutableLiveData<>();
+    private final MutableLiveData<Long> lastProfessorId = new MutableLiveData<>();
 
     LiveData<ProfessorFormState> getProfessorFormState() {
         return professorFormState;
     }
 
-    public LiveData<Integer> getLastProfessorId() {
+    public LiveData<Long> getLastProfessorId() {
         return lastProfessorId;
     }
 

@@ -13,22 +13,22 @@ import com.example.electronicdiary.data_classes.ModuleInfo;
 import com.example.electronicdiary.data_classes.StudentEvent;
 import com.example.electronicdiary.data_classes.StudentPerformanceInModule;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 class EventsAdapter extends BaseExpandableListAdapter {
     private final LayoutInflater inflater;
 
-    private final ArrayList<Integer> modules;
+    private final List<Integer> modules;
     private final HashMap<Integer, ModuleInfo> moduleInfoByModules;
     private final HashMap<Integer, StudentPerformanceInModule> studentPerformanceByModules;
-    private final HashMap<Integer, ArrayList<Event>> eventsByModules;
-    private final HashMap<Integer, ArrayList<StudentEvent>> studentEventsByModules;
+    private final HashMap<Integer, List<Event>> eventsByModules;
+    private final HashMap<Integer, List<StudentEvent>> studentEventsByModules;
 
-    EventsAdapter(Context context, ArrayList<Integer> modules, HashMap<Integer, ModuleInfo> moduleInfoByModules,
+    EventsAdapter(Context context, List<Integer> modules, HashMap<Integer, ModuleInfo> moduleInfoByModules,
                   HashMap<Integer, StudentPerformanceInModule> studentPerformanceByModules,
-                  HashMap<Integer, ArrayList<Event>> eventsByModules,
-                  HashMap<Integer, ArrayList<StudentEvent>> studentEventsByModules) {
+                  HashMap<Integer, List<Event>> eventsByModules,
+                  HashMap<Integer, List<StudentEvent>> studentEventsByModules) {
         this.inflater = LayoutInflater.from(context);
         this.modules = modules;
         this.moduleInfoByModules = moduleInfoByModules;
@@ -99,7 +99,7 @@ class EventsAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isExpanded, View view, ViewGroup parent) {
         Event event = eventsByModules.get(modules.get(groupPosition)).get(childPosition);
-        ArrayList<StudentEvent> studentEvents = studentEventsByModules.get(modules.get(groupPosition));
+        List<StudentEvent> studentEvents = studentEventsByModules.get(modules.get(groupPosition));
 
         int lastAttempt = 0;
         StudentEvent studentEvent = null;

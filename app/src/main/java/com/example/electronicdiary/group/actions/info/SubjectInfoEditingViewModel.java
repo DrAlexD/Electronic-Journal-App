@@ -13,11 +13,11 @@ public class SubjectInfoEditingViewModel extends ViewModel {
         return subjectInfo;
     }
 
-    public void downloadSubjectInfo(int groupId, int subjectId, int lecturerId, int seminarianId, int semesterId) {
+    public void downloadSubjectInfo(long groupId, long subjectId, long lecturerId, long seminarianId, long semesterId) {
         this.subjectInfo.setValue(Repository.getInstance().getSubjectInfo(groupId, subjectId, lecturerId, seminarianId, semesterId));
     }
 
-    public void editSubjectInfo(int groupId, int subjectId, int lecturerId, int seminarianId, int semesterId,
+    public void editSubjectInfo(long groupId, long subjectId, long lecturerId, long seminarianId, long semesterId,
                                 boolean isSwapLecturerAndSeminarian, boolean isExam, boolean isDifferentiatedCredit, boolean isForAllGroups) {
         Repository.getInstance().editSubjectInfo(groupId, subjectId, lecturerId, seminarianId, semesterId, isSwapLecturerAndSeminarian,
                 isExam, isDifferentiatedCredit, isForAllGroups);

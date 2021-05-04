@@ -29,7 +29,7 @@ public class LessonEditingDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_lesson_editing, null);
 
-        int lessonId = getArguments().getInt("lessonId");
+        long lessonId = getArguments().getLong("lessonId");
 
         LessonEditingViewModel lessonEditingViewModel = new ViewModelProvider(this).get(LessonEditingViewModel.class);
         lessonEditingViewModel.downloadLessonById(lessonId);
@@ -103,11 +103,11 @@ public class LessonEditingDialogFragment extends DialogFragment {
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", lessonEditingViewModel.getLesson().getValue().getModuleNumber() - 1);
-                    bundle.putInt("groupId", lessonEditingViewModel.getLesson().getValue().getGroupId());
-                    bundle.putInt("subjectId", lessonEditingViewModel.getLesson().getValue().getSubjectId());
-                    bundle.putInt("lecturerId", lessonEditingViewModel.getLesson().getValue().getLecturerId());
-                    bundle.putInt("seminarianId", lessonEditingViewModel.getLesson().getValue().getSeminarianId());
-                    bundle.putInt("semesterId", lessonEditingViewModel.getLesson().getValue().getSemesterId());
+                    bundle.putLong("groupId", lessonEditingViewModel.getLesson().getValue().getGroupId());
+                    bundle.putLong("subjectId", lessonEditingViewModel.getLesson().getValue().getSubjectId());
+                    bundle.putLong("lecturerId", lessonEditingViewModel.getLesson().getValue().getLecturerId());
+                    bundle.putLong("seminarianId", lessonEditingViewModel.getLesson().getValue().getSeminarianId());
+                    bundle.putLong("semesterId", lessonEditingViewModel.getLesson().getValue().getSemesterId());
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_lesson_editing_to_group_performance, bundle);
                 })
@@ -119,11 +119,11 @@ public class LessonEditingDialogFragment extends DialogFragment {
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", lessonEditingViewModel.getLesson().getValue().getModuleNumber() - 1);
-                    bundle.putInt("groupId", lessonEditingViewModel.getLesson().getValue().getGroupId());
-                    bundle.putInt("subjectId", lessonEditingViewModel.getLesson().getValue().getSubjectId());
-                    bundle.putInt("lecturerId", lessonEditingViewModel.getLesson().getValue().getLecturerId());
-                    bundle.putInt("seminarianId", lessonEditingViewModel.getLesson().getValue().getSeminarianId());
-                    bundle.putInt("semesterId", lessonEditingViewModel.getLesson().getValue().getSemesterId());
+                    bundle.putLong("groupId", lessonEditingViewModel.getLesson().getValue().getGroupId());
+                    bundle.putLong("subjectId", lessonEditingViewModel.getLesson().getValue().getSubjectId());
+                    bundle.putLong("lecturerId", lessonEditingViewModel.getLesson().getValue().getLecturerId());
+                    bundle.putLong("seminarianId", lessonEditingViewModel.getLesson().getValue().getSeminarianId());
+                    bundle.putLong("semesterId", lessonEditingViewModel.getLesson().getValue().getSemesterId());
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_lesson_editing_to_group_performance, bundle);
                 }).create();

@@ -21,9 +21,9 @@ public class StudentPerformanceFragment extends Fragment {
 
         int page = getArguments().getInt("openPage");
         int moduleExpand = getArguments().getInt("moduleExpand", -1);
-        int studentId = getArguments().getInt("studentId");
-        int subjectId = getArguments().getInt("subjectId");
-        int semesterId = getArguments().getInt("semesterId");
+        long studentId = getArguments().getLong("studentId");
+        long subjectId = getArguments().getLong("subjectId");
+        long semesterId = getArguments().getLong("semesterId");
 
         StudentPerformanceViewModel studentPerformanceViewModel = new ViewModelProvider(this).get(StudentPerformanceViewModel.class);
         studentPerformanceViewModel.setModuleExpand(moduleExpand);

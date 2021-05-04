@@ -2,16 +2,16 @@ package com.example.electronicdiary.data_classes;
 
 public class ModuleInfo {
     private final int moduleNumber;
-    private final int groupId;
-    private final int subjectId;
-    private final int lecturerId;
-    private final int seminarianId;
-    private final int semesterId;
+    private final long groupId;
+    private final long subjectId;
+    private final long lecturerId;
+    private final long seminarianId;
+    private final long semesterId;
 
     private final int minPoints;
     private final int maxPoints;
 
-    public ModuleInfo(int moduleNumber, int groupId, int subjectId, int lecturerId, int seminarianId, int semesterId, int minPoints, int maxPoints) {
+    public ModuleInfo(int moduleNumber, long groupId, long subjectId, long lecturerId, long seminarianId, long semesterId, int minPoints, int maxPoints) {
         this.moduleNumber = moduleNumber;
         this.groupId = groupId;
         this.subjectId = subjectId;
@@ -26,23 +26,23 @@ public class ModuleInfo {
         return moduleNumber;
     }
 
-    public int getGroupId() {
+    public long getGroupId() {
         return groupId;
     }
 
-    public int getSubjectId() {
+    public long getSubjectId() {
         return subjectId;
     }
 
-    public int getLecturerId() {
+    public long getLecturerId() {
         return lecturerId;
     }
 
-    public int getSeminarianId() {
+    public long getSeminarianId() {
         return seminarianId;
     }
 
-    public int getSemesterId() {
+    public long getSemesterId() {
         return semesterId;
     }
 

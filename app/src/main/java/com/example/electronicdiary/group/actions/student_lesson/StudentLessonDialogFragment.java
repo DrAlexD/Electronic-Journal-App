@@ -30,15 +30,15 @@ public class StudentLessonDialogFragment extends DialogFragment {
         if (!isFromGroupPerformance)
             isLecture = getArguments().getBoolean("isLecture");
         boolean isHasData = getArguments().getBoolean("isHasData");
-        int lessonId = getArguments().getInt("lessonId");
+        long lessonId = getArguments().getLong("lessonId");
         String lessonDate = getArguments().getString("lessonDate");
-        int studentId = getArguments().getInt("studentId");
+        long studentId = getArguments().getLong("studentId");
         int moduleNumber = getArguments().getInt("moduleNumber");
-        int groupId = getArguments().getInt("groupId");
-        int subjectId = getArguments().getInt("subjectId");
-        int lecturerId = getArguments().getInt("lecturerId");
-        int seminarianId = getArguments().getInt("seminarianId");
-        int semesterId = getArguments().getInt("semesterId");
+        long groupId = getArguments().getLong("groupId");
+        long subjectId = getArguments().getLong("subjectId");
+        long lecturerId = getArguments().getLong("lecturerId");
+        long seminarianId = getArguments().getLong("seminarianId");
+        long semesterId = getArguments().getLong("semesterId");
 
         StudentLessonViewModel studentLessonViewModel = new ViewModelProvider(this).get(StudentLessonViewModel.class);
 
@@ -75,20 +75,20 @@ public class StudentLessonDialogFragment extends DialogFragment {
                     if (isFromGroupPerformance) {
                         Bundle bundle = new Bundle();
                         bundle.putInt("openPage", moduleNumber - 1);
-                        bundle.putInt("groupId", groupId);
-                        bundle.putInt("subjectId", subjectId);
-                        bundle.putInt("lecturerId", lecturerId);
-                        bundle.putInt("seminarianId", seminarianId);
-                        bundle.putInt("semesterId", semesterId);
+                        bundle.putLong("groupId", groupId);
+                        bundle.putLong("subjectId", subjectId);
+                        bundle.putLong("lecturerId", lecturerId);
+                        bundle.putLong("seminarianId", seminarianId);
+                        bundle.putLong("semesterId", semesterId);
 
                         Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_lesson_to_group_performance, bundle);
                     } else {
                         Bundle bundle = new Bundle();
                         bundle.putInt("openPage", finalIsLecture ? 1 : 2);
                         bundle.putInt("moduleExpand", moduleNumber - 1);
-                        bundle.putInt("studentId", studentId);
-                        bundle.putInt("subjectId", subjectId);
-                        bundle.putInt("semesterId", semesterId);
+                        bundle.putLong("studentId", studentId);
+                        bundle.putLong("subjectId", subjectId);
+                        bundle.putLong("semesterId", semesterId);
 
                         Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_lesson_to_student_performance, bundle);
                     }
@@ -102,20 +102,20 @@ public class StudentLessonDialogFragment extends DialogFragment {
                 if (isFromGroupPerformance) {
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", moduleNumber - 1);
-                    bundle.putInt("groupId", groupId);
-                    bundle.putInt("subjectId", subjectId);
-                    bundle.putInt("lecturerId", lecturerId);
-                    bundle.putInt("seminarianId", seminarianId);
-                    bundle.putInt("semesterId", semesterId);
+                    bundle.putLong("groupId", groupId);
+                    bundle.putLong("subjectId", subjectId);
+                    bundle.putLong("lecturerId", lecturerId);
+                    bundle.putLong("seminarianId", seminarianId);
+                    bundle.putLong("semesterId", semesterId);
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_lesson_to_group_performance, bundle);
                 } else {
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", finalIsLecture ? 1 : 2);
                     bundle.putInt("moduleExpand", moduleNumber - 1);
-                    bundle.putInt("studentId", studentId);
-                    bundle.putInt("subjectId", subjectId);
-                    bundle.putInt("semesterId", semesterId);
+                    bundle.putLong("studentId", studentId);
+                    bundle.putLong("subjectId", subjectId);
+                    bundle.putLong("semesterId", semesterId);
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_lesson_to_student_performance, bundle);
                 }

@@ -23,11 +23,11 @@ public class ModuleInfoEditingViewModel extends ViewModel {
         moduleInfoFormState.setValue(new ModuleInfoFormState(minPoints, maxPoints));
     }
 
-    public void downloadModuleInfoByNumber(int moduleNumber, int groupId, int subjectId, int lecturerId, int seminarianId, int semesterId) {
+    public void downloadModuleInfoByNumber(int moduleNumber, long groupId, long subjectId, long lecturerId, long seminarianId, long semesterId) {
         this.moduleInfo.setValue(Repository.getInstance().getModuleInfoByNumber(moduleNumber, groupId, subjectId, lecturerId, seminarianId, semesterId));
     }
 
-    public void editModuleInfo(int moduleNumber, int groupId, int subjectId, int lecturerId, int seminarianId, int semesterId, int minPoints, int maxPoints) {
+    public void editModuleInfo(int moduleNumber, long groupId, long subjectId, long lecturerId, long seminarianId, long semesterId, int minPoints, int maxPoints) {
         Repository.getInstance().editModuleInfo(moduleNumber, groupId, subjectId, lecturerId, seminarianId, semesterId, minPoints, maxPoints);
     }
 }

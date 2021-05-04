@@ -30,11 +30,11 @@ public class LessonAddingDialogFragment extends DialogFragment {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_lesson_adding, null);
 
         int moduleNumber = getArguments().getInt("moduleNumber");
-        int groupId = getArguments().getInt("groupId");
-        int subjectId = getArguments().getInt("subjectId");
-        int lecturerId = getArguments().getInt("lecturerId");
-        int seminarianId = getArguments().getInt("seminarianId");
-        int semesterId = getArguments().getInt("semesterId");
+        long groupId = getArguments().getLong("groupId");
+        long subjectId = getArguments().getLong("subjectId");
+        long lecturerId = getArguments().getLong("lecturerId");
+        long seminarianId = getArguments().getLong("seminarianId");
+        long semesterId = getArguments().getLong("semesterId");
 
         LessonAddingViewModel lessonAddingViewModel = new ViewModelProvider(this).get(LessonAddingViewModel.class);
 
@@ -90,11 +90,11 @@ public class LessonAddingDialogFragment extends DialogFragment {
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", moduleNumber - 1);
-                    bundle.putInt("groupId", groupId);
-                    bundle.putInt("subjectId", subjectId);
-                    bundle.putInt("lecturerId", lecturerId);
-                    bundle.putInt("seminarianId", seminarianId);
-                    bundle.putInt("semesterId", semesterId);
+                    bundle.putLong("groupId", groupId);
+                    bundle.putLong("subjectId", subjectId);
+                    bundle.putLong("lecturerId", lecturerId);
+                    bundle.putLong("seminarianId", seminarianId);
+                    bundle.putLong("semesterId", semesterId);
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_lesson_adding_to_group_performance, bundle);
                 }).create();

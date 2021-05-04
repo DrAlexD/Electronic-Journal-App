@@ -16,16 +16,17 @@ import com.example.electronicdiary.data_classes.Professor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProfessorsAdapter extends RecyclerView.Adapter<ProfessorsAdapter.ViewHolder> implements Filterable {
     private final LayoutInflater inflater;
     private final View.OnClickListener onItemClickListener;
 
-    private ArrayList<Professor> professors;
+    private List<Professor> professors;
 
-    private ArrayList<Professor> originalProfessors;
+    private List<Professor> originalProfessors;
 
-    public ProfessorsAdapter(Context context, ArrayList<Professor> professors, View.OnClickListener onItemClickListener) {
+    public ProfessorsAdapter(Context context, List<Professor> professors, View.OnClickListener onItemClickListener) {
         this.inflater = LayoutInflater.from(context);
         this.onItemClickListener = onItemClickListener;
         this.professors = professors;
@@ -56,7 +57,7 @@ public class ProfessorsAdapter extends RecyclerView.Adapter<ProfessorsAdapter.Vi
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults oReturn = new FilterResults();
-                ArrayList<Professor> filterResults = new ArrayList<>();
+                List<Professor> filterResults = new ArrayList<>();
 
                 if (originalProfessors == null) {
                     originalProfessors = professors;
@@ -78,7 +79,7 @@ public class ProfessorsAdapter extends RecyclerView.Adapter<ProfessorsAdapter.Vi
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                professors = (ArrayList<Professor>) results.values;
+                professors = (List<Professor>) results.values;
                 notifyDataSetChanged();
             }
         };

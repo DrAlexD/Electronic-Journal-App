@@ -25,15 +25,15 @@ public class LessonEditingViewModel extends ViewModel {
         lessonFormState.setValue(new LessonFormState(dateAndTime, pointsPerVisit));
     }
 
-    public void downloadLessonById(int lessonId) {
+    public void downloadLessonById(long lessonId) {
         this.lesson.setValue(Repository.getInstance().getLessonById(lessonId));
     }
 
-    public void editLesson(int lessonId, Date dateAndTime, boolean isLecture, int pointsPerVisit) {
+    public void editLesson(long lessonId, Date dateAndTime, boolean isLecture, int pointsPerVisit) {
         Repository.getInstance().editLesson(lessonId, dateAndTime, isLecture, pointsPerVisit);
     }
 
-    public void deleteLesson(int lessonId) {
+    public void deleteLesson(long lessonId) {
         Repository.getInstance().deleteLesson(lessonId);
     }
 }

@@ -24,11 +24,11 @@ public class SubjectEditingViewModel extends ViewModel {
         subjectFormState.setValue(new SubjectFormState(subjectTitle));
     }
 
-    public void downloadSubjectById(int subjectId) {
+    public void downloadSubjectById(long subjectId) {
         this.subject.setValue(Repository.getInstance().getSubjectById(subjectId));
     }
 
-    public void editSubject(int subjectId, String subjectTitle) {
+    public void editSubject(long subjectId, String subjectTitle) {
         Repository.getInstance().editSubject(subjectId, subjectTitle);
     }
 }

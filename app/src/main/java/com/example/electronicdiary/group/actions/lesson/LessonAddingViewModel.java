@@ -19,7 +19,7 @@ public class LessonAddingViewModel extends ViewModel {
         lessonFormState.setValue(new LessonFormState(dateAndTime, pointsPerVisit));
     }
 
-    public void addLesson(int moduleNumber, int groupId, int subjectId, int lecturerId, int seminarianId, int semesterId,
+    public void addLesson(int moduleNumber, long groupId, long subjectId, long lecturerId, long seminarianId, long semesterId,
                           Date dateAndTime, boolean isLecture, int pointsPerVisit) {
         Repository.getInstance().addLesson(moduleNumber, groupId, subjectId, lecturerId, seminarianId, semesterId,
                 dateAndTime, isLecture, pointsPerVisit);

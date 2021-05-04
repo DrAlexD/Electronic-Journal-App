@@ -16,16 +16,17 @@ import com.example.electronicdiary.data_classes.Student;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.ViewHolder> implements Filterable {
     private final LayoutInflater inflater;
     private final View.OnClickListener onItemClickListener;
 
-    private ArrayList<Student> students;
+    private List<Student> students;
 
-    private ArrayList<Student> originalStudents;
+    private List<Student> originalStudents;
 
-    public StudentsAdapter(Context context, ArrayList<Student> students, View.OnClickListener onItemClickListener) {
+    public StudentsAdapter(Context context, List<Student> students, View.OnClickListener onItemClickListener) {
         this.inflater = LayoutInflater.from(context);
         this.onItemClickListener = onItemClickListener;
         this.students = students;
@@ -57,7 +58,7 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.ViewHo
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults oReturn = new FilterResults();
-                ArrayList<Student> filterResults = new ArrayList<>();
+                List<Student> filterResults = new ArrayList<>();
 
                 if (originalStudents == null) {
                     originalStudents = students;
@@ -80,7 +81,7 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.ViewHo
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                students = (ArrayList<Student>) results.values;
+                students = (List<Student>) results.values;
                 notifyDataSetChanged();
             }
         };

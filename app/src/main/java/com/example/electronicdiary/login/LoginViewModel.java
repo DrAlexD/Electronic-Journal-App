@@ -4,15 +4,21 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.electronicdiary.JwtResponse;
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.Result;
 import com.example.electronicdiary.data_classes.User;
 
 public class LoginViewModel extends ViewModel {
-    private final MutableLiveData<Result<User>> user = new MutableLiveData<>();
     private final MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
+    private final MutableLiveData<Result<JwtResponse>> response = new MutableLiveData<>();
+    private final MutableLiveData<? extends User> user = new MutableLiveData<>();
 
-    LiveData<Result<User>> getUser() {
+    LiveData<Result<JwtResponse>> getResponse() {
+        return response;
+    }
+
+    LiveData<? extends User> getUser() {
         return user;
     }
 
@@ -21,7 +27,11 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void login(String username, String password) {
-        user.setValue(Repository.getInstance().login(username, password));
+        Repository.getInstance().login(username, password, response);
+    }
+
+    public void getLoggedUser(JwtResponse jwtResponse) {
+        Repository.getInstance().getLoggedUser(jwtResponse, user);
     }
 
     public void loginDataChanged(String username, String password) {

@@ -6,14 +6,14 @@ import java.util.Date;
 
 public class StudentEvent {
     private final int attemptNumber;
-    private final int eventId;
+    private final long eventId;
     private final int moduleNumber;
-    private final int studentId;
-    private final int groupId;
-    private final int subjectId;
-    private final int lecturerId;
-    private final int seminarianId;
-    private final int semesterId;
+    private final long studentId;
+    private final long groupId;
+    private final long subjectId;
+    private final long lecturerId;
+    private final long seminarianId;
+    private final long semesterId;
 
     private final boolean isAttended;
     private final int variantNumber;
@@ -23,8 +23,8 @@ public class StudentEvent {
     private int bonusPoints = -1;
     private boolean isHaveCredit = false;
 
-    public StudentEvent(int attemptNumber, int eventId, int moduleNumber, int studentId, int groupId, int subjectId,
-                        int lecturerId, int seminarianId, int semesterId, boolean isAttended, int variantNumber,
+    public StudentEvent(int attemptNumber, long eventId, int moduleNumber, long studentId, long groupId, long subjectId,
+                        long lecturerId, long seminarianId, long semesterId, boolean isAttended, int variantNumber,
                         Date finishDate, int earnedPoints, int bonusPoints, boolean isHaveCredit) {
         this.attemptNumber = attemptNumber;
         this.eventId = eventId;
@@ -43,8 +43,8 @@ public class StudentEvent {
         this.isHaveCredit = isHaveCredit;
     }
 
-    public StudentEvent(int attemptNumber, int eventId, int moduleNumber, int studentId, int groupId, int subjectId,
-                        int lecturerId, int seminarianId, int semesterId, boolean isAttended, int variantNumber) {
+    public StudentEvent(int attemptNumber, long eventId, int moduleNumber, long studentId, long groupId, long subjectId,
+                        long lecturerId, long seminarianId, long semesterId, boolean isAttended, int variantNumber) {
         this.attemptNumber = attemptNumber;
         this.eventId = eventId;
         this.moduleNumber = moduleNumber;
@@ -71,7 +71,7 @@ public class StudentEvent {
         return attemptNumber;
     }
 
-    public int getEventId() {
+    public long getEventId() {
         return eventId;
     }
 
@@ -79,27 +79,27 @@ public class StudentEvent {
         return moduleNumber;
     }
 
-    public int getStudentId() {
+    public long getStudentId() {
         return studentId;
     }
 
-    public int getGroupId() {
+    public long getGroupId() {
         return groupId;
     }
 
-    public int getSubjectId() {
+    public long getSubjectId() {
         return subjectId;
     }
 
-    public int getLecturerId() {
+    public long getLecturerId() {
         return lecturerId;
     }
 
-    public int getSeminarianId() {
+    public long getSeminarianId() {
         return seminarianId;
     }
 
-    public int getSemesterId() {
+    public long getSemesterId() {
         return semesterId;
     }
 

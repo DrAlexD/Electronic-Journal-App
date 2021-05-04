@@ -7,12 +7,12 @@ import androidx.lifecycle.ViewModel;
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.data_classes.Semester;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class SearchSemestersViewModel extends ViewModel {
-    private final MutableLiveData<ArrayList<Semester>> semesters = new MutableLiveData<>();
+    private final MutableLiveData<List<Semester>> semesters = new MutableLiveData<>();
 
-    public LiveData<ArrayList<Semester>> getSemesters() {
+    public LiveData<List<Semester>> getSemesters() {
         return semesters;
     }
 
@@ -20,7 +20,7 @@ public class SearchSemestersViewModel extends ViewModel {
         this.semesters.setValue(Repository.getInstance().getSemesters());
     }
 
-    public void deleteSemester(int semesterId) {
+    public void deleteSemester(long semesterId) {
         Repository.getInstance().deleteSemester(semesterId);
     }
 }

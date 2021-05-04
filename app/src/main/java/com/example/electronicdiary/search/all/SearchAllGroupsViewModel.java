@@ -7,12 +7,12 @@ import androidx.lifecycle.ViewModel;
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.data_classes.Group;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class SearchAllGroupsViewModel extends ViewModel {
-    private final MutableLiveData<ArrayList<Group>> allGroups = new MutableLiveData<>();
+    private final MutableLiveData<List<Group>> allGroups = new MutableLiveData<>();
 
-    public LiveData<ArrayList<Group>> getAllGroups() {
+    public LiveData<List<Group>> getAllGroups() {
         return allGroups;
     }
 
@@ -20,16 +20,16 @@ public class SearchAllGroupsViewModel extends ViewModel {
         this.allGroups.setValue(Repository.getInstance().getAllGroups());
     }
 
-    public void addStudent(String studentName, String studentSecondName, int studentGroupId, String studentLogin,
+    public void addStudent(String studentName, String studentSecondName, long studentGroupId, String studentLogin,
                            String studentPassword) {
         Repository.getInstance().addStudent(studentName, studentSecondName, studentGroupId, studentLogin, studentPassword);
     }
 
-    public void deleteGroup(int groupId) {
+    public void deleteGroup(long groupId) {
         Repository.getInstance().deleteGroup(groupId);
     }
 
-    public void changeStudentGroup(int studentId, int newStudentGroupId) {
+    public void changeStudentGroup(long studentId, long newStudentGroupId) {
         Repository.getInstance().changeStudentGroup(studentId, newStudentGroupId);
     }
 }

@@ -20,27 +20,27 @@ public class StudentPerformanceInSubjectViewModel extends ViewModel {
         return studentPerformanceInSubject;
     }
 
-    public void downloadSubjectInfo(int groupId, int subjectId, int lecturerId, int seminarianId, int semesterId) {
+    public void downloadSubjectInfo(long groupId, long subjectId, long lecturerId, long seminarianId, long semesterId) {
         this.subjectInfo.setValue(Repository.getInstance().getSubjectInfo(groupId, subjectId, lecturerId, seminarianId, semesterId));
     }
 
-    public void downloadStudentPerformanceInSubject(int studentId, int groupId, int subjectId, int lecturerId, int seminarianId, int semesterId) {
+    public void downloadStudentPerformanceInSubject(long studentId, long groupId, long subjectId, long lecturerId, long seminarianId, long semesterId) {
         this.studentPerformanceInSubject.setValue(Repository.getInstance().getStudentPerformanceInSubject(studentId, groupId, subjectId, lecturerId, seminarianId, semesterId));
     }
 
-    public void editStudentPerformance(int studentId, int groupId, int subjectId, int lecturerId, int seminarianId, int semesterId, int earnedPoints, int bonusPoints,
+    public void editStudentPerformance(long studentId, long groupId, long subjectId, long lecturerId, long seminarianId, long semesterId, int earnedPoints, int bonusPoints,
                                        boolean isHaveCreditOrAdmission) {
         Repository.getInstance().editStudentPerformanceInSubject(studentId, groupId, subjectId, lecturerId, seminarianId, semesterId,
                 earnedPoints, bonusPoints, isHaveCreditOrAdmission);
     }
 
-    public void editStudentPerformance(int studentId, int groupId, int subjectId, int lecturerId, int seminarianId, int semesterId, int earnedPoints, int bonusPoints,
+    public void editStudentPerformance(long studentId, long groupId, long subjectId, long lecturerId, long seminarianId, long semesterId, int earnedPoints, int bonusPoints,
                                        boolean isHaveCreditOrAdmission, int mark) {
         Repository.getInstance().editStudentPerformanceInSubject(studentId, groupId, subjectId, lecturerId, seminarianId, semesterId,
                 earnedPoints, bonusPoints, isHaveCreditOrAdmission);
     }
 
-    public void editStudentPerformance(int studentId, int groupId, int subjectId, int lecturerId, int seminarianId, int semesterId, int earnedPoints, int bonusPoints,
+    public void editStudentPerformance(long studentId, long groupId, long subjectId, long lecturerId, long seminarianId, long semesterId, int earnedPoints, int bonusPoints,
                                        boolean isHaveCreditOrAdmission, int earnedExamPoints, int mark) {
         Repository.getInstance().editStudentPerformanceInSubject(studentId, groupId, subjectId, lecturerId, seminarianId, semesterId,
                 earnedPoints, bonusPoints, isHaveCreditOrAdmission, earnedExamPoints, mark);

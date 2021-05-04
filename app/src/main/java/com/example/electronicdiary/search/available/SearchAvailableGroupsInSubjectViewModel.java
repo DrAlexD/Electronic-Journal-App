@@ -7,21 +7,21 @@ import androidx.lifecycle.ViewModel;
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.data_classes.SubjectInfo;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class SearchAvailableGroupsInSubjectViewModel extends ViewModel {
-    private final MutableLiveData<ArrayList<SubjectInfo>> availableGroupsInSubject = new MutableLiveData<>();
+    private final MutableLiveData<List<SubjectInfo>> availableGroupsInSubject = new MutableLiveData<>();
 
-    public LiveData<ArrayList<SubjectInfo>> getAvailableGroupsInSubject() {
+    public LiveData<List<SubjectInfo>> getAvailableGroupsInSubject() {
         return availableGroupsInSubject;
     }
 
-    public void downloadAvailableGroupsInSubject(int professorId, int subjectId, int semesterId) {
+    public void downloadAvailableGroupsInSubject(long professorId, long subjectId, long semesterId) {
         this.availableGroupsInSubject.setValue(Repository.getInstance().
                 getAvailableGroupsInSubject(professorId, subjectId, semesterId));
     }
 
-    public void deleteGroupInAvailableSubject(int professorId, int groupId, int subjectId, int semesterId) {
+    public void deleteGroupInAvailableSubject(long professorId, long groupId, long subjectId, long semesterId) {
         Repository.getInstance().deleteGroupInAvailableSubject(professorId, groupId, subjectId, semesterId);
     }
 }

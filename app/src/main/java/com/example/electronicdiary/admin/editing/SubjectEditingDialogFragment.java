@@ -27,7 +27,7 @@ public class SubjectEditingDialogFragment extends DialogFragment {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_subject_editing, null);
 
         SubjectEditingViewModel subjectEditingViewModel = new ViewModelProvider(this).get(SubjectEditingViewModel.class);
-        int subjectId = getArguments().getInt("subjectId");
+        long subjectId = getArguments().getLong("subjectId");
         subjectEditingViewModel.downloadSubjectById(subjectId);
 
         EditText subjectTitle = root.findViewById(R.id.subjectTitleEditing);

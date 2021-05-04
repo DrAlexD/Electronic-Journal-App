@@ -19,7 +19,7 @@ public class EventAddingViewModel extends ViewModel {
         eventFormState.setValue(new EventFormState(startDate, deadlineDate, minPoints, maxPoints));
     }
 
-    public void addEvent(int moduleNumber, int groupId, int subjectId, int lecturerId, int seminarianId, int semesterId,
+    public void addEvent(int moduleNumber, long groupId, long subjectId, long lecturerId, long seminarianId, long semesterId,
                          String type, Date startDate, Date deadlineDate, int minPoints, int maxPoints) {
         Repository.getInstance().addEvent(moduleNumber, groupId, subjectId, lecturerId, seminarianId, semesterId,
                 type, startDate, deadlineDate, minPoints, maxPoints);

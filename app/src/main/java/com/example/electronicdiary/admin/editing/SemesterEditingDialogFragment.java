@@ -28,7 +28,7 @@ public class SemesterEditingDialogFragment extends DialogFragment {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_semester_editing, null);
 
         SemesterEditingViewModel semesterEditingViewModel = new ViewModelProvider(this).get(SemesterEditingViewModel.class);
-        int semesterId = getArguments().getInt("semesterId");
+        long semesterId = getArguments().getLong("semesterId");
         semesterEditingViewModel.downloadSemesterById(semesterId);
 
         EditText semesterYear = root.findViewById(R.id.semesterYearEditing);

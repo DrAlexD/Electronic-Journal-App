@@ -1,12 +1,12 @@
 package com.example.electronicdiary.data_classes;
 
 public class StudentPerformanceInSubject {
-    private final int studentId;
-    private final int groupId;
-    private final int subjectId;
-    private final int lecturerId;
-    private final int seminarianId;
-    private final int semesterId;
+    private final long studentId;
+    private final long groupId;
+    private final long subjectId;
+    private final long lecturerId;
+    private final long seminarianId;
+    private final long semesterId;
 
     private int positionInWaitingList = -1;
     private int earnedPoints = -1;
@@ -15,7 +15,7 @@ public class StudentPerformanceInSubject {
     private int earnedExamPoints = -1;
     private int mark = -1;
 
-    public StudentPerformanceInSubject(int studentId, int groupId, int subjectId, int lecturerId, int seminarianId, int semesterId) {
+    public StudentPerformanceInSubject(long studentId, long groupId, long subjectId, long lecturerId, long seminarianId, long semesterId) {
         this.studentId = studentId;
         this.groupId = groupId;
         this.subjectId = subjectId;
@@ -24,8 +24,8 @@ public class StudentPerformanceInSubject {
         this.semesterId = semesterId;
     }
 
-    public StudentPerformanceInSubject(int studentId, int groupId, int subjectId, int lecturerId,
-                                       int seminarianId, int semesterId, int positionInWaitingList, int earnedPoints,
+    public StudentPerformanceInSubject(long studentId, long groupId, long subjectId, long lecturerId,
+                                       long seminarianId, long semesterId, int positionInWaitingList, int earnedPoints,
                                        int bonusPoints, boolean isHaveCreditOrAdmission, int earnedExamPoints, int mark) {
         this.studentId = studentId;
         this.groupId = groupId;
@@ -41,27 +41,27 @@ public class StudentPerformanceInSubject {
         this.mark = mark;
     }
 
-    public int getStudentId() {
+    public long getStudentId() {
         return studentId;
     }
 
-    public int getGroupId() {
+    public long getGroupId() {
         return groupId;
     }
 
-    public int getSubjectId() {
+    public long getSubjectId() {
         return subjectId;
     }
 
-    public int getLecturerId() {
+    public long getLecturerId() {
         return lecturerId;
     }
 
-    public int getSeminarianId() {
+    public long getSeminarianId() {
         return seminarianId;
     }
 
-    public int getSemesterId() {
+    public long getSemesterId() {
         return semesterId;
     }
 

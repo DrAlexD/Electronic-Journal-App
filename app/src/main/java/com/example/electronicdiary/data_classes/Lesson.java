@@ -5,20 +5,20 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Date;
 
 public class Lesson {
-    private final int id;
+    private final long id;
     private final int moduleNumber;
-    private final int groupId;
-    private final int subjectId;
-    private final int lecturerId;
-    private final int seminarianId;
-    private final int semesterId;
+    private final long groupId;
+    private final long subjectId;
+    private final long lecturerId;
+    private final long seminarianId;
+    private final long semesterId;
 
     private final Date dateAndTime;
     private final boolean isLecture;
     private final int pointsPerVisit;
 
-    public Lesson(int id, int moduleNumber, int groupId, int subjectId, int lecturerId,
-                  int seminarianId, int semesterId, Date dateAndTime, boolean isLecture, int pointsPerVisit) {
+    public Lesson(long id, int moduleNumber, long groupId, long subjectId, long lecturerId,
+                  long seminarianId, long semesterId, Date dateAndTime, boolean isLecture, int pointsPerVisit) {
         this.id = id;
         this.moduleNumber = moduleNumber;
         this.groupId = groupId;
@@ -38,7 +38,7 @@ public class Lesson {
                 isLecture + ", pointsPerVisit=" + pointsPerVisit + '}';
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -46,24 +46,24 @@ public class Lesson {
         return moduleNumber;
     }
 
-    public int getGroupId() {
+    public long getGroupId() {
         return groupId;
     }
 
 
-    public int getSubjectId() {
+    public long getSubjectId() {
         return subjectId;
     }
 
-    public int getLecturerId() {
+    public long getLecturerId() {
         return lecturerId;
     }
 
-    public int getSeminarianId() {
+    public long getSeminarianId() {
         return seminarianId;
     }
 
-    public int getSemesterId() {
+    public long getSemesterId() {
         return semesterId;
     }
 

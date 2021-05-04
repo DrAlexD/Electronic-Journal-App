@@ -3,21 +3,21 @@ package com.example.electronicdiary.data_classes;
 import org.jetbrains.annotations.NotNull;
 
 public class StudentLesson {
-    private final int lessonId;
+    private final long lessonId;
     private final int moduleNumber;
-    private final int studentId;
-    private final int groupId;
-    private final int subjectId;
-    private final int lecturerId;
-    private final int seminarianId;
-    private final int semesterId;
+    private final long studentId;
+    private final long groupId;
+    private final long subjectId;
+    private final long lecturerId;
+    private final long seminarianId;
+    private final long semesterId;
 
     private final boolean isAttended;
 
     private int bonusPoints = -1;
 
-    public StudentLesson(int lessonId, int moduleNumber, int studentId, int groupId, int subjectId, int lecturerId,
-                         int seminarianId, int semesterId, boolean isAttended, int bonusPoints) {
+    public StudentLesson(long lessonId, int moduleNumber, long studentId, long groupId, long subjectId, long lecturerId,
+                         long seminarianId, long semesterId, boolean isAttended, int bonusPoints) {
         this.lessonId = lessonId;
         this.moduleNumber = moduleNumber;
         this.studentId = studentId;
@@ -30,8 +30,8 @@ public class StudentLesson {
         this.bonusPoints = bonusPoints;
     }
 
-    public StudentLesson(int lessonId, int moduleNumber, int studentId, int groupId, int subjectId, int lecturerId,
-                         int seminarianId, int semesterId, boolean isAttended) {
+    public StudentLesson(long lessonId, int moduleNumber, long studentId, long groupId, long subjectId, long lecturerId,
+                         long seminarianId, long semesterId, boolean isAttended) {
         this.lessonId = lessonId;
         this.moduleNumber = moduleNumber;
         this.studentId = studentId;
@@ -49,7 +49,7 @@ public class StudentLesson {
         return "StudentLesson{" + "lessonId=" + lessonId + ", isAttended=" + isAttended + ", bonusPoints=" + bonusPoints + '}';
     }
 
-    public int getLessonId() {
+    public long getLessonId() {
         return lessonId;
     }
 
@@ -57,27 +57,27 @@ public class StudentLesson {
         return moduleNumber;
     }
 
-    public int getStudentId() {
+    public long getStudentId() {
         return studentId;
     }
 
-    public int getGroupId() {
+    public long getGroupId() {
         return groupId;
     }
 
-    public int getSubjectId() {
+    public long getSubjectId() {
         return subjectId;
     }
 
-    public int getLecturerId() {
+    public long getLecturerId() {
         return lecturerId;
     }
 
-    public int getSeminarianId() {
+    public long getSeminarianId() {
         return seminarianId;
     }
 
-    public int getSemesterId() {
+    public long getSemesterId() {
         return semesterId;
     }
 

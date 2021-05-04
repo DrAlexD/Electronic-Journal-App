@@ -3,15 +3,15 @@ package com.example.electronicdiary.data_classes;
 import org.jetbrains.annotations.NotNull;
 
 public class Group {
-    private final int id;
+    private final long id;
     private final String title;
 
-    public Group(int id, String title) {
+    public Group(long id, String title) {
         this.id = id;
         this.title = title;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

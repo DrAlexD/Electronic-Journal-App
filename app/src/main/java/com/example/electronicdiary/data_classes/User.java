@@ -1,31 +1,33 @@
 package com.example.electronicdiary.data_classes;
 
 public class User {
-    final int id;
+    final long id;
     final String firstName;
     final String secondName;
+    final String role;
     final boolean isProfessor;
-
-    String login;
+    String username;
     String password;
 
-    User(int id, String firstName, String secondName, boolean isProfessor) {
+    User(long id, String firstName, String secondName, String role, boolean isProfessor) {
         this.id = id;
         this.firstName = firstName;
         this.secondName = secondName;
+        this.role = role;
         this.isProfessor = isProfessor;
     }
 
-    User(int id, String firstName, String secondName, String login, String password, boolean isProfessor) {
+    User(long id, String firstName, String secondName, String username, String password, String role, boolean isProfessor) {
         this.id = id;
         this.firstName = firstName;
         this.secondName = secondName;
-        this.login = login;
+        this.username = username;
         this.password = password;
+        this.role = role;
         this.isProfessor = isProfessor;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -41,12 +43,16 @@ public class User {
         return firstName + " " + secondName;
     }
 
-    public String getLogin() {
-        return login;
+    public String getUsername() {
+        return username;
     }
 
     public String getPassword() {
         return password;
+    }
+
+    public String getRole() {
+        return role;
     }
 
     public boolean isProfessor() {

@@ -25,7 +25,7 @@ public class SearchAvailableSubjectsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_search_available_subjects, container, false);
 
         SearchAvailableSubjectsViewModel searchAvailableSubjectsViewModel = new ViewModelProvider(this).get(SearchAvailableSubjectsViewModel.class);
-        searchAvailableSubjectsViewModel.downloadAvailableSubjects(getArguments().getInt("semesterId"));
+        searchAvailableSubjectsViewModel.downloadAvailableSubjects(getArguments().getLong("semesterId"));
 
         int actionCode = getArguments().getInt("actionCode");
 
@@ -42,21 +42,21 @@ public class SearchAvailableSubjectsFragment extends Fragment {
                 if (actionCode == 11) {
                     Bundle bundle = new Bundle();
                     bundle.putInt("actionCode", 11);
-                    bundle.putInt("subjectId", availableSubjects.get(position).getId());
-                    bundle.putInt("professorId", getArguments().getInt("professorId"));
-                    bundle.putInt("semesterId", getArguments().getInt("semesterId"));
+                    bundle.putLong("subjectId", availableSubjects.get(position).getId());
+                    bundle.putLong("professorId", getArguments().getLong("professorId"));
+                    bundle.putLong("semesterId", getArguments().getLong("semesterId"));
 
                     Navigation.findNavController(view).navigate(R.id.action_search_available_subjects_to_search_all_groups, bundle);
                 } else if (actionCode == 12) {
-                    searchAvailableSubjectsViewModel.deleteAvailableSubject(getArguments().getInt("professorId"),
-                            availableSubjects.get(position).getId(), getArguments().getInt("semesterId"));
+                    searchAvailableSubjectsViewModel.deleteAvailableSubject(getArguments().getLong("professorId"),
+                            availableSubjects.get(position).getId(), getArguments().getLong("semesterId"));
 
                     Navigation.findNavController(view).navigate(R.id.action_search_available_subjects_to_profile);
                 } else if (actionCode == 13) {
                     Bundle bundle = new Bundle();
-                    bundle.putInt("subjectId", availableSubjects.get(position).getId());
-                    bundle.putInt("professorId", getArguments().getInt("professorId"));
-                    bundle.putInt("semesterId", getArguments().getInt("semesterId"));
+                    bundle.putLong("subjectId", availableSubjects.get(position).getId());
+                    bundle.putLong("professorId", getArguments().getLong("professorId"));
+                    bundle.putLong("semesterId", getArguments().getLong("semesterId"));
 
                     Navigation.findNavController(view).navigate(R.id.action_search_available_subjects_to_search_available_groups_in_subject, bundle);
                 }

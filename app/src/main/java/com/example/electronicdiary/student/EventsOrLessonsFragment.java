@@ -17,7 +17,7 @@ import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.data_classes.Event;
 import com.example.electronicdiary.data_classes.Lesson;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class EventsOrLessonsFragment extends Fragment {
 
@@ -26,7 +26,7 @@ public class EventsOrLessonsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_events_or_lessons, container, false);
 
         int position = getArguments().getInt("position");
-        ArrayList<Integer> modules = Repository.getInstance().getModules();
+        List<Integer> modules = Repository.getInstance().getModules();
 
         StudentPerformanceViewModel studentPerformanceViewModel = new ViewModelProvider(getParentFragment()).get(StudentPerformanceViewModel.class);
 
@@ -48,14 +48,14 @@ public class EventsOrLessonsFragment extends Fragment {
                 bundle.putString("eventTitle", event.getTitle());
                 TextView attemptNumber = v.findViewById(R.id.attemptNumber);
                 bundle.putInt("attemptNumber", Integer.parseInt(attemptNumber.getText().toString()));
-                bundle.putInt("eventId", event.getId());
-                bundle.putInt("studentId", studentPerformanceViewModel.getStudent().getValue().getId());
+                bundle.putLong("eventId", event.getId());
+                bundle.putLong("studentId", studentPerformanceViewModel.getStudent().getValue().getId());
                 bundle.putInt("moduleNumber", modules.get(groupPosition));
-                bundle.putInt("groupId", studentPerformanceViewModel.getStudent().getValue().getGroupId());
-                bundle.putInt("subjectId", studentPerformanceViewModel.getSubjectInfo().getValue().getSubjectId());
-                bundle.putInt("lecturerId", studentPerformanceViewModel.getSubjectInfo().getValue().getLecturerId());
-                bundle.putInt("seminarianId", studentPerformanceViewModel.getSubjectInfo().getValue().getSeminarianId());
-                bundle.putInt("semesterId", studentPerformanceViewModel.getSubjectInfo().getValue().getSemesterId());
+                bundle.putLong("groupId", studentPerformanceViewModel.getStudent().getValue().getGroupId());
+                bundle.putLong("subjectId", studentPerformanceViewModel.getSubjectInfo().getValue().getSubjectId());
+                bundle.putLong("lecturerId", studentPerformanceViewModel.getSubjectInfo().getValue().getLecturerId());
+                bundle.putLong("seminarianId", studentPerformanceViewModel.getSubjectInfo().getValue().getSeminarianId());
+                bundle.putLong("semesterId", studentPerformanceViewModel.getSubjectInfo().getValue().getSemesterId());
                 Navigation.findNavController(v).navigate(R.id.action_student_performance_to_dialog_student_event, bundle);
                 return true;
             };
@@ -129,14 +129,14 @@ public class EventsOrLessonsFragment extends Fragment {
                                 (lesson.getDateAndTime().getHours())) + ":" +
                         ((lesson.getDateAndTime().getMinutes()) < 10 ? "0" + (lesson.getDateAndTime().getMinutes()) :
                                 (lesson.getDateAndTime().getMinutes())));
-                bundle.putInt("lessonId", lesson.getId());
-                bundle.putInt("studentId", studentPerformanceViewModel.getStudent().getValue().getId());
+                bundle.putLong("lessonId", lesson.getId());
+                bundle.putLong("studentId", studentPerformanceViewModel.getStudent().getValue().getId());
                 bundle.putInt("moduleNumber", modules.get(groupPosition));
-                bundle.putInt("groupId", studentPerformanceViewModel.getStudent().getValue().getGroupId());
-                bundle.putInt("subjectId", studentPerformanceViewModel.getSubjectInfo().getValue().getSubjectId());
-                bundle.putInt("lecturerId", studentPerformanceViewModel.getSubjectInfo().getValue().getLecturerId());
-                bundle.putInt("seminarianId", studentPerformanceViewModel.getSubjectInfo().getValue().getSeminarianId());
-                bundle.putInt("semesterId", studentPerformanceViewModel.getSubjectInfo().getValue().getSemesterId());
+                bundle.putLong("groupId", studentPerformanceViewModel.getStudent().getValue().getGroupId());
+                bundle.putLong("subjectId", studentPerformanceViewModel.getSubjectInfo().getValue().getSubjectId());
+                bundle.putLong("lecturerId", studentPerformanceViewModel.getSubjectInfo().getValue().getLecturerId());
+                bundle.putLong("seminarianId", studentPerformanceViewModel.getSubjectInfo().getValue().getSeminarianId());
+                bundle.putLong("semesterId", studentPerformanceViewModel.getSubjectInfo().getValue().getSemesterId());
 
                 Navigation.findNavController(v).navigate(R.id.action_student_performance_to_dialog_student_lesson, bundle);
                 return true;
@@ -190,14 +190,14 @@ public class EventsOrLessonsFragment extends Fragment {
                                 (lesson.getDateAndTime().getHours())) + ":" +
                         ((lesson.getDateAndTime().getMinutes()) < 10 ? "0" + (lesson.getDateAndTime().getMinutes()) :
                                 (lesson.getDateAndTime().getMinutes())));
-                bundle.putInt("lessonId", lesson.getId());
-                bundle.putInt("studentId", studentPerformanceViewModel.getStudent().getValue().getId());
+                bundle.putLong("lessonId", lesson.getId());
+                bundle.putLong("studentId", studentPerformanceViewModel.getStudent().getValue().getId());
                 bundle.putInt("moduleNumber", modules.get(groupPosition));
-                bundle.putInt("groupId", studentPerformanceViewModel.getStudent().getValue().getGroupId());
-                bundle.putInt("subjectId", studentPerformanceViewModel.getSubjectInfo().getValue().getSubjectId());
-                bundle.putInt("lecturerId", studentPerformanceViewModel.getSubjectInfo().getValue().getLecturerId());
-                bundle.putInt("seminarianId", studentPerformanceViewModel.getSubjectInfo().getValue().getSeminarianId());
-                bundle.putInt("semesterId", studentPerformanceViewModel.getSubjectInfo().getValue().getSemesterId());
+                bundle.putLong("groupId", studentPerformanceViewModel.getStudent().getValue().getGroupId());
+                bundle.putLong("subjectId", studentPerformanceViewModel.getSubjectInfo().getValue().getSubjectId());
+                bundle.putLong("lecturerId", studentPerformanceViewModel.getSubjectInfo().getValue().getLecturerId());
+                bundle.putLong("seminarianId", studentPerformanceViewModel.getSubjectInfo().getValue().getSeminarianId());
+                bundle.putLong("semesterId", studentPerformanceViewModel.getSubjectInfo().getValue().getSemesterId());
 
                 Navigation.findNavController(v).navigate(R.id.action_student_performance_to_dialog_student_lesson, bundle);
                 return true;

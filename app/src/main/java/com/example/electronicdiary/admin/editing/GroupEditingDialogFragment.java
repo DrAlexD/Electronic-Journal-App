@@ -27,7 +27,7 @@ public class GroupEditingDialogFragment extends DialogFragment {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_group_editing, null);
 
         GroupEditingViewModel groupEditingViewModel = new ViewModelProvider(this).get(GroupEditingViewModel.class);
-        int groupId = getArguments().getInt("groupId");
+        long groupId = getArguments().getLong("groupId");
         groupEditingViewModel.downloadGroupById(groupId);
 
         EditText groupTitle = root.findViewById(R.id.groupTitleEditing);

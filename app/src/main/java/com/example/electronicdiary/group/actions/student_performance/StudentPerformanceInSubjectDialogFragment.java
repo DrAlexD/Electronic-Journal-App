@@ -25,12 +25,12 @@ public class StudentPerformanceInSubjectDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_student_performance_in_subject, null);
 
-        int studentId = getArguments().getInt("studentId");
-        int groupId = getArguments().getInt("groupId");
-        int subjectId = getArguments().getInt("subjectId");
-        int lecturerId = getArguments().getInt("lecturerId");
-        int seminarianId = getArguments().getInt("seminarianId");
-        int semesterId = getArguments().getInt("semesterId");
+        long studentId = getArguments().getLong("studentId");
+        long groupId = getArguments().getLong("groupId");
+        long subjectId = getArguments().getLong("subjectId");
+        long lecturerId = getArguments().getLong("lecturerId");
+        long seminarianId = getArguments().getLong("seminarianId");
+        long semesterId = getArguments().getLong("semesterId");
 
         StudentPerformanceInSubjectViewModel studentPerformanceViewModel =
                 new ViewModelProvider(this).get(StudentPerformanceInSubjectViewModel.class);
@@ -101,11 +101,11 @@ public class StudentPerformanceInSubjectDialogFragment extends DialogFragment {
                     }
 
                     Bundle bundle = new Bundle();
-                    bundle.putInt("groupId", groupId);
-                    bundle.putInt("subjectId", subjectId);
-                    bundle.putInt("lecturerId", lecturerId);
-                    bundle.putInt("seminarianId", seminarianId);
-                    bundle.putInt("semesterId", semesterId);
+                    bundle.putLong("groupId", groupId);
+                    bundle.putLong("subjectId", subjectId);
+                    bundle.putLong("lecturerId", lecturerId);
+                    bundle.putLong("seminarianId", seminarianId);
+                    bundle.putLong("semesterId", semesterId);
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_performance_in_subject_to_group_performance, bundle);
                 }).create();

@@ -41,7 +41,7 @@ public class SearchAllStudentsFragment extends Fragment {
 
                 if (actionCode == 1) {
                     Bundle bundle = new Bundle();
-                    bundle.putInt("studentId", allStudents.get(position).getId());
+                    bundle.putLong("studentId", allStudents.get(position).getId());
                     Navigation.findNavController(view).navigate(R.id.action_search_all_students_to_dialog_student_editing, bundle);
                 } else if (actionCode == 2) {
                     searchAllStudentsViewModel.deleteStudent(allStudents.get(position).getId());
@@ -52,8 +52,8 @@ public class SearchAllStudentsFragment extends Fragment {
                 } else if (actionCode == 3) {
                     Bundle bundle = new Bundle();
                     bundle.putInt("actionCode", actionCode);
-                    bundle.putInt("studentId", allStudents.get(position).getId());
-                    bundle.putInt("groupId", allStudents.get(position).getGroupId());
+                    bundle.putLong("studentId", allStudents.get(position).getId());
+                    bundle.putLong("groupId", allStudents.get(position).getGroupId());
 
                     Navigation.findNavController(view).navigate(R.id.action_search_all_students_to_search_all_groups, bundle);
                 }

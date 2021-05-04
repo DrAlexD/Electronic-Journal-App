@@ -20,14 +20,14 @@ import com.example.electronicdiary.Repository;
 
 public class ProfileFragment extends Fragment {
     private ProfileViewModel profileViewModel;
-    private int semesterId;
-    private int professorId;
+    private long semesterId;
+    private long professorId;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_profile, container, false);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        semesterId = Integer.parseInt(sharedPreferences.getString(getString(R.string.current_semester), ""));
+        semesterId = Long.parseLong(sharedPreferences.getString(getString(R.string.current_semester), "-1"));
         professorId = Repository.getInstance().getUser().getId();
 
         profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
@@ -46,11 +46,11 @@ public class ProfileFragment extends Fragment {
             expandableListView.setAdapter(subjectsWithGroupsAdapter);
             expandableListView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
                 Bundle bundle = new Bundle();
-                bundle.putInt("groupId", availableSubjectsWithGroups.get(profileViewModel.getAvailableSubjects().getValue().get(groupPosition)).get(childPosition).getGroup().getId());
-                bundle.putInt("subjectId", profileViewModel.getAvailableSubjects().getValue().get(groupPosition).getId());
-                bundle.putInt("lecturerId", availableSubjectsWithGroups.get(profileViewModel.getAvailableSubjects().getValue().get(groupPosition)).get(childPosition).getLecturerId());
-                bundle.putInt("seminarianId", availableSubjectsWithGroups.get(profileViewModel.getAvailableSubjects().getValue().get(groupPosition)).get(childPosition).getSeminarianId());
-                bundle.putInt("semesterId", semesterId);
+                bundle.putLong("groupId", availableSubjectsWithGroups.get(profileViewModel.getAvailableSubjects().getValue().get(groupPosition)).get(childPosition).getGroup().getId());
+                bundle.putLong("subjectId", profileViewModel.getAvailableSubjects().getValue().get(groupPosition).getId());
+                bundle.putLong("lecturerId", availableSubjectsWithGroups.get(profileViewModel.getAvailableSubjects().getValue().get(groupPosition)).get(childPosition).getLecturerId());
+                bundle.putLong("seminarianId", availableSubjectsWithGroups.get(profileViewModel.getAvailableSubjects().getValue().get(groupPosition)).get(childPosition).getSeminarianId());
+                bundle.putLong("semesterId", semesterId);
                 Navigation.findNavController(v).navigate(R.id.action_profile_to_group_performance, bundle);
                 return true;
             });
@@ -78,8 +78,8 @@ public class ProfileFragment extends Fragment {
         addSubjectButton.setVisibility(isProfessorRules ? View.VISIBLE : View.GONE);
         addSubjectButton.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
-            bundle.putInt("professorId", professorId);
-            bundle.putInt("semesterId", semesterId);
+            bundle.putLong("professorId", professorId);
+            bundle.putLong("semesterId", semesterId);
             bundle.putInt("actionCode", 10);
             Navigation.findNavController(root).navigate(R.id.action_profile_to_search_all_subjects, bundle);
         });
@@ -88,8 +88,8 @@ public class ProfileFragment extends Fragment {
         addGroupButton.setVisibility(isProfessorRules ? View.VISIBLE : View.GONE);
         addGroupButton.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
-            bundle.putInt("professorId", professorId);
-            bundle.putInt("semesterId", semesterId);
+            bundle.putLong("professorId", professorId);
+            bundle.putLong("semesterId", semesterId);
             bundle.putInt("actionCode", 11);
             Navigation.findNavController(root).navigate(R.id.action_profile_to_search_available_subjects, bundle);
         });
@@ -98,8 +98,8 @@ public class ProfileFragment extends Fragment {
         deleteSubjectButton.setVisibility(isProfessorRules ? View.VISIBLE : View.GONE);
         deleteSubjectButton.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
-            bundle.putInt("professorId", professorId);
-            bundle.putInt("semesterId", semesterId);
+            bundle.putLong("professorId", professorId);
+            bundle.putLong("semesterId", semesterId);
             bundle.putInt("actionCode", 12);
             Navigation.findNavController(root).navigate(R.id.action_profile_to_search_available_subjects, bundle);
         });
@@ -108,8 +108,8 @@ public class ProfileFragment extends Fragment {
         deleteGroupButton.setVisibility(isProfessorRules ? View.VISIBLE : View.GONE);
         deleteGroupButton.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
-            bundle.putInt("professorId", professorId);
-            bundle.putInt("semesterId", semesterId);
+            bundle.putLong("professorId", professorId);
+            bundle.putLong("semesterId", semesterId);
             bundle.putInt("actionCode", 13);
             Navigation.findNavController(root).navigate(R.id.action_profile_to_search_available_subjects, bundle);
         });

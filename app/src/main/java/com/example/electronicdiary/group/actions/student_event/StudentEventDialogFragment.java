@@ -31,20 +31,20 @@ public class StudentEventDialogFragment extends DialogFragment {
 
         boolean isFromGroupPerformance = getArguments().getBoolean("isFromGroupPerformance");
         int attemptNumber = getArguments().getInt("attemptNumber");
-        int eventId = getArguments().getInt("eventId");
+        long eventId = getArguments().getLong("eventId");
         int eventMinPoints = getArguments().getInt("eventMinPoints");
         String eventDeadlineDateString = getArguments().getString("eventDeadlineDate");
         String[] splitedEventDeadlineDate = eventDeadlineDateString.split("\\.");
         Date eventDeadlineDate = new Date(Integer.parseInt(splitedEventDeadlineDate[2]), Integer.parseInt(splitedEventDeadlineDate[1]) - 1,
                 Integer.parseInt(splitedEventDeadlineDate[0]));
         String eventTitle = getArguments().getString("eventTitle");
-        int studentId = getArguments().getInt("studentId");
+        long studentId = getArguments().getLong("studentId");
         int moduleNumber = getArguments().getInt("moduleNumber");
-        int groupId = getArguments().getInt("groupId");
-        int subjectId = getArguments().getInt("subjectId");
-        int lecturerId = getArguments().getInt("lecturerId");
-        int seminarianId = getArguments().getInt("seminarianId");
-        int semesterId = getArguments().getInt("semesterId");
+        long groupId = getArguments().getLong("groupId");
+        long subjectId = getArguments().getLong("subjectId");
+        long lecturerId = getArguments().getLong("lecturerId");
+        long seminarianId = getArguments().getLong("seminarianId");
+        long semesterId = getArguments().getLong("semesterId");
 
         boolean isHasData = attemptNumber != 0;
         StudentEventViewModel studentEventViewModel = new ViewModelProvider(this).get(StudentEventViewModel.class);
@@ -166,20 +166,20 @@ public class StudentEventDialogFragment extends DialogFragment {
 
                     if (isFromGroupPerformance) {
                         Bundle bundle = new Bundle();
-                        bundle.putInt("groupId", groupId);
-                        bundle.putInt("subjectId", subjectId);
-                        bundle.putInt("lecturerId", lecturerId);
-                        bundle.putInt("seminarianId", seminarianId);
-                        bundle.putInt("semesterId", semesterId);
+                        bundle.putLong("groupId", groupId);
+                        bundle.putLong("subjectId", subjectId);
+                        bundle.putLong("lecturerId", lecturerId);
+                        bundle.putLong("seminarianId", seminarianId);
+                        bundle.putLong("semesterId", semesterId);
 
                         Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_event_to_group_performance, bundle);
                     } else {
                         Bundle bundle = new Bundle();
                         bundle.putInt("openPage", 0);
                         bundle.putInt("moduleExpand", moduleNumber - 1);
-                        bundle.putInt("studentId", studentId);
-                        bundle.putInt("subjectId", subjectId);
-                        bundle.putInt("semesterId", semesterId);
+                        bundle.putLong("studentId", studentId);
+                        bundle.putLong("subjectId", subjectId);
+                        bundle.putLong("semesterId", semesterId);
 
                         Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_event_to_student_performance, bundle);
                     }
@@ -192,20 +192,20 @@ public class StudentEventDialogFragment extends DialogFragment {
 
                 if (isFromGroupPerformance) {
                     Bundle bundle = new Bundle();
-                    bundle.putInt("groupId", groupId);
-                    bundle.putInt("subjectId", subjectId);
-                    bundle.putInt("lecturerId", lecturerId);
-                    bundle.putInt("seminarianId", seminarianId);
-                    bundle.putInt("semesterId", semesterId);
+                    bundle.putLong("groupId", groupId);
+                    bundle.putLong("subjectId", subjectId);
+                    bundle.putLong("lecturerId", lecturerId);
+                    bundle.putLong("seminarianId", seminarianId);
+                    bundle.putLong("semesterId", semesterId);
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_event_to_group_performance, bundle);
                 } else {
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", 0);
                     bundle.putInt("moduleExpand", moduleNumber - 1);
-                    bundle.putInt("studentId", studentId);
-                    bundle.putInt("subjectId", subjectId);
-                    bundle.putInt("semesterId", semesterId);
+                    bundle.putLong("studentId", studentId);
+                    bundle.putLong("subjectId", subjectId);
+                    bundle.putLong("semesterId", semesterId);
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_event_to_student_performance, bundle);
                 }

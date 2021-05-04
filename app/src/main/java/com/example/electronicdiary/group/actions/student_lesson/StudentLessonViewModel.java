@@ -13,21 +13,21 @@ public class StudentLessonViewModel extends ViewModel {
         return studentLesson;
     }
 
-    public void downloadStudentLessonById(int lessonId, int studentId) {
+    public void downloadStudentLessonById(long lessonId, long studentId) {
         this.studentLesson.setValue(Repository.getInstance().getStudentLessonById(lessonId, studentId));
     }
 
-    public void addStudentLesson(int lessonId, int moduleNumber, int studentId, int groupId, int subjectId, int lecturerId,
-                                 int seminarianId, int semesterId, boolean isAttended) {
+    public void addStudentLesson(long lessonId, int moduleNumber, long studentId, long groupId, long subjectId, long lecturerId,
+                                 long seminarianId, long semesterId, boolean isAttended) {
         Repository.getInstance().addStudentLesson(lessonId, moduleNumber, studentId, groupId, subjectId, lecturerId,
                 seminarianId, semesterId, isAttended);
     }
 
-    public void editStudentLesson(int lessonId, int studentId, boolean isAttended, int bonusPoints) {
+    public void editStudentLesson(long lessonId, long studentId, boolean isAttended, int bonusPoints) {
         Repository.getInstance().editStudentLesson(lessonId, studentId, isAttended, bonusPoints);
     }
 
-    public void deleteStudentLesson(int lessonId, int studentId) {
+    public void deleteStudentLesson(long lessonId, long studentId) {
         Repository.getInstance().deleteStudentLesson(lessonId, studentId);
     }
 }

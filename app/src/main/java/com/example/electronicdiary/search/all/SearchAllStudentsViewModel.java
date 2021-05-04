@@ -7,20 +7,20 @@ import androidx.lifecycle.ViewModel;
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.data_classes.Student;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class SearchAllStudentsViewModel extends ViewModel {
-    private final MutableLiveData<ArrayList<Student>> allStudents = new MutableLiveData<>();
+    private final MutableLiveData<List<Student>> allStudents = new MutableLiveData<>();
 
-    public LiveData<ArrayList<Student>> getAllStudents() {
+    public LiveData<List<Student>> getAllStudents() {
         return allStudents;
     }
 
     public void downloadAllStudents() {
-        this.allStudents.setValue(Repository.getInstance().getAllStudents());
+        Repository.getInstance().getAllStudents(allStudents);
     }
 
-    public void deleteStudent(int studentId) {
+    public void deleteStudent(long studentId) {
         Repository.getInstance().deleteStudent(studentId);
     }
 }

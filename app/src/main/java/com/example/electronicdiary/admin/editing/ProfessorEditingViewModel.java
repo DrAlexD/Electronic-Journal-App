@@ -26,11 +26,11 @@ public class ProfessorEditingViewModel extends ViewModel {
                 professorPassword, isNameOrSecondNameChanged));
     }
 
-    public void downloadProfessorByIdWithLogin(int professorId) {
+    public void downloadProfessorByIdWithLogin(long professorId) {
         this.professor.setValue(Repository.getInstance().getProfessorByIdWithLogin(professorId));
     }
 
-    public void editProfessor(int professorId, String professorName, String professorSecondName, String professorLogin, String professorPassword) {
+    public void editProfessor(long professorId, String professorName, String professorSecondName, String professorLogin, String professorPassword) {
         Repository.getInstance().editProfessor(professorId, professorName, professorSecondName, professorLogin, professorPassword);
     }
 }

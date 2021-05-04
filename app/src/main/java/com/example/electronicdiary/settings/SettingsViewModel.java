@@ -7,12 +7,12 @@ import androidx.lifecycle.ViewModel;
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.data_classes.Semester;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class SettingsViewModel extends ViewModel {
-    private final MutableLiveData<ArrayList<Semester>> semesters = new MutableLiveData<>();
+    private final MutableLiveData<List<Semester>> semesters = new MutableLiveData<>();
 
-    public LiveData<ArrayList<Semester>> getSemesters() {
+    public LiveData<List<Semester>> getSemesters() {
         return semesters;
     }
 

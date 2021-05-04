@@ -7,20 +7,20 @@ import androidx.lifecycle.ViewModel;
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.data_classes.Subject;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class SearchAvailableSubjectsViewModel extends ViewModel {
-    private final MutableLiveData<ArrayList<Subject>> availableSubjects = new MutableLiveData<>();
+    private final MutableLiveData<List<Subject>> availableSubjects = new MutableLiveData<>();
 
-    public LiveData<ArrayList<Subject>> getAvailableSubjects() {
+    public LiveData<List<Subject>> getAvailableSubjects() {
         return availableSubjects;
     }
 
-    public void downloadAvailableSubjects(int semesterId) {
+    public void downloadAvailableSubjects(long semesterId) {
         this.availableSubjects.setValue(Repository.getInstance().getAvailableSubjects(semesterId));
     }
 
-    public void deleteAvailableSubject(int professorId, int subjectId, int semesterId) {
+    public void deleteAvailableSubject(long professorId, long subjectId, long semesterId) {
         Repository.getInstance().deleteAvailableSubject(professorId, subjectId, semesterId);
     }
 }

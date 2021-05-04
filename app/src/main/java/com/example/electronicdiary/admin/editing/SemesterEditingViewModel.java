@@ -24,11 +24,11 @@ public class SemesterEditingViewModel extends ViewModel {
         semesterFormState.setValue(new SemesterFormState(semesterYear));
     }
 
-    public void downloadSemesterById(int semesterId) {
+    public void downloadSemesterById(long semesterId) {
         this.semester.setValue(Repository.getInstance().getSemesterById(semesterId));
     }
 
-    public void editSemester(int semesterId, int semesterYear, boolean isFirstHalf) {
+    public void editSemester(long semesterId, int semesterYear, boolean isFirstHalf) {
         Repository.getInstance().editSemester(semesterId, semesterYear, isFirstHalf);
     }
 }

@@ -15,19 +15,19 @@ import com.example.electronicdiary.data_classes.StudentPerformanceInModule;
 import com.example.electronicdiary.data_classes.StudentPerformanceInSubject;
 import com.example.electronicdiary.data_classes.SubjectInfo;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class GroupPerformanceViewModel extends ViewModel {
     private final MutableLiveData<SubjectInfo> subjectInfo = new MutableLiveData<>();
     private final MutableLiveData<HashMap<Integer, ModuleInfo>> moduleInfo = new MutableLiveData<>();
-    private final MutableLiveData<HashMap<Integer, ArrayList<Event>>> events = new MutableLiveData<>();
-    private final MutableLiveData<HashMap<Integer, ArrayList<Lesson>>> lessons = new MutableLiveData<>();
-    private final MutableLiveData<ArrayList<Student>> studentsInGroup = new MutableLiveData<>();
-    private final MutableLiveData<ArrayList<StudentPerformanceInSubject>> studentsPerformancesInSubject = new MutableLiveData<>();
-    private final MutableLiveData<HashMap<Integer, ArrayList<StudentPerformanceInModule>>> studentsPerformancesInModules = new MutableLiveData<>();
-    private final MutableLiveData<HashMap<Integer, ArrayList<ArrayList<StudentEvent>>>> studentsEvents = new MutableLiveData<>();
-    private final MutableLiveData<HashMap<Integer, ArrayList<ArrayList<StudentLesson>>>> studentsLessons = new MutableLiveData<>();
+    private final MutableLiveData<HashMap<Integer, List<Event>>> events = new MutableLiveData<>();
+    private final MutableLiveData<HashMap<Integer, List<Lesson>>> lessons = new MutableLiveData<>();
+    private final MutableLiveData<List<Student>> studentsInGroup = new MutableLiveData<>();
+    private final MutableLiveData<List<StudentPerformanceInSubject>> studentsPerformancesInSubject = new MutableLiveData<>();
+    private final MutableLiveData<HashMap<Integer, List<StudentPerformanceInModule>>> studentsPerformancesInModules = new MutableLiveData<>();
+    private final MutableLiveData<HashMap<Integer, List<List<StudentEvent>>>> studentsEvents = new MutableLiveData<>();
+    private final MutableLiveData<HashMap<Integer, List<List<StudentLesson>>>> studentsLessons = new MutableLiveData<>();
 
     public LiveData<SubjectInfo> getSubjectInfo() {
         return subjectInfo;
@@ -37,35 +37,35 @@ public class GroupPerformanceViewModel extends ViewModel {
         return moduleInfo;
     }
 
-    public LiveData<HashMap<Integer, ArrayList<Event>>> getEvents() {
+    public LiveData<HashMap<Integer, List<Event>>> getEvents() {
         return events;
     }
 
-    public LiveData<HashMap<Integer, ArrayList<Lesson>>> getLessons() {
+    public LiveData<HashMap<Integer, List<Lesson>>> getLessons() {
         return lessons;
     }
 
-    public LiveData<ArrayList<Student>> getStudentsInGroup() {
+    public LiveData<List<Student>> getStudentsInGroup() {
         return studentsInGroup;
     }
 
-    public LiveData<ArrayList<StudentPerformanceInSubject>> getStudentsPerformancesInSubject() {
+    public LiveData<List<StudentPerformanceInSubject>> getStudentsPerformancesInSubject() {
         return studentsPerformancesInSubject;
     }
 
-    public LiveData<HashMap<Integer, ArrayList<StudentPerformanceInModule>>> getStudentsPerformancesInModules() {
+    public LiveData<HashMap<Integer, List<StudentPerformanceInModule>>> getStudentsPerformancesInModules() {
         return studentsPerformancesInModules;
     }
 
-    public LiveData<HashMap<Integer, ArrayList<ArrayList<StudentEvent>>>> getStudentsEvents() {
+    public LiveData<HashMap<Integer, List<List<StudentEvent>>>> getStudentsEvents() {
         return studentsEvents;
     }
 
-    public LiveData<HashMap<Integer, ArrayList<ArrayList<StudentLesson>>>> getStudentsLessons() {
+    public LiveData<HashMap<Integer, List<List<StudentLesson>>>> getStudentsLessons() {
         return studentsLessons;
     }
 
-    public void downloadStudentsEventsAndLessons(int groupId, int subjectId, int lecturerId, int seminarianId, int semesterId) {
+    public void downloadStudentsEventsAndLessons(long groupId, long subjectId, long lecturerId, long seminarianId, long semesterId) {
         this.subjectInfo.setValue(Repository.getInstance().getSubjectInfo(groupId, subjectId, lecturerId, seminarianId, semesterId));
         this.moduleInfo.setValue(Repository.getInstance().getModuleInfo(groupId, subjectId, lecturerId, seminarianId, semesterId));
         this.events.setValue(Repository.getInstance().getEvents(groupId, subjectId, lecturerId, seminarianId, semesterId));

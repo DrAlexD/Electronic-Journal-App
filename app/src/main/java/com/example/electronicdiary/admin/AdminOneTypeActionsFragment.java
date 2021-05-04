@@ -14,6 +14,7 @@ import androidx.navigation.Navigation;
 import com.example.electronicdiary.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AdminOneTypeActionsFragment extends Fragment {
 
@@ -35,7 +36,7 @@ public class AdminOneTypeActionsFragment extends Fragment {
     }
 
     private void addActions(View root) {
-        ArrayList<String> actions = new ArrayList<>();
+        List<String> actions = new ArrayList<>();
         actions.add("Добавить группу");
         actions.add("Добавить студента к группе");
         actions.add("Добавить предмет");
@@ -61,7 +62,7 @@ public class AdminOneTypeActionsFragment extends Fragment {
     }
 
     private void editActions(View root) {
-        ArrayList<String> actions = new ArrayList<>();
+        List<String> actions = new ArrayList<>();
         actions.add("Изменить название группы");
         actions.add("Изменить информацию студента");
         actions.add("Поменять группу у студента");
@@ -97,7 +98,7 @@ public class AdminOneTypeActionsFragment extends Fragment {
     }
 
     private void deleteActions(View root) {
-        ArrayList<String> actions = new ArrayList<>();
+        List<String> actions = new ArrayList<>();
         actions.add("Удалить группу");
         actions.add("Удалить студента");
         actions.add("Удалить предмет");

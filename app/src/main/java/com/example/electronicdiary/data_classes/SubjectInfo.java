@@ -2,17 +2,17 @@ package com.example.electronicdiary.data_classes;
 
 public class SubjectInfo {
     private final Group group;
-    private final int subjectId;
-    private final int lecturerId;
-    private final int seminarianId;
-    private final int semesterId;
+    private final long subjectId;
+    private final long lecturerId;
+    private final long seminarianId;
+    private final long semesterId;
 
     private final boolean isExam;
     private final boolean isDifferentiatedCredit;
 
     private boolean isQueueAllowed = false;
 
-    public SubjectInfo(Group group, int subjectId, int lecturerId, int seminarianId, int semesterId, boolean isExam, boolean isDifferentiatedCredit) {
+    public SubjectInfo(Group group, long subjectId, long lecturerId, long seminarianId, long semesterId, boolean isExam, boolean isDifferentiatedCredit) {
         this.group = group;
         this.subjectId = subjectId;
         this.lecturerId = lecturerId;
@@ -22,7 +22,7 @@ public class SubjectInfo {
         this.isDifferentiatedCredit = isDifferentiatedCredit;
     }
 
-    public SubjectInfo(Group group, int subjectId, int lecturerId, int seminarianId, int semesterId, boolean isExam, boolean isDifferentiatedCredit, boolean isQueueAllowed) {
+    public SubjectInfo(Group group, long subjectId, long lecturerId, long seminarianId, long semesterId, boolean isExam, boolean isDifferentiatedCredit, boolean isQueueAllowed) {
         this.group = group;
         this.subjectId = subjectId;
         this.lecturerId = lecturerId;
@@ -37,19 +37,19 @@ public class SubjectInfo {
         return group;
     }
 
-    public int getSubjectId() {
+    public long getSubjectId() {
         return subjectId;
     }
 
-    public int getLecturerId() {
+    public long getLecturerId() {
         return lecturerId;
     }
 
-    public int getSeminarianId() {
+    public long getSeminarianId() {
         return seminarianId;
     }
 
-    public int getSemesterId() {
+    public long getSemesterId() {
         return semesterId;
     }
 

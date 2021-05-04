@@ -25,23 +25,23 @@ public class StudentEventViewModel extends ViewModel {
         studentEventFormState.setValue(new StudentEventFormState(variantNumber));
     }
 
-    public void downloadStudentEventById(int attemptNumber, int eventId, int studentId) {
+    public void downloadStudentEventById(int attemptNumber, long eventId, long studentId) {
         this.studentEvent.setValue(Repository.getInstance().getStudentEventById(attemptNumber, eventId, studentId));
     }
 
-    public void addStudentEvent(int attemptNumber, int eventId, int studentId, int moduleNumber, int groupId, int subjectId,
-                                int lecturerId, int seminarianId, int semesterId, boolean isAttended, int variantNumber) {
+    public void addStudentEvent(int attemptNumber, long eventId, long studentId, int moduleNumber, long groupId, long subjectId,
+                                long lecturerId, long seminarianId, long semesterId, boolean isAttended, int variantNumber) {
         Repository.getInstance().addStudentEvent(attemptNumber, eventId, studentId, moduleNumber, groupId, subjectId,
                 lecturerId, seminarianId, semesterId, isAttended, variantNumber);
     }
 
-    public void editStudentEvent(int attemptNumber, int eventId, int studentId, boolean isAttended, int variantNumber,
+    public void editStudentEvent(int attemptNumber, long eventId, long studentId, boolean isAttended, int variantNumber,
                                  Date finishDate, int earnedPoints, int bonusPoints, boolean isHaveCredit) {
         Repository.getInstance().editStudentEvent(attemptNumber, eventId, studentId, isAttended, variantNumber,
                 finishDate, earnedPoints, bonusPoints, isHaveCredit);
     }
 
-    public void deleteStudentEvent(int attemptNumber, int eventId, int studentId) {
+    public void deleteStudentEvent(int attemptNumber, long eventId, long studentId) {
         Repository.getInstance().deleteStudentEvent(attemptNumber, eventId, studentId);
     }
 }

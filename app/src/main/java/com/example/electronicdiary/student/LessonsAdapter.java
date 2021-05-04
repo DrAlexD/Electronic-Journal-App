@@ -13,22 +13,22 @@ import com.example.electronicdiary.data_classes.ModuleInfo;
 import com.example.electronicdiary.data_classes.StudentLesson;
 import com.example.electronicdiary.data_classes.StudentPerformanceInModule;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 class LessonsAdapter extends BaseExpandableListAdapter {
     private final LayoutInflater inflater;
 
-    private final ArrayList<Integer> modules;
+    private final List<Integer> modules;
     private final HashMap<Integer, ModuleInfo> moduleInfoByModules;
     private final HashMap<Integer, StudentPerformanceInModule> studentPerformanceByModules;
-    private final HashMap<Integer, ArrayList<Lesson>> lessonsByModules;
-    private final HashMap<Integer, ArrayList<StudentLesson>> studentLessonsByModules;
+    private final HashMap<Integer, List<Lesson>> lessonsByModules;
+    private final HashMap<Integer, List<StudentLesson>> studentLessonsByModules;
 
-    LessonsAdapter(Context context, ArrayList<Integer> modules, HashMap<Integer, ModuleInfo> moduleInfoByModules,
+    LessonsAdapter(Context context, List<Integer> modules, HashMap<Integer, ModuleInfo> moduleInfoByModules,
                    HashMap<Integer, StudentPerformanceInModule> studentPerformanceByModules,
-                   HashMap<Integer, ArrayList<Lesson>> lessonsByModules,
-                   HashMap<Integer, ArrayList<StudentLesson>> studentLessonsByModules) {
+                   HashMap<Integer, List<Lesson>> lessonsByModules,
+                   HashMap<Integer, List<StudentLesson>> studentLessonsByModules) {
         this.inflater = LayoutInflater.from(context);
         this.modules = modules;
         this.moduleInfoByModules = moduleInfoByModules;
@@ -99,7 +99,7 @@ class LessonsAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isExpanded, View view, ViewGroup parent) {
         Lesson lesson = lessonsByModules.get(modules.get(groupPosition)).get(childPosition);
-        ArrayList<StudentLesson> studentLessons = studentLessonsByModules.get(modules.get(groupPosition));
+        List<StudentLesson> studentLessons = studentLessonsByModules.get(modules.get(groupPosition));
 
         StudentLesson studentLesson = null;
         for (int i = 0; i < studentLessons.size(); i++) {

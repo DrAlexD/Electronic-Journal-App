@@ -20,7 +20,7 @@ import com.example.electronicdiary.R;
 import org.jetbrains.annotations.NotNull;
 
 public class StudentEditingDialogFragment extends DialogFragment {
-    private int studentId;
+    private long studentId;
 
     private AlertDialog dialog;
     private StudentEditingViewModel studentEditingViewModel;
@@ -36,7 +36,7 @@ public class StudentEditingDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_student_editing, null);
 
-        studentId = getArguments().getInt("studentId");
+        studentId = getArguments().getLong("studentId");
         studentEditingViewModel = new ViewModelProvider(this).get(StudentEditingViewModel.class);
         studentEditingViewModel.downloadStudentByIdWithLogin(studentId);
 
@@ -74,7 +74,7 @@ public class StudentEditingDialogFragment extends DialogFragment {
 
             studentName.setText(student.getFirstName());
             studentSecondName.setText(student.getSecondName());
-            studentLogin.setText(student.getLogin());
+            studentLogin.setText(student.getUsername());
             studentPassword.setText(student.getPassword());
             generateCheckBox.setEnabled(true);
         });

@@ -52,7 +52,7 @@ public class SearchAllGroupsFragment extends Fragment {
                     Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_admin_actions, bundle);
                 } else if (actionCode == 1) {
                     Bundle bundle = new Bundle();
-                    bundle.putInt("groupId", allGroups.get(position).getId());
+                    bundle.putLong("groupId", allGroups.get(position).getId());
                     Navigation.findNavController(root).navigate(R.id.action_search_all_groups_to_dialog_group_editing, bundle);
                 } else if (actionCode == 2) {
                     searchAllGroupsViewModel.deleteGroup(allGroups.get(position).getId());
@@ -61,8 +61,8 @@ public class SearchAllGroupsFragment extends Fragment {
                     bundle.putInt("openPage", actionCode);
                     Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_admin_actions, bundle);
                 } else if (actionCode == 3) {
-                    if (getArguments().getInt("groupId") != allGroups.get(position).getId()) {
-                        searchAllGroupsViewModel.changeStudentGroup(getArguments().getInt("studentId"),
+                    if (getArguments().getLong("groupId") != allGroups.get(position).getId()) {
+                        searchAllGroupsViewModel.changeStudentGroup(getArguments().getLong("studentId"),
                                 allGroups.get(position).getId());
 
                         Bundle bundle = new Bundle();
@@ -71,10 +71,10 @@ public class SearchAllGroupsFragment extends Fragment {
                     }
                 } else if (actionCode == 10 || actionCode == 11) {
                     Bundle bundle = new Bundle();
-                    bundle.putInt("professorId", getArguments().getInt("professorId"));
-                    bundle.putInt("groupId", allGroups.get(position).getId());
-                    bundle.putInt("subjectId", getArguments().getInt("subjectId"));
-                    bundle.putInt("semesterId", getArguments().getInt("semesterId"));
+                    bundle.putLong("professorId", getArguments().getLong("professorId"));
+                    bundle.putLong("groupId", allGroups.get(position).getId());
+                    bundle.putLong("subjectId", getArguments().getLong("subjectId"));
+                    bundle.putLong("semesterId", getArguments().getLong("semesterId"));
 
                     Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_dialog_subject_info_adding, bundle);
                 }

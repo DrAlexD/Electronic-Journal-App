@@ -7,12 +7,12 @@ import androidx.lifecycle.ViewModel;
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.data_classes.Subject;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class SearchAllSubjectsViewModel extends ViewModel {
-    private final MutableLiveData<ArrayList<Subject>> allSubjects = new MutableLiveData<>();
+    private final MutableLiveData<List<Subject>> allSubjects = new MutableLiveData<>();
 
-    public LiveData<ArrayList<Subject>> getAllSubjects() {
+    public LiveData<List<Subject>> getAllSubjects() {
         return allSubjects;
     }
 
@@ -20,7 +20,7 @@ public class SearchAllSubjectsViewModel extends ViewModel {
         this.allSubjects.setValue(Repository.getInstance().getAllSubjects());
     }
 
-    public void deleteSubject(int subjectId) {
+    public void deleteSubject(long subjectId) {
         Repository.getInstance().deleteSubject(subjectId);
     }
 }

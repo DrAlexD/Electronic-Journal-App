@@ -32,26 +32,26 @@ import com.example.electronicdiary.data_classes.SubjectInfo;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class GroupPerformanceFragment extends Fragment {
-    private int groupId;
-    private int subjectId;
-    private int lecturerId;
-    private int seminarianId;
-    private int semesterId;
+    private long groupId;
+    private long subjectId;
+    private long lecturerId;
+    private long seminarianId;
+    private long semesterId;
 
     private GroupPerformanceViewModel groupPerformanceViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_group_performance, container, false);
 
-        groupId = getArguments().getInt("groupId");
-        subjectId = getArguments().getInt("subjectId");
-        lecturerId = getArguments().getInt("lecturerId");
-        seminarianId = getArguments().getInt("seminarianId");
-        semesterId = getArguments().getInt("semesterId");
+        groupId = getArguments().getLong("groupId");
+        subjectId = getArguments().getLong("subjectId");
+        lecturerId = getArguments().getLong("lecturerId");
+        seminarianId = getArguments().getLong("seminarianId");
+        semesterId = getArguments().getLong("semesterId");
 
         groupPerformanceViewModel = new ViewModelProvider(this).get(GroupPerformanceViewModel.class);
         groupPerformanceViewModel.downloadStudentsEventsAndLessons(groupId, subjectId, lecturerId, seminarianId, semesterId);
@@ -66,11 +66,11 @@ public class GroupPerformanceFragment extends Fragment {
             addEventButton.setVisibility(isProfessorRules ? View.VISIBLE : View.GONE);
             addEventButton.setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
-                bundle.putInt("groupId", groupId);
-                bundle.putInt("subjectId", subjectId);
-                bundle.putInt("lecturerId", lecturerId);
-                bundle.putInt("seminarianId", seminarianId);
-                bundle.putInt("semesterId", semesterId);
+                bundle.putLong("groupId", groupId);
+                bundle.putLong("subjectId", subjectId);
+                bundle.putLong("lecturerId", lecturerId);
+                bundle.putLong("seminarianId", seminarianId);
+                bundle.putLong("semesterId", semesterId);
                 Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_event_adding, bundle);
             });
 
@@ -100,23 +100,23 @@ public class GroupPerformanceFragment extends Fragment {
         return root;
     }
 
-    private void generateEventsTable(View root, HashMap<Integer, ArrayList<ArrayList<StudentEvent>>> studentsEvents) {
+    private void generateEventsTable(View root, HashMap<Integer, List<List<StudentEvent>>> studentsEvents) {
         TableLayout studentsInModuleEventsTable = root.findViewById(R.id.studentsInModuleEventsTable);
         int padding2inDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics());
         int padding5inDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
 
-        HashMap<Integer, ArrayList<Event>> events = groupPerformanceViewModel.getEvents().getValue();
+        HashMap<Integer, List<Event>> events = groupPerformanceViewModel.getEvents().getValue();
         TableRow eventsRow = generateEventsRow(padding2inDp, padding5inDp, events);
         studentsInModuleEventsTable.addView(eventsRow);
 
-        ArrayList<Student> students = groupPerformanceViewModel.getStudentsInGroup().getValue();
+        List<Student> students = groupPerformanceViewModel.getStudentsInGroup().getValue();
         for (int i = 0; i < students.size(); i++) {
             TableRow pointsRow = generatePointsRow(i, padding2inDp, padding5inDp, students.get(i), events, studentsEvents);
             studentsInModuleEventsTable.addView(pointsRow);
         }
     }
 
-    private TableRow generateEventsRow(int padding2inDp, int padding5inDp, HashMap<Integer, ArrayList<Event>> events) {
+    private TableRow generateEventsRow(int padding2inDp, int padding5inDp, HashMap<Integer, List<Event>> events) {
         TableRow eventsRow = new TableRow(getContext());
         eventsRow.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE |
                 LinearLayout.SHOW_DIVIDER_BEGINNING | LinearLayout.SHOW_DIVIDER_END);
@@ -129,7 +129,7 @@ public class GroupPerformanceFragment extends Fragment {
         infoView.setGravity(Gravity.CENTER);
         eventsRow.addView(infoView);
 
-        ArrayList<Integer> modules = Repository.getInstance().getModules();
+        List<Integer> modules = Repository.getInstance().getModules();
 
         for (int moduleNumber : modules) {
             for (Event event : events.get(moduleNumber)) {
@@ -140,7 +140,7 @@ public class GroupPerformanceFragment extends Fragment {
                 eventView.setGravity(Gravity.CENTER);
                 eventView.setOnClickListener(view -> {
                     Bundle bundle = new Bundle();
-                    bundle.putInt("eventId", event.getId());
+                    bundle.putLong("eventId", event.getId());
                     Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_event_editing, bundle);
                 });
                 eventsRow.addView(eventView);
@@ -154,11 +154,11 @@ public class GroupPerformanceFragment extends Fragment {
             moduleView.setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
                 bundle.putInt("moduleNumber", moduleNumber);
-                bundle.putInt("groupId", groupId);
-                bundle.putInt("subjectId", subjectId);
-                bundle.putInt("lecturerId", lecturerId);
-                bundle.putInt("seminarianId", seminarianId);
-                bundle.putInt("semesterId", semesterId);
+                bundle.putLong("groupId", groupId);
+                bundle.putLong("subjectId", subjectId);
+                bundle.putLong("lecturerId", lecturerId);
+                bundle.putLong("seminarianId", seminarianId);
+                bundle.putLong("semesterId", semesterId);
                 Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_module_info_editing, bundle);
             });
             eventsRow.addView(moduleView);
@@ -171,11 +171,11 @@ public class GroupPerformanceFragment extends Fragment {
         resultPointsView.setGravity(Gravity.CENTER);
         resultPointsView.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
-            bundle.putInt("groupId", groupId);
-            bundle.putInt("subjectId", subjectId);
-            bundle.putInt("lecturerId", lecturerId);
-            bundle.putInt("seminarianId", seminarianId);
-            bundle.putInt("semesterId", semesterId);
+            bundle.putLong("groupId", groupId);
+            bundle.putLong("subjectId", subjectId);
+            bundle.putLong("lecturerId", lecturerId);
+            bundle.putLong("seminarianId", seminarianId);
+            bundle.putLong("semesterId", semesterId);
             Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_subject_info_editing, bundle);
         });
         eventsRow.addView(resultPointsView);
@@ -189,11 +189,11 @@ public class GroupPerformanceFragment extends Fragment {
             examPointsView.setGravity(Gravity.CENTER);
             examPointsView.setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
-                bundle.putInt("groupId", groupId);
-                bundle.putInt("subjectId", subjectId);
-                bundle.putInt("lecturerId", lecturerId);
-                bundle.putInt("seminarianId", seminarianId);
-                bundle.putInt("semesterId", semesterId);
+                bundle.putLong("groupId", groupId);
+                bundle.putLong("subjectId", subjectId);
+                bundle.putLong("lecturerId", lecturerId);
+                bundle.putLong("seminarianId", seminarianId);
+                bundle.putLong("semesterId", semesterId);
                 Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_subject_info_editing, bundle);
             });
             eventsRow.addView(examPointsView);
@@ -207,11 +207,11 @@ public class GroupPerformanceFragment extends Fragment {
             markView.setGravity(Gravity.CENTER);
             markView.setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
-                bundle.putInt("groupId", groupId);
-                bundle.putInt("subjectId", subjectId);
-                bundle.putInt("lecturerId", lecturerId);
-                bundle.putInt("seminarianId", seminarianId);
-                bundle.putInt("semesterId", semesterId);
+                bundle.putLong("groupId", groupId);
+                bundle.putLong("subjectId", subjectId);
+                bundle.putLong("lecturerId", lecturerId);
+                bundle.putLong("seminarianId", seminarianId);
+                bundle.putLong("semesterId", semesterId);
                 Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_subject_info_editing, bundle);
             });
             eventsRow.addView(markView);
@@ -221,8 +221,8 @@ public class GroupPerformanceFragment extends Fragment {
     }
 
     private TableRow generatePointsRow(int i, int padding2inDp, int padding5inDp, Student student,
-                                       HashMap<Integer, ArrayList<Event>> events,
-                                       HashMap<Integer, ArrayList<ArrayList<StudentEvent>>> studentsEvents) {
+                                       HashMap<Integer, List<Event>> events,
+                                       HashMap<Integer, List<List<StudentEvent>>> studentsEvents) {
         TableRow pointsRow = new TableRow(getContext());
         pointsRow.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE |
                 LinearLayout.SHOW_DIVIDER_BEGINNING | LinearLayout.SHOW_DIVIDER_END);
@@ -235,13 +235,13 @@ public class GroupPerformanceFragment extends Fragment {
         studentView.setGravity(Gravity.CENTER);
         studentView.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
-            bundle.putInt("studentId", student.getId());
-            bundle.putInt("semesterId", semesterId);
+            bundle.putLong("studentId", student.getId());
+            bundle.putLong("semesterId", semesterId);
             Navigation.findNavController(view).navigate(R.id.action_group_performance_to_student_profile, bundle);
         });
         pointsRow.addView(studentView);
 
-        ArrayList<Integer> modules = Repository.getInstance().getModules();
+        List<Integer> modules = Repository.getInstance().getModules();
         for (int moduleNumber : modules) {
             for (Event event : events.get(moduleNumber)) {
                 TextView pointsView = new TextView(getContext());
@@ -293,14 +293,14 @@ public class GroupPerformanceFragment extends Fragment {
                                     (event.getDeadlineDate().getMonth() + 1)) + "." + event.getDeadlineDate().getYear());
                     bundle.putString("eventTitle", event.getTitle());
                     bundle.putInt("attemptNumber", finalLastAttempt);
-                    bundle.putInt("eventId", event.getId());
-                    bundle.putInt("studentId", student.getId());
+                    bundle.putLong("eventId", event.getId());
+                    bundle.putLong("studentId", student.getId());
                     bundle.putInt("moduleNumber", moduleNumber);
-                    bundle.putInt("groupId", groupId);
-                    bundle.putInt("subjectId", subjectId);
-                    bundle.putInt("lecturerId", lecturerId);
-                    bundle.putInt("seminarianId", seminarianId);
-                    bundle.putInt("semesterId", semesterId);
+                    bundle.putLong("groupId", groupId);
+                    bundle.putLong("subjectId", subjectId);
+                    bundle.putLong("lecturerId", lecturerId);
+                    bundle.putLong("seminarianId", seminarianId);
+                    bundle.putLong("semesterId", semesterId);
                     Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_student_event, bundle);
                 });
                 pointsRow.addView(pointsView);
@@ -349,12 +349,12 @@ public class GroupPerformanceFragment extends Fragment {
         resultPointsView.setGravity(Gravity.CENTER);
         resultPointsView.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
-            bundle.putInt("studentId", student.getId());
-            bundle.putInt("groupId", groupId);
-            bundle.putInt("subjectId", subjectId);
-            bundle.putInt("lecturerId", lecturerId);
-            bundle.putInt("seminarianId", seminarianId);
-            bundle.putInt("semesterId", semesterId);
+            bundle.putLong("studentId", student.getId());
+            bundle.putLong("groupId", groupId);
+            bundle.putLong("subjectId", subjectId);
+            bundle.putLong("lecturerId", lecturerId);
+            bundle.putLong("seminarianId", seminarianId);
+            bundle.putLong("semesterId", semesterId);
             Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_student_performance_in_subject, bundle);
         });
         pointsRow.addView(resultPointsView);
@@ -374,12 +374,12 @@ public class GroupPerformanceFragment extends Fragment {
             examPointsView.setGravity(Gravity.CENTER);
             examPointsView.setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
-                bundle.putInt("studentId", student.getId());
-                bundle.putInt("groupId", groupId);
-                bundle.putInt("subjectId", subjectId);
-                bundle.putInt("lecturerId", lecturerId);
-                bundle.putInt("seminarianId", seminarianId);
-                bundle.putInt("semesterId", semesterId);
+                bundle.putLong("studentId", student.getId());
+                bundle.putLong("groupId", groupId);
+                bundle.putLong("subjectId", subjectId);
+                bundle.putLong("lecturerId", lecturerId);
+                bundle.putLong("seminarianId", seminarianId);
+                bundle.putLong("semesterId", semesterId);
                 Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_student_performance_in_subject, bundle);
             });
             pointsRow.addView(examPointsView);
@@ -397,12 +397,12 @@ public class GroupPerformanceFragment extends Fragment {
             markView.setGravity(Gravity.CENTER);
             markView.setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
-                bundle.putInt("studentId", student.getId());
-                bundle.putInt("groupId", groupId);
-                bundle.putInt("subjectId", subjectId);
-                bundle.putInt("lecturerId", lecturerId);
-                bundle.putInt("seminarianId", seminarianId);
-                bundle.putInt("semesterId", semesterId);
+                bundle.putLong("studentId", student.getId());
+                bundle.putLong("groupId", groupId);
+                bundle.putLong("subjectId", subjectId);
+                bundle.putLong("lecturerId", lecturerId);
+                bundle.putLong("seminarianId", seminarianId);
+                bundle.putLong("semesterId", semesterId);
                 Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_student_performance_in_subject, bundle);
             });
             pointsRow.addView(markView);

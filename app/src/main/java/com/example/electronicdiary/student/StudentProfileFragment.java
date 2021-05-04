@@ -21,8 +21,8 @@ import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.data_classes.Subject;
 
 public class StudentProfileFragment extends Fragment {
-    private int studentId;
-    private int semesterId;
+    private long studentId;
+    private long semesterId;
 
     @Nullable
     @Override
@@ -30,12 +30,12 @@ public class StudentProfileFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_student_profile, container, false);
 
         if (getArguments() != null) {
-            studentId = getArguments().getInt("studentId");
-            semesterId = getArguments().getInt("semesterId");
+            studentId = getArguments().getLong("studentId");
+            semesterId = getArguments().getLong("semesterId");
         } else {
             studentId = Repository.getInstance().getUser().getId();
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-            semesterId = Integer.parseInt(sharedPreferences.getString(getString(R.string.current_semester), ""));
+            semesterId = Long.parseLong(sharedPreferences.getString(getString(R.string.current_semester), "-1"));
         }
 
         StudentProfileViewModel studentProfileViewModel = new ViewModelProvider(this).get(StudentProfileViewModel.class);
@@ -84,9 +84,9 @@ public class StudentProfileFragment extends Fragment {
             listView.setOnItemClickListener((parent, view, position, id) -> {
                 Bundle bundle = new Bundle();
                 bundle.putInt("openPage", 0);
-                bundle.putInt("studentId", studentId);
-                bundle.putInt("subjectId", availableStudentSubjects.get(position).getId());
-                bundle.putInt("semesterId", semesterId);
+                bundle.putLong("studentId", studentId);
+                bundle.putLong("subjectId", availableStudentSubjects.get(position).getId());
+                bundle.putLong("semesterId", semesterId);
                 Navigation.findNavController(view).navigate(R.id.action_student_profile_to_student_performance, bundle);
             });
         });

@@ -41,7 +41,7 @@ public class SearchSemestersFragment extends Fragment {
 
                 if (actionCode == 1) {
                     Bundle bundle = new Bundle();
-                    bundle.putInt("semesterId", semesters.get(position).getId());
+                    bundle.putLong("semesterId", semesters.get(position).getId());
                     Navigation.findNavController(view).navigate(R.id.action_search_semesters_to_dialog_semester_editing, bundle);
                 } else if (actionCode == 2) {
                     searchSemestersViewModel.deleteSemester(semesters.get(position).getId());

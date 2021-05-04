@@ -26,11 +26,11 @@ public class ModuleInfoEditingDialogFragment extends DialogFragment {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_module_info_editing, null);
 
         int moduleNumber = getArguments().getInt("moduleNumber");
-        int groupId = getArguments().getInt("groupId");
-        int subjectId = getArguments().getInt("subjectId");
-        int lecturerId = getArguments().getInt("lecturerId");
-        int seminarianId = getArguments().getInt("seminarianId");
-        int semesterId = getArguments().getInt("semesterId");
+        long groupId = getArguments().getLong("groupId");
+        long subjectId = getArguments().getLong("subjectId");
+        long lecturerId = getArguments().getLong("lecturerId");
+        long seminarianId = getArguments().getLong("seminarianId");
+        long semesterId = getArguments().getLong("semesterId");
 
         ModuleInfoEditingViewModel moduleInfoEditingViewModel = new ViewModelProvider(this).get(ModuleInfoEditingViewModel.class);
         moduleInfoEditingViewModel.downloadModuleInfoByNumber(moduleNumber, groupId, subjectId, lecturerId, seminarianId, semesterId);

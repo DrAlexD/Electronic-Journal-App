@@ -28,7 +28,7 @@ public class EventEditingDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_event_editing, null);
 
-        int eventId = getArguments().getInt("eventId");
+        long eventId = getArguments().getLong("eventId");
 
         EventEditingViewModel eventEditingViewModel = new ViewModelProvider(this).get(EventEditingViewModel.class);
         eventEditingViewModel.downloadEventById(eventId);
@@ -113,11 +113,11 @@ public class EventEditingDialogFragment extends DialogFragment {
                     eventEditingViewModel.deleteEvent(eventId);
 
                     Bundle bundle = new Bundle();
-                    bundle.putInt("groupId", eventEditingViewModel.getEvent().getValue().getGroupId());
-                    bundle.putInt("subjectId", eventEditingViewModel.getEvent().getValue().getSubjectId());
-                    bundle.putInt("lecturerId", eventEditingViewModel.getEvent().getValue().getLecturerId());
-                    bundle.putInt("seminarianId", eventEditingViewModel.getEvent().getValue().getSeminarianId());
-                    bundle.putInt("semesterId", eventEditingViewModel.getEvent().getValue().getSemesterId());
+                    bundle.putLong("groupId", eventEditingViewModel.getEvent().getValue().getGroupId());
+                    bundle.putLong("subjectId", eventEditingViewModel.getEvent().getValue().getSubjectId());
+                    bundle.putLong("lecturerId", eventEditingViewModel.getEvent().getValue().getLecturerId());
+                    bundle.putLong("seminarianId", eventEditingViewModel.getEvent().getValue().getSeminarianId());
+                    bundle.putLong("semesterId", eventEditingViewModel.getEvent().getValue().getSemesterId());
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_event_editing_to_group_performance, bundle);
                 }).create();

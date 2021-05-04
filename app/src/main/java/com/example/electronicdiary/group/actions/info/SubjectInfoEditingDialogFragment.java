@@ -23,11 +23,11 @@ public class SubjectInfoEditingDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_subject_info_editing, null);
 
-        int groupId = getArguments().getInt("groupId");
-        int subjectId = getArguments().getInt("subjectId");
-        int lecturerId = getArguments().getInt("lecturerId");
-        int seminarianId = getArguments().getInt("seminarianId");
-        int semesterId = getArguments().getInt("semesterId");
+        long groupId = getArguments().getLong("groupId");
+        long subjectId = getArguments().getLong("subjectId");
+        long lecturerId = getArguments().getLong("lecturerId");
+        long seminarianId = getArguments().getLong("seminarianId");
+        long semesterId = getArguments().getLong("semesterId");
 
         SubjectInfoEditingViewModel subjectInfoEditingViewModel = new ViewModelProvider(this).get(SubjectInfoEditingViewModel.class);
         subjectInfoEditingViewModel.downloadSubjectInfo(groupId, subjectId, lecturerId, seminarianId, semesterId);
@@ -67,11 +67,11 @@ public class SubjectInfoEditingDialogFragment extends DialogFragment {
                             isSwapLecturerAndSeminarian.isChecked(), isExam.isChecked(), isDifferentiatedCredit.isChecked(), isForAllGroups.isChecked());
 
                     Bundle bundle = new Bundle();
-                    bundle.putInt("groupId", groupId);
-                    bundle.putInt("subjectId", subjectId);
-                    bundle.putInt("lecturerId", lecturerId);
-                    bundle.putInt("seminarianId", seminarianId);
-                    bundle.putInt("semesterId", semesterId);
+                    bundle.putLong("groupId", groupId);
+                    bundle.putLong("subjectId", subjectId);
+                    bundle.putLong("lecturerId", lecturerId);
+                    bundle.putLong("seminarianId", seminarianId);
+                    bundle.putLong("semesterId", semesterId);
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_subject_info_editing_to_group_performance, bundle);
                 }).create();

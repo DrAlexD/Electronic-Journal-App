@@ -16,11 +16,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.electronicdiary.JwtResponse;
 import com.example.electronicdiary.MainActivity;
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.Result;
-import com.example.electronicdiary.data_classes.User;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -43,11 +43,18 @@ public class LoginActivity extends AppCompatActivity {
         isRememberMe.setChecked(sharedPreferences.getBoolean(getString(R.string.is_remember_me), false));
 
         if (isRememberMe.isChecked()) {
-            Repository.getInstance().setLastLoggedInUser(sharedPreferences.getInt("userId", -1),
-                    sharedPreferences.getBoolean("isUserProfessor", true));
-            openMainActivity();
+            loginViewModel.getLoggedUser(new JwtResponse(sharedPreferences.getString("jwtToken", ""),
+                    sharedPreferences.getLong("userId", -1), sharedPreferences.getBoolean("isUserProfessor", true)));
+            loginViewModel.getUser().observe(this, user -> {
+                if (user == null) {
+                    return;
+                }
+
+                Repository.getInstance().setUser(user);
+                openMainActivity();
+            });
         } else {
-            if (sharedPreferences.getInt(getString(R.string.current_semester), -1) == -1)
+            if (Long.parseLong(sharedPreferences.getString(getString(R.string.current_semester), "-1")) == -1)
                 sharedPreferences.edit().putString(getString(R.string.current_semester),
                         String.valueOf(Repository.getInstance().getLastSemesterId())).apply();
 
@@ -80,19 +87,31 @@ public class LoginActivity extends AppCompatActivity {
             loginButton.setEnabled(loginFormState.isDataValid());
         });
 
-        loginViewModel.getUser().observe(this, user -> {
-            if (user == null) {
+        loginViewModel.getResponse().observe(this, response -> {
+            if (response == null) {
                 return;
             }
             //loadingProgressBar.setVisibility(View.GONE);
-            if (user instanceof Result.Success) {
+            if (response instanceof Result.Success) {
+                String jwtToken = ((Result.Success<JwtResponse>) response).getData().getToken();
+                Long userId = ((Result.Success<JwtResponse>) response).getData().getId();
+                Boolean isUserProfessor = ((Result.Success<JwtResponse>) response).getData().isProfessor();
                 sharedPreferences.edit().putBoolean(getString(R.string.is_remember_me), isRememberMe.isChecked()).apply();
-                sharedPreferences.edit().putInt("userId", ((Result.Success<User>) user).getData().getId()).apply();
-                sharedPreferences.edit().putBoolean("isUserProfessor", ((Result.Success<User>) user).getData().isProfessor()).apply();
+                sharedPreferences.edit().putString("jwtToken", jwtToken).apply();
+                sharedPreferences.edit().putLong("userId", userId).apply();
+                sharedPreferences.edit().putBoolean("isUserProfessor", isUserProfessor).apply();
 
-                openMainActivity();
+                loginViewModel.getLoggedUser(new JwtResponse(jwtToken, userId, isUserProfessor));
+                loginViewModel.getUser().observe(this, user -> {
+                    if (user == null) {
+                        return;
+                    }
+
+                    Repository.getInstance().setUser(user);
+                    openMainActivity();
+                });
             } else {
-                String error = ((Result.Error) user).getError();
+                String error = ((Result.Error) response).getError();
                 Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
             }
             //setResult(Activity.RESULT_OK);

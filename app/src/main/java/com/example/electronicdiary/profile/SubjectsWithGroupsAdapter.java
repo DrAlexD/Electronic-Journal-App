@@ -11,15 +11,15 @@ import com.example.electronicdiary.R;
 import com.example.electronicdiary.data_classes.Subject;
 import com.example.electronicdiary.data_classes.SubjectInfo;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 class SubjectsWithGroupsAdapter extends BaseExpandableListAdapter {
     private final LayoutInflater inflater;
-    private final ArrayList<Subject> subjects;
-    private final HashMap<Subject, ArrayList<SubjectInfo>> subjectsWithGroups;
+    private final List<Subject> subjects;
+    private final HashMap<Subject, List<SubjectInfo>> subjectsWithGroups;
 
-    SubjectsWithGroupsAdapter(Context context, ArrayList<Subject> subjects, HashMap<Subject, ArrayList<SubjectInfo>> subjectWithGroups) {
+    SubjectsWithGroupsAdapter(Context context, List<Subject> subjects, HashMap<Subject, List<SubjectInfo>> subjectWithGroups) {
         this.inflater = LayoutInflater.from(context);
         this.subjects = subjects;
         this.subjectsWithGroups = subjectWithGroups;

@@ -10,20 +10,20 @@ import com.example.electronicdiary.data_classes.Semester;
 import com.example.electronicdiary.data_classes.Student;
 import com.example.electronicdiary.data_classes.Subject;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class StudentProfileViewModel extends ViewModel {
     private final MutableLiveData<Semester> semester = new MutableLiveData<>();
     private final MutableLiveData<Student> student = new MutableLiveData<>();
     private final MutableLiveData<Group> group = new MutableLiveData<>();
-    private final MutableLiveData<ArrayList<Subject>> availableStudentSubjects = new MutableLiveData<>();
+    private final MutableLiveData<List<Subject>> availableStudentSubjects = new MutableLiveData<>();
 
     public MutableLiveData<Semester> getSemester() {
         return semester;
     }
 
 
-    public MutableLiveData<Student> getStudent() {
+    public LiveData<Student> getStudent() {
         return student;
     }
 
@@ -31,23 +31,23 @@ public class StudentProfileViewModel extends ViewModel {
         return group;
     }
 
-    public LiveData<ArrayList<Subject>> getAvailableStudentSubjects() {
+    public LiveData<List<Subject>> getAvailableStudentSubjects() {
         return availableStudentSubjects;
     }
 
-    public void downloadSemesterById(int semesterId) {
+    public void downloadSemesterById(long semesterId) {
         this.semester.setValue(Repository.getInstance().getSemesterById(semesterId));
     }
 
-    public void downloadStudentById(int studentId) {
-        this.student.setValue(Repository.getInstance().getStudentById(studentId));
+    public void downloadStudentById(long studentId) {
+        Repository.getInstance().getStudentById(studentId, student);
     }
 
-    public void downloadGroupById(int groupId) {
+    public void downloadGroupById(long groupId) {
         this.group.setValue(Repository.getInstance().getGroupById(groupId));
     }
 
-    public void downloadAvailableStudentSubjects(int studentId, int semesterId) {
+    public void downloadAvailableStudentSubjects(long studentId, long semesterId) {
         this.availableStudentSubjects.setValue(Repository.getInstance().getAvailableStudentSubjects(studentId, semesterId));
     }
 }

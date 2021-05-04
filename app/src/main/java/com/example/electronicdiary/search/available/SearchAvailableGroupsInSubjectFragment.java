@@ -19,6 +19,7 @@ import com.example.electronicdiary.data_classes.SubjectInfo;
 import com.example.electronicdiary.search.GroupsAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SearchAvailableGroupsInSubjectFragment extends Fragment {
     private GroupsAdapter groupsAdapter;
@@ -30,8 +31,8 @@ public class SearchAvailableGroupsInSubjectFragment extends Fragment {
 
         SearchAvailableGroupsInSubjectViewModel searchAvailableGroupsInSubjectViewModel = new ViewModelProvider(this).
                 get(SearchAvailableGroupsInSubjectViewModel.class);
-        searchAvailableGroupsInSubjectViewModel.downloadAvailableGroupsInSubject(getArguments().getInt("professorId"),
-                getArguments().getInt("subjectId"), getArguments().getInt("semesterId"));
+        searchAvailableGroupsInSubjectViewModel.downloadAvailableGroupsInSubject(getArguments().getLong("professorId"),
+                getArguments().getLong("subjectId"), getArguments().getLong("semesterId"));
 
         final RecyclerView recyclerView = root.findViewById(R.id.searchedAvailableGroupsInSubjectList);
         searchAvailableGroupsInSubjectViewModel.getAvailableGroupsInSubject().observe(getViewLifecycleOwner(),
@@ -44,13 +45,13 @@ public class SearchAvailableGroupsInSubjectFragment extends Fragment {
                         RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
                         int position = viewHolder.getAdapterPosition();
 
-                        searchAvailableGroupsInSubjectViewModel.deleteGroupInAvailableSubject(getArguments().getInt("professorId"),
-                                availableGroupsInSubject.get(position).getGroup().getId(), getArguments().getInt("subjectId"),
-                                getArguments().getInt("semesterId"));
+                        searchAvailableGroupsInSubjectViewModel.deleteGroupInAvailableSubject(getArguments().getLong("professorId"),
+                                availableGroupsInSubject.get(position).getGroup().getId(), getArguments().getLong("subjectId"),
+                                getArguments().getLong("semesterId"));
                         Navigation.findNavController(view).navigate(R.id.action_search_available_groups_in_subject_to_profile);
                     };
 
-                    ArrayList<Group> groups = new ArrayList<>();
+                    List<Group> groups = new ArrayList<>();
                     for (SubjectInfo subjectInfo : availableGroupsInSubject) {
                         groups.add(subjectInfo.getGroup());
                     }

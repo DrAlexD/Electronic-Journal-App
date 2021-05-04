@@ -3,12 +3,12 @@ package com.example.electronicdiary.data_classes;
 import org.jetbrains.annotations.NotNull;
 
 public class Professor extends User {
-    public Professor(int id, String firstName, String secondName) {
-        super(id, firstName, secondName, true);
+    public Professor(long id, String firstName, String secondName, String role) {
+        super(id, firstName, secondName, role, true);
     }
 
-    public Professor(int id, String firstName, String secondName, String login, String password) {
-        super(id, firstName, secondName, login, password, true);
+    public Professor(long id, String firstName, String secondName, String username, String password, String role) {
+        super(id, firstName, secondName, username, password, role, true);
     }
 
     @NotNull

@@ -54,9 +54,9 @@ public class SubjectInfoAddingDialogFragment extends DialogFragment {
         dialog = builder.setView(root)
                 .setTitle("Укажите доп. информацию")
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    Repository.getInstance().addAvailableSubject(getArguments().getInt("professorId"),
-                            isLecturer.isChecked(), isSeminarian.isChecked(), getArguments().getInt("groupId"), getArguments().getInt("subjectId"),
-                            getArguments().getInt("semesterId"), isExam.isChecked(), isDifferentiatedCredit.isChecked());
+                    Repository.getInstance().addAvailableSubject(getArguments().getLong("professorId"),
+                            isLecturer.isChecked(), isSeminarian.isChecked(), getArguments().getLong("groupId"), getArguments().getLong("subjectId"),
+                            getArguments().getLong("semesterId"), isExam.isChecked(), isDifferentiatedCredit.isChecked());
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_subject_info_adding_to_profile);
                 }).create();
