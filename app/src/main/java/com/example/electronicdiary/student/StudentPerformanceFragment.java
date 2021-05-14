@@ -7,12 +7,24 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.data_classes.Event;
+import com.example.electronicdiary.data_classes.Lesson;
+import com.example.electronicdiary.data_classes.Module;
+import com.example.electronicdiary.data_classes.StudentEvent;
+import com.example.electronicdiary.data_classes.StudentLesson;
+import com.example.electronicdiary.data_classes.StudentPerformanceInModule;
+import com.example.electronicdiary.data_classes.StudentPerformanceInSubject;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+
+import java.util.List;
+import java.util.Map;
 
 public class StudentPerformanceFragment extends Fragment {
 
@@ -21,46 +33,49 @@ public class StudentPerformanceFragment extends Fragment {
 
         int page = getArguments().getInt("openPage");
         int moduleExpand = getArguments().getInt("moduleExpand", -1);
-        long studentId = getArguments().getLong("studentId");
-        long subjectId = getArguments().getLong("subjectId");
-        long semesterId = getArguments().getLong("semesterId");
+        long studentPerformanceInSubjectId = getArguments().getLong("studentPerformanceInSubjectId");
 
         StudentPerformanceViewModel studentPerformanceViewModel = new ViewModelProvider(this).get(StudentPerformanceViewModel.class);
         studentPerformanceViewModel.setModuleExpand(moduleExpand);
         studentPerformanceViewModel.setOpenPage(page);
-        studentPerformanceViewModel.downloadStudentById(studentId);
+        studentPerformanceViewModel.downloadStudentPerformanceInSubject(studentPerformanceInSubjectId);
 
-        studentPerformanceViewModel.getStudent().observe(getViewLifecycleOwner(), student -> {
-            if (student == null) {
-                return;
-            }
+        LiveData<StudentPerformanceInSubject> studentPerformanceInSubjectLiveData = studentPerformanceViewModel.getStudentPerformanceInSubject();
+        LiveData<Map<String, Module>> modulesLiveData = Transformations.switchMap(studentPerformanceInSubjectLiveData,
+                s -> {
+                    studentPerformanceViewModel.downloadEventsAndLessons(s.getSubjectInfo().getId());
+                    return studentPerformanceViewModel.getModules();
+                });
+        LiveData<Map<String, List<Event>>> eventsLiveData = Transformations.switchMap(modulesLiveData,
+                s -> studentPerformanceViewModel.getEvents());
+        LiveData<Map<String, List<Lesson>>> lecturesLiveData = Transformations.switchMap(eventsLiveData,
+                s -> studentPerformanceViewModel.getLectures());
+        LiveData<Map<String, List<Lesson>>> seminarsLiveData = Transformations.switchMap(lecturesLiveData,
+                s -> studentPerformanceViewModel.getSeminars());
+        LiveData<Map<String, StudentPerformanceInModule>> studentPerformanceInModulesLiveData = Transformations.switchMap(seminarsLiveData,
+                s -> studentPerformanceViewModel.getStudentPerformanceInModules());
+        LiveData<Map<String, List<StudentEvent>>> studentEventsLiveData = Transformations.switchMap(studentPerformanceInModulesLiveData,
+                s -> studentPerformanceViewModel.getStudentEvents());
+        LiveData<Map<String, List<StudentLesson>>> studentLessonsLiveData = Transformations.switchMap(studentEventsLiveData,
+                s -> studentPerformanceViewModel.getStudentLessons());
 
-            studentPerformanceViewModel.downloadSubjectInfo(student.getGroupId(), subjectId, semesterId);
-            studentPerformanceViewModel.getSubjectInfo().observe(getViewLifecycleOwner(), subjectInfo -> {
-                if (subjectInfo == null) {
-                    return;
-                }
+        studentLessonsLiveData.observe(getViewLifecycleOwner(), studentLessons -> {
+            EventsOrLessonsPagerAdapter eventsOrLessonsPagerAdapter = new EventsOrLessonsPagerAdapter(this);
+            ViewPager2 viewPager = root.findViewById(R.id.events_or_lessons_pager);
+            viewPager.setAdapter(eventsOrLessonsPagerAdapter);
+            viewPager.setCurrentItem(page, false);
+            viewPager.setOffscreenPageLimit(2);
 
-                studentPerformanceViewModel.downloadEventsAndLessons(studentId, student.getGroupId(), subjectId,
-                        subjectInfo.getLecturerId(), subjectInfo.getSeminarianId(), semesterId);
-            });
+            TabLayout tabLayout = root.findViewById(R.id.events_or_lessons_tab_layout);
+            new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+                if (position == 0)
+                    tab.setText("Мероприятия");
+                else if (position == 1)
+                    tab.setText("Лекции");
+                else if (position == 2)
+                    tab.setText("Семинары");
+            }).attach();
         });
-
-        EventsOrLessonsPagerAdapter eventsOrLessonsPagerAdapter = new EventsOrLessonsPagerAdapter(this);
-        ViewPager2 viewPager = root.findViewById(R.id.events_or_lessons_pager);
-        viewPager.setAdapter(eventsOrLessonsPagerAdapter);
-        viewPager.setCurrentItem(page, false);
-        viewPager.setOffscreenPageLimit(2);
-
-        TabLayout tabLayout = root.findViewById(R.id.events_or_lessons_tab_layout);
-        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
-            if (position == 0)
-                tab.setText("Мероприятия");
-            else if (position == 1)
-                tab.setText("Лекции");
-            else if (position == 2)
-                tab.setText("Семинары");
-        }).attach();
 
         return root;
     }

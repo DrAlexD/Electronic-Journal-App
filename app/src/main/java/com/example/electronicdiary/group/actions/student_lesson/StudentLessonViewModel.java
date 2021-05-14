@@ -1,33 +1,54 @@
 package com.example.electronicdiary.group.actions.student_lesson;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.electronicdiary.Repository;
+import com.example.electronicdiary.data_classes.Lesson;
 import com.example.electronicdiary.data_classes.StudentLesson;
+import com.example.electronicdiary.data_classes.StudentPerformanceInModule;
+
+import java.util.Map;
 
 public class StudentLessonViewModel extends ViewModel {
     private final MutableLiveData<StudentLesson> studentLesson = new MutableLiveData<>();
+    private final MutableLiveData<Lesson> lesson = new MutableLiveData<>();
+    private final MutableLiveData<Map<String, StudentPerformanceInModule>> studentPerformanceInModules = new MutableLiveData<>();
 
-    public MutableLiveData<StudentLesson> getStudentLesson() {
+    public LiveData<StudentLesson> getStudentLesson() {
         return studentLesson;
     }
 
-    public void downloadStudentLessonById(long lessonId, long studentId) {
-        this.studentLesson.setValue(Repository.getInstance().getStudentLessonById(lessonId, studentId));
+    public LiveData<Lesson> getLesson() {
+        return lesson;
     }
 
-    public void addStudentLesson(long lessonId, int moduleNumber, long studentId, long groupId, long subjectId, long lecturerId,
-                                 long seminarianId, long semesterId, boolean isAttended) {
-        Repository.getInstance().addStudentLesson(lessonId, moduleNumber, studentId, groupId, subjectId, lecturerId,
-                seminarianId, semesterId, isAttended);
+    public LiveData<Map<String, StudentPerformanceInModule>> getStudentPerformanceInModules() {
+        return studentPerformanceInModules;
     }
 
-    public void editStudentLesson(long lessonId, long studentId, boolean isAttended, int bonusPoints) {
-        Repository.getInstance().editStudentLesson(lessonId, studentId, isAttended, bonusPoints);
+    public void downloadStudentLessonById(long studentLessonId) {
+        Repository.getInstance().getStudentLessonById(studentLessonId, studentLesson);
     }
 
-    public void deleteStudentLesson(long lessonId, long studentId) {
-        Repository.getInstance().deleteStudentLesson(lessonId, studentId);
+    public void downloadLessonById(long lessonId) {
+        Repository.getInstance().getLessonById(lessonId, lesson);
+    }
+
+    public void downloadStudentPerformanceInModules(long studentPerformanceInSubjectId) {
+        Repository.getInstance().getStudentPerformanceInModules(studentPerformanceInSubjectId, studentPerformanceInModules);
+    }
+
+    public void addStudentLesson(StudentPerformanceInModule studentPerformanceInModule, Lesson lesson, boolean isAttended) {
+        Repository.getInstance().addStudentLesson(new StudentLesson(studentPerformanceInModule, lesson, isAttended));
+    }
+
+    public void editStudentLesson(long studentLessonId, StudentPerformanceInModule studentPerformanceInModule, Lesson lesson, boolean isAttended, int bonusPoints) {
+        Repository.getInstance().editStudentLesson(studentLessonId, new StudentLesson(studentPerformanceInModule, lesson, isAttended, bonusPoints));
+    }
+
+    public void deleteStudentLesson(long studentLessonId) {
+        Repository.getInstance().deleteStudentLesson(studentLessonId);
     }
 }

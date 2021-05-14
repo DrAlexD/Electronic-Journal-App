@@ -1,56 +1,59 @@
 package com.example.electronicdiary.data_classes;
 
 public class SubjectInfo {
+    private final Subject subject;
     private final Group group;
-    private final long subjectId;
+    private final Professor seminarian;
+    private final Semester semester;
+    private long id;
     private final long lecturerId;
-    private final long seminarianId;
-    private final long semesterId;
 
     private final boolean isExam;
     private final boolean isDifferentiatedCredit;
 
-    private boolean isQueueAllowed = false;
-
-    public SubjectInfo(Group group, long subjectId, long lecturerId, long seminarianId, long semesterId, boolean isExam, boolean isDifferentiatedCredit) {
+    public SubjectInfo(Group group, Subject subject, long lecturerId, Professor seminarian, Semester semester, boolean isExam, boolean isDifferentiatedCredit) {
         this.group = group;
-        this.subjectId = subjectId;
+        this.subject = subject;
         this.lecturerId = lecturerId;
-        this.seminarianId = seminarianId;
-        this.semesterId = semesterId;
+        this.seminarian = seminarian;
+        this.semester = semester;
         this.isExam = isExam;
         this.isDifferentiatedCredit = isDifferentiatedCredit;
     }
 
-    public SubjectInfo(Group group, long subjectId, long lecturerId, long seminarianId, long semesterId, boolean isExam, boolean isDifferentiatedCredit, boolean isQueueAllowed) {
+    public SubjectInfo(long id, Group group, Subject subject, long lecturerId, Professor seminarian, Semester semester, boolean isExam, boolean isDifferentiatedCredit) {
+        this.id = id;
         this.group = group;
-        this.subjectId = subjectId;
+        this.subject = subject;
         this.lecturerId = lecturerId;
-        this.seminarianId = seminarianId;
-        this.semesterId = semesterId;
+        this.seminarian = seminarian;
+        this.semester = semester;
         this.isExam = isExam;
         this.isDifferentiatedCredit = isDifferentiatedCredit;
-        this.isQueueAllowed = isQueueAllowed;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public Group getGroup() {
         return group;
     }
 
-    public long getSubjectId() {
-        return subjectId;
+    public Subject getSubject() {
+        return subject;
     }
 
     public long getLecturerId() {
         return lecturerId;
     }
 
-    public long getSeminarianId() {
-        return seminarianId;
+    public Professor getSeminarian() {
+        return seminarian;
     }
 
-    public long getSemesterId() {
-        return semesterId;
+    public Semester getSemester() {
+        return semester;
     }
 
     public boolean isExam() {
@@ -59,13 +62,5 @@ public class SubjectInfo {
 
     public boolean isDifferentiatedCredit() {
         return isDifferentiatedCredit;
-    }
-
-    public boolean isQueueAllowed() {
-        return isQueueAllowed;
-    }
-
-    public void setQueueAllowed(boolean queueAllowed) {
-        isQueueAllowed = queueAllowed;
     }
 }

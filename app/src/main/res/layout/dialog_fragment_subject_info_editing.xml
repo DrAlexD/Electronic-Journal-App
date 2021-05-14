@@ -6,13 +6,13 @@
     android:paddingLeft="32dp"
     android:paddingRight="32dp">
 
-    <CheckBox
+<!--    <CheckBox
         android:id="@+id/subjectInfoIsSwapLecturerAndSeminarianEditing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/is_swap_lecturer_and_seminarian_text"
-        android:textSize="18sp" />
+        android:textSize="18sp" />-->
 
     <CheckBox
         android:id="@+id/subjectInfoIsExamEditing"
@@ -32,12 +32,12 @@
         android:text="@string/is_differentiated_credit_text"
         android:textSize="18sp" />
 
-    <CheckBox
-        android:id="@+id/subjectInfoIsForAllGroupsEditing"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:gravity="center"
-        android:text="@string/is_for_all_groups_text"
-        android:textSize="18sp" />
+    <!--    <CheckBox
+            android:id="@+id/subjectInfoIsForAllGroupsEditing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:text="@string/is_for_all_groups_text"
+            android:textSize="18sp" />-->
 </LinearLayout>

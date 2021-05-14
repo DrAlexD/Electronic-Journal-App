@@ -22,19 +22,18 @@ import androidx.navigation.Navigation;
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.data_classes.Lesson;
+import com.example.electronicdiary.data_classes.Module;
 import com.example.electronicdiary.data_classes.Student;
 import com.example.electronicdiary.data_classes.StudentLesson;
 import com.example.electronicdiary.data_classes.StudentPerformanceInModule;
-import com.example.electronicdiary.data_classes.SubjectInfo;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ModuleFragment extends Fragment {
     private int moduleNumber;
 
     private GroupPerformanceViewModel groupPerformanceViewModel;
-    private SubjectInfo subjectInfo;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,7 +42,6 @@ public class ModuleFragment extends Fragment {
         moduleNumber = getArguments().getInt("position");
 
         groupPerformanceViewModel = new ViewModelProvider(getParentFragment()).get(GroupPerformanceViewModel.class);
-        subjectInfo = groupPerformanceViewModel.getSubjectInfo().getValue();
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         boolean isProfessorRules = sharedPreferences.getBoolean(getString(R.string.is_professor_rules), false);
@@ -52,41 +50,34 @@ public class ModuleFragment extends Fragment {
         addLessonButton.setVisibility(isProfessorRules ? View.VISIBLE : View.GONE);
         addLessonButton.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
-            bundle.putInt("moduleNumber", moduleNumber);
-            bundle.putLong("groupId", subjectInfo.getGroup().getId());
-            bundle.putLong("subjectId", subjectInfo.getSubjectId());
-            bundle.putLong("lecturerId", subjectInfo.getLecturerId());
-            bundle.putLong("seminarianId", subjectInfo.getSeminarianId());
-            bundle.putLong("semesterId", subjectInfo.getSemesterId());
+            bundle.putLong("moduleId", groupPerformanceViewModel.getModules().getValue().get(String.valueOf(moduleNumber)).getId());
             Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_lesson_adding, bundle);
         });
 
-        groupPerformanceViewModel.getStudentsLessons().observe(getViewLifecycleOwner(), studentsLessons -> {
-            if (studentsLessons == null) {
-                return;
-            }
-
-            generateLessonsTable(root, studentsLessons);
-        });
+        if (groupPerformanceViewModel.getLessons().getValue() != null &&
+                groupPerformanceViewModel.getLessons().getValue().get(String.valueOf(moduleNumber)) != null) {
+            generateLessonsTable(root);
+        }
 
         return root;
     }
 
-    private void generateLessonsTable(View root, HashMap<Integer, List<List<StudentLesson>>> studentsLessons) {
+    private void generateLessonsTable(View root) {
+        Map<String, Map<String, List<StudentLesson>>> studentsLessons = groupPerformanceViewModel.getStudentsLessons().getValue();
         TableLayout studentsInModuleLessonsTable = root.findViewById(R.id.studentsInModuleLessonsTable);
         int padding2inDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics());
         int padding5inDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
 
-        List<Integer> modules = Repository.getInstance().getModules();
-        List<Lesson> lessons = groupPerformanceViewModel.getLessons().getValue().get(modules.get(moduleNumber - 1));
+        List<Integer> modules = Repository.getInstance().getModulesNumbers();
+        List<Lesson> lessons = groupPerformanceViewModel.getLessons().getValue().get(String.valueOf(modules.get(moduleNumber - 1)));
         TableRow lessonsRow = generateLessonsRow(padding2inDp, padding5inDp, lessons);
         studentsInModuleLessonsTable.addView(lessonsRow);
 
         List<Student> students = groupPerformanceViewModel.getStudentsInGroup().getValue();
         for (int i = 0; i < students.size(); i++) {
             TableRow pointsRow = generatePointsRow(padding2inDp, padding5inDp, students.get(i), lessons,
-                    studentsLessons.get(modules.get(moduleNumber - 1)).get(i),
-                    groupPerformanceViewModel.getStudentsPerformancesInModules().getValue().get(moduleNumber).get(i));
+                    studentsLessons.get(String.valueOf(modules.get(moduleNumber - 1))).get(String.valueOf(i)),
+                    groupPerformanceViewModel.getStudentsPerformancesInModules().getValue().get(String.valueOf(moduleNumber)).get(i));
             studentsInModuleLessonsTable.addView(pointsRow);
         }
     }
@@ -122,6 +113,8 @@ public class ModuleFragment extends Fragment {
             lessonsRow.addView(lessonView);
         }
 
+        Map<String, Module> modules = groupPerformanceViewModel.getModules().getValue();
+
         TextView moduleView = new TextView(getContext());
         moduleView.setTextSize(20);
         moduleView.setText("Модуль " + moduleNumber);
@@ -129,12 +122,7 @@ public class ModuleFragment extends Fragment {
         moduleView.setGravity(Gravity.CENTER);
         moduleView.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
-            bundle.putInt("moduleNumber", moduleNumber);
-            bundle.putLong("groupId", subjectInfo.getGroup().getId());
-            bundle.putLong("subjectId", subjectInfo.getSubjectId());
-            bundle.putLong("lecturerId", subjectInfo.getLecturerId());
-            bundle.putLong("seminarianId", subjectInfo.getSeminarianId());
-            bundle.putLong("semesterId", subjectInfo.getSemesterId());
+            bundle.putLong("moduleId", modules.get(String.valueOf(moduleNumber)).getId());
             Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_module_info_editing, bundle);
         });
         lessonsRow.addView(moduleView);
@@ -157,7 +145,6 @@ public class ModuleFragment extends Fragment {
         studentView.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
             bundle.putLong("studentId", student.getId());
-            bundle.putLong("semesterId", subjectInfo.getSemesterId());
             Navigation.findNavController(view).navigate(R.id.action_group_performance_to_student_profile, bundle);
         });
         pointsRow.addView(studentView);
@@ -167,8 +154,11 @@ public class ModuleFragment extends Fragment {
             pointsView.setTextSize(20);
             pointsView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
             boolean isHasData = false;
+            Long studentLessonId = null;
+            Long studentPerformanceInSubjectId = null;
             for (StudentLesson studentLesson : studentLessons) {
-                if (studentLesson.getStudentId() == student.getId() && studentLesson.getLessonId() == lesson.getId()) {
+                if (studentLesson.getStudentPerformanceInModule().getStudentPerformanceInSubject().getStudent().getId()
+                        == student.getId() && studentLesson.getLesson().getId() == lesson.getId()) {
                     if (!studentLesson.isAttended()) {
                         pointsView.setText("Н");
                     } else {
@@ -178,6 +168,8 @@ public class ModuleFragment extends Fragment {
                             pointsView.setText(String.valueOf(lesson.getPointsPerVisit() + studentLesson.getBonusPoints()));
                     }
                     isHasData = true;
+                    studentPerformanceInSubjectId = studentLesson.getStudentPerformanceInModule().getStudentPerformanceInSubject().getId();
+                    studentLessonId = studentLesson.getId();
                     break;
                 }
             }
@@ -186,6 +178,8 @@ public class ModuleFragment extends Fragment {
             pointsView.setGravity(Gravity.CENTER);
 
             boolean finalIsHasData = isHasData;
+            Long finalStudentLessonId = studentLessonId;
+            Long finalStudentPerformanceInSubjectId = studentPerformanceInSubjectId;
             pointsView.setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("isFromGroupPerformance", true);
@@ -199,13 +193,9 @@ public class ModuleFragment extends Fragment {
                         ((lesson.getDateAndTime().getMinutes()) < 10 ? "0" + (lesson.getDateAndTime().getMinutes()) :
                                 (lesson.getDateAndTime().getMinutes())));
                 bundle.putLong("lessonId", lesson.getId());
-                bundle.putLong("studentId", student.getId());
-                bundle.putInt("moduleNumber", moduleNumber);
-                bundle.putLong("groupId", subjectInfo.getGroup().getId());
-                bundle.putLong("subjectId", subjectInfo.getSubjectId());
-                bundle.putLong("lecturerId", subjectInfo.getLecturerId());
-                bundle.putLong("seminarianId", subjectInfo.getSeminarianId());
-                bundle.putLong("semesterId", subjectInfo.getSemesterId());
+                bundle.putLong("studentPerformanceInSubjectId", finalStudentPerformanceInSubjectId);
+                bundle.putLong("studentLessonId", finalStudentLessonId);
+                bundle.putLong("subjectInfoId", groupPerformanceViewModel.getSubjectInfo().getValue().getId());
                 Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_student_lesson, bundle);
             });
             pointsRow.addView(pointsView);

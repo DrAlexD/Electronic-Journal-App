@@ -5,18 +5,20 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.electronicdiary.Repository;
+import com.example.electronicdiary.Result;
 import com.example.electronicdiary.admin.StudentFormState;
+import com.example.electronicdiary.data_classes.Group;
 import com.example.electronicdiary.data_classes.Student;
 
 public class StudentEditingViewModel extends ViewModel {
     private final MutableLiveData<StudentFormState> studentFormState = new MutableLiveData<>();
-    private final MutableLiveData<Student> student = new MutableLiveData<>();
+    private final MutableLiveData<Result<Student>> student = new MutableLiveData<>();
 
     LiveData<StudentFormState> getStudentFormState() {
         return studentFormState;
     }
 
-    public MutableLiveData<Student> getStudent() {
+    public LiveData<Result<Student>> getStudent() {
         return student;
     }
 
@@ -27,10 +29,10 @@ public class StudentEditingViewModel extends ViewModel {
     }
 
     public void downloadStudentByIdWithLogin(long studentId) {
-        this.student.setValue(Repository.getInstance().getStudentByIdWithLogin(studentId));
+        Repository.getInstance().getStudentById(studentId, student);
     }
 
-    public void editStudent(long studentId, String studentName, String studentSecondName, String studentLogin, String studentPassword) {
-        Repository.getInstance().editStudent(studentId, studentName, studentSecondName, studentLogin, studentPassword);
+    public void editStudent(long studentId, String studentName, String studentSecondName, Group group, String studentLogin, String studentPassword, String role) {
+        Repository.getInstance().editStudent(studentId, new Student(studentName, studentSecondName, group, studentLogin, studentPassword, role));
     }
 }

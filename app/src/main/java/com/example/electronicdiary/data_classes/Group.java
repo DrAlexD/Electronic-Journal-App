@@ -3,8 +3,12 @@ package com.example.electronicdiary.data_classes;
 import org.jetbrains.annotations.NotNull;
 
 public class Group {
-    private final long id;
+    private long id;
     private final String title;
+
+    public Group(String title) {
+        this.title = title;
+    }
 
     public Group(long id, String title) {
         this.id = id;

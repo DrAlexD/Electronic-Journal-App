@@ -33,11 +33,9 @@ public class GroupEditingDialogFragment extends DialogFragment {
         EditText groupTitle = root.findViewById(R.id.groupTitleEditing);
 
         groupEditingViewModel.getGroup().observe(this, group -> {
-            if (group == null) {
-                return;
+            if (group != null) {
+                groupTitle.setText(group.getTitle());
             }
-
-            groupTitle.setText(group.getTitle());
         });
 
         TextWatcher afterTextChangedListener = new TextWatcher() {

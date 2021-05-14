@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.admin.GroupFormState;
+import com.example.electronicdiary.data_classes.Group;
 
 public class GroupAddingViewModel extends ViewModel {
     private final MutableLiveData<GroupFormState> groupFormState = new MutableLiveData<>();
@@ -19,6 +20,6 @@ public class GroupAddingViewModel extends ViewModel {
     }
 
     public void addGroup(String groupTitle) {
-        Repository.getInstance().addGroup(groupTitle);
+        Repository.getInstance().addGroup(new Group(groupTitle));
     }
 }

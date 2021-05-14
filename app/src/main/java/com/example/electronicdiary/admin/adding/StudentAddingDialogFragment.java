@@ -19,6 +19,8 @@ import com.example.electronicdiary.R;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Random;
+
 public class StudentAddingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
     private StudentAddingViewModel studentAddingViewModel;
@@ -35,7 +37,6 @@ public class StudentAddingDialogFragment extends DialogFragment {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_student_adding, null);
 
         studentAddingViewModel = new ViewModelProvider(this).get(StudentAddingViewModel.class);
-        studentAddingViewModel.downloadLastStudentId();
 
         setupAutoGenerate(root);
 
@@ -147,9 +148,10 @@ public class StudentAddingDialogFragment extends DialogFragment {
     }
 
     private void setGeneratedLoginAndPassword() {
+        int randomNumber = new Random().nextInt(100);
         studentLogin.setText(studentName.getText().toString().toLowerCase() +
-                studentSecondName.getText().toString().toLowerCase() + studentAddingViewModel.getLastStudentId().getValue().toString());
-        studentPassword.setText("123456" + studentAddingViewModel.getLastStudentId().getValue().toString());
+                studentSecondName.getText().toString().toLowerCase() + randomNumber);
+        studentPassword.setText("123456" + randomNumber);
     }
 
     private void setEmptyLoginAndPassword() {

@@ -5,43 +5,62 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.electronicdiary.Repository;
+import com.example.electronicdiary.data_classes.Event;
 import com.example.electronicdiary.data_classes.StudentEvent;
+import com.example.electronicdiary.data_classes.StudentPerformanceInModule;
 
 import java.util.Date;
+import java.util.Map;
 
 public class StudentEventViewModel extends ViewModel {
     private final MutableLiveData<StudentEventFormState> studentEventFormState = new MutableLiveData<>();
     private final MutableLiveData<StudentEvent> studentEvent = new MutableLiveData<>();
+    private final MutableLiveData<Event> event = new MutableLiveData<>();
+    private final MutableLiveData<Map<String, StudentPerformanceInModule>> studentPerformanceInModules = new MutableLiveData<>();
 
     LiveData<StudentEventFormState> getStudentEventFormState() {
         return studentEventFormState;
     }
 
-    public MutableLiveData<StudentEvent> getStudentEvent() {
+    public LiveData<StudentEvent> getStudentEvent() {
         return studentEvent;
+    }
+
+    public LiveData<Event> getEvent() {
+        return event;
+    }
+
+    public LiveData<Map<String, StudentPerformanceInModule>> getStudentPerformanceInModules() {
+        return studentPerformanceInModules;
     }
 
     public void eventPerformanceDataChanged(String variantNumber) {
         studentEventFormState.setValue(new StudentEventFormState(variantNumber));
     }
 
-    public void downloadStudentEventById(int attemptNumber, long eventId, long studentId) {
-        this.studentEvent.setValue(Repository.getInstance().getStudentEventById(attemptNumber, eventId, studentId));
+    public void downloadEventById(long eventId) {
+        Repository.getInstance().getEventById(eventId, event);
     }
 
-    public void addStudentEvent(int attemptNumber, long eventId, long studentId, int moduleNumber, long groupId, long subjectId,
-                                long lecturerId, long seminarianId, long semesterId, boolean isAttended, int variantNumber) {
-        Repository.getInstance().addStudentEvent(attemptNumber, eventId, studentId, moduleNumber, groupId, subjectId,
-                lecturerId, seminarianId, semesterId, isAttended, variantNumber);
+    public void downloadStudentPerformanceInModule(long studentPerformanceInSubjectId) {
+        Repository.getInstance().getStudentPerformanceInModules(studentPerformanceInSubjectId, studentPerformanceInModules);
     }
 
-    public void editStudentEvent(int attemptNumber, long eventId, long studentId, boolean isAttended, int variantNumber,
+    public void downloadStudentEventById(long studentEventId) {
+        Repository.getInstance().getStudentEventById(studentEventId, studentEvent);
+    }
+
+    public void addStudentEvent(int attemptNumber, StudentPerformanceInModule studentPerformanceInModule, Event event, boolean isAttended, int variantNumber) {
+        Repository.getInstance().addStudentEvent(new StudentEvent(attemptNumber, studentPerformanceInModule, event, isAttended, variantNumber));
+    }
+
+    public void editStudentEvent(long studentEventId, int attemptNumber, StudentPerformanceInModule studentPerformanceInModule, Event event, boolean isAttended, int variantNumber,
                                  Date finishDate, int earnedPoints, int bonusPoints, boolean isHaveCredit) {
-        Repository.getInstance().editStudentEvent(attemptNumber, eventId, studentId, isAttended, variantNumber,
-                finishDate, earnedPoints, bonusPoints, isHaveCredit);
+        Repository.getInstance().editStudentEvent(studentEventId, new StudentEvent(attemptNumber, studentPerformanceInModule, event, isAttended, variantNumber,
+                finishDate, earnedPoints, bonusPoints, isHaveCredit));
     }
 
-    public void deleteStudentEvent(int attemptNumber, long eventId, long studentId) {
-        Repository.getInstance().deleteStudentEvent(attemptNumber, eventId, studentId);
+    public void deleteStudentEvent(long studentEventId) {
+        Repository.getInstance().deleteStudentEvent(studentEventId);
     }
 }

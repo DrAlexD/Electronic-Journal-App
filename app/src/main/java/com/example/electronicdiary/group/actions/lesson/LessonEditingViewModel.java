@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.data_classes.Lesson;
+import com.example.electronicdiary.data_classes.Module;
 
 import java.util.Date;
 
@@ -17,7 +18,7 @@ public class LessonEditingViewModel extends ViewModel {
         return lessonFormState;
     }
 
-    public MutableLiveData<Lesson> getLesson() {
+    public LiveData<Lesson> getLesson() {
         return lesson;
     }
 
@@ -26,11 +27,11 @@ public class LessonEditingViewModel extends ViewModel {
     }
 
     public void downloadLessonById(long lessonId) {
-        this.lesson.setValue(Repository.getInstance().getLessonById(lessonId));
+        Repository.getInstance().getLessonById(lessonId, lesson);
     }
 
-    public void editLesson(long lessonId, Date dateAndTime, boolean isLecture, int pointsPerVisit) {
-        Repository.getInstance().editLesson(lessonId, dateAndTime, isLecture, pointsPerVisit);
+    public void editLesson(long lessonId, Module module, Date dateAndTime, boolean isLecture, int pointsPerVisit) {
+        Repository.getInstance().editLesson(lessonId, new Lesson(module, dateAndTime, isLecture, pointsPerVisit));
     }
 
     public void deleteLesson(long lessonId) {

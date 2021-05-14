@@ -10,12 +10,18 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.data_classes.Lesson;
+import com.example.electronicdiary.data_classes.StudentPerformanceInModule;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
 
 public class StudentLessonDialogFragment extends DialogFragment {
     private AlertDialog dialog;
@@ -32,13 +38,9 @@ public class StudentLessonDialogFragment extends DialogFragment {
         boolean isHasData = getArguments().getBoolean("isHasData");
         long lessonId = getArguments().getLong("lessonId");
         String lessonDate = getArguments().getString("lessonDate");
-        long studentId = getArguments().getLong("studentId");
-        int moduleNumber = getArguments().getInt("moduleNumber");
-        long groupId = getArguments().getLong("groupId");
-        long subjectId = getArguments().getLong("subjectId");
-        long lecturerId = getArguments().getLong("lecturerId");
-        long seminarianId = getArguments().getLong("seminarianId");
-        long semesterId = getArguments().getLong("semesterId");
+        long studentLessonId = getArguments().getLong("studentLessonId");
+        long studentPerformanceInSubjectId = getArguments().getLong("studentPerformanceInSubjectId");
+        long subjectInfoId = getArguments().getLong("subjectInfoId");
 
         StudentLessonViewModel studentLessonViewModel = new ViewModelProvider(this).get(StudentLessonViewModel.class);
 
@@ -46,15 +48,13 @@ public class StudentLessonDialogFragment extends DialogFragment {
         EditText bonusPoints = root.findViewById(R.id.studentLessonBonusPoints);
 
         if (isHasData) {
-            studentLessonViewModel.downloadStudentLessonById(lessonId, studentId);
+            studentLessonViewModel.downloadStudentLessonById(studentLessonId);
             studentLessonViewModel.getStudentLesson().observe(this, studentLesson -> {
-                if (studentLesson == null) {
-                    return;
+                if (studentLesson != null) {
+                    isAttended.setChecked(studentLesson.isAttended());
+                    if (studentLesson.getBonusPoints() != -1)
+                        bonusPoints.setText(String.valueOf(studentLesson.getBonusPoints()));
                 }
-
-                isAttended.setChecked(studentLesson.isAttended());
-                if (studentLesson.getBonusPoints() != -1)
-                    bonusPoints.setText(String.valueOf(studentLesson.getBonusPoints()));
             });
         } else {
             bonusPoints.setVisibility(View.GONE);
@@ -65,57 +65,63 @@ public class StudentLessonDialogFragment extends DialogFragment {
         builder.setView(root)
                 .setTitle("Посещение " + lessonDate)
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    if (isHasData)
-                        studentLessonViewModel.editStudentLesson(lessonId, studentId, isAttended.isChecked(),
-                                Integer.parseInt(bonusPoints.getText().toString().isEmpty() ? "-1" : bonusPoints.getText().toString()));
-                    else
-                        studentLessonViewModel.addStudentLesson(lessonId, moduleNumber, studentId,
-                                groupId, subjectId, lecturerId, seminarianId, semesterId, isAttended.isChecked());
+                    studentLessonViewModel.downloadLessonById(lessonId);
+                    studentLessonViewModel.downloadStudentPerformanceInModules(studentPerformanceInSubjectId);
 
-                    if (isFromGroupPerformance) {
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("openPage", moduleNumber - 1);
-                        bundle.putLong("groupId", groupId);
-                        bundle.putLong("subjectId", subjectId);
-                        bundle.putLong("lecturerId", lecturerId);
-                        bundle.putLong("seminarianId", seminarianId);
-                        bundle.putLong("semesterId", semesterId);
+                    LiveData<Lesson> lessonLiveData = studentLessonViewModel.getLesson();
+                    LiveData<Map<String, StudentPerformanceInModule>> studentPerformanceInModulesLiveData =
+                            Transformations.switchMap(lessonLiveData, g -> studentLessonViewModel.getStudentPerformanceInModules());
 
-                        Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_lesson_to_group_performance, bundle);
-                    } else {
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("openPage", finalIsLecture ? 1 : 2);
-                        bundle.putInt("moduleExpand", moduleNumber - 1);
-                        bundle.putLong("studentId", studentId);
-                        bundle.putLong("subjectId", subjectId);
-                        bundle.putLong("semesterId", semesterId);
+                    studentPerformanceInModulesLiveData.observe(getViewLifecycleOwner(), studentPerformanceInModule -> {
+                        if (studentPerformanceInModule != null) {
+                            Lesson lesson = studentLessonViewModel.getLesson().getValue();
+                            if (isHasData)
+                                studentLessonViewModel.editStudentLesson(studentLessonId, studentLessonViewModel.getStudentLesson().getValue().getStudentPerformanceInModule(),
+                                        studentLessonViewModel.getStudentLesson().getValue().getLesson(), isAttended.isChecked(),
+                                        Integer.parseInt(bonusPoints.getText().toString().isEmpty() ? "-1" : bonusPoints.getText().toString()));
+                            else
+                                studentLessonViewModel.addStudentLesson(studentPerformanceInModule.get(String.valueOf(lesson.getModule().getModuleNumber())),
+                                        lesson, isAttended.isChecked());
 
-                        Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_lesson_to_student_performance, bundle);
-                    }
+                            if (isFromGroupPerformance) {
+                                Bundle bundle = new Bundle();
+                                bundle.putInt("openPage", lesson.getModule().getModuleNumber() - 1);
+                                bundle.putLong("subjectInfoId", subjectInfoId);
+
+                                Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_lesson_to_group_performance, bundle);
+                            } else {
+                                Bundle bundle = new Bundle();
+                                bundle.putInt("openPage", finalIsLecture ? 1 : 2);
+                                bundle.putInt("moduleExpand", lesson.getModule().getModuleNumber() - 1);
+                                bundle.putLong("studentPerformanceInSubjectId", studentPerformanceInModule.get(String.valueOf(lesson.getModule().getModuleNumber()))
+                                        .getStudentPerformanceInSubject().getId());
+
+                                Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_lesson_to_student_performance, bundle);
+                            }
+                        }
+                    });
                 });
         if (isHasData) {
             builder.setNegativeButton("Отменить", (dialog, id) -> {
                 dismiss();
             }).setNeutralButton("Удалить", (dialog, id) -> {
-                studentLessonViewModel.deleteStudentLesson(lessonId, studentId);
+                studentLessonViewModel.deleteStudentLesson(studentLessonId);
+
+                int moduleNumber = studentLessonViewModel.getStudentLesson().getValue().getLesson().getModule().getModuleNumber();
 
                 if (isFromGroupPerformance) {
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", moduleNumber - 1);
-                    bundle.putLong("groupId", groupId);
-                    bundle.putLong("subjectId", subjectId);
-                    bundle.putLong("lecturerId", lecturerId);
-                    bundle.putLong("seminarianId", seminarianId);
-                    bundle.putLong("semesterId", semesterId);
+                    bundle.putLong("subjectInfoId", subjectInfoId);
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_lesson_to_group_performance, bundle);
                 } else {
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", finalIsLecture ? 1 : 2);
                     bundle.putInt("moduleExpand", moduleNumber - 1);
-                    bundle.putLong("studentId", studentId);
-                    bundle.putLong("subjectId", subjectId);
-                    bundle.putLong("semesterId", semesterId);
+                    bundle.putLong("studentPerformanceInSubjectId", studentLessonViewModel.getStudentLesson().getValue()
+                            .getStudentPerformanceInModule().getStudentPerformanceInSubject().getId());
+
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_lesson_to_student_performance, bundle);
                 }

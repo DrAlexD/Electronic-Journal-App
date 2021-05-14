@@ -94,7 +94,7 @@
 
     <dialog
         android:id="@+id/nav_dialog_module_info_editing"
-        android:name="com.example.electronicdiary.group.actions.info.ModuleInfoEditingDialogFragment">
+        android:name="com.example.electronicdiary.group.actions.info.ModuleEditingDialogFragment">
         <action
             android:id="@+id/pop_out_dialog_module_info_editing_to_group_performance"
             app:popUpTo="@id/nav_group_performance"

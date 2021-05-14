@@ -9,29 +9,29 @@ import android.widget.TextView;
 
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.data_classes.Event;
-import com.example.electronicdiary.data_classes.ModuleInfo;
+import com.example.electronicdiary.data_classes.Module;
 import com.example.electronicdiary.data_classes.StudentEvent;
 import com.example.electronicdiary.data_classes.StudentPerformanceInModule;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class EventsAdapter extends BaseExpandableListAdapter {
     private final LayoutInflater inflater;
 
     private final List<Integer> modules;
-    private final HashMap<Integer, ModuleInfo> moduleInfoByModules;
-    private final HashMap<Integer, StudentPerformanceInModule> studentPerformanceByModules;
-    private final HashMap<Integer, List<Event>> eventsByModules;
-    private final HashMap<Integer, List<StudentEvent>> studentEventsByModules;
+    private final Map<String, Module> moduleByModules;
+    private final Map<String, StudentPerformanceInModule> studentPerformanceByModules;
+    private final Map<String, List<Event>> eventsByModules;
+    private final Map<String, List<StudentEvent>> studentEventsByModules;
 
-    EventsAdapter(Context context, List<Integer> modules, HashMap<Integer, ModuleInfo> moduleInfoByModules,
-                  HashMap<Integer, StudentPerformanceInModule> studentPerformanceByModules,
-                  HashMap<Integer, List<Event>> eventsByModules,
-                  HashMap<Integer, List<StudentEvent>> studentEventsByModules) {
+    EventsAdapter(Context context, List<Integer> modules, Map<String, Module> moduleByModules,
+                  Map<String, StudentPerformanceInModule> studentPerformanceByModules,
+                  Map<String, List<Event>> eventsByModules,
+                  Map<String, List<StudentEvent>> studentEventsByModules) {
         this.inflater = LayoutInflater.from(context);
         this.modules = modules;
-        this.moduleInfoByModules = moduleInfoByModules;
+        this.moduleByModules = moduleByModules;
         this.studentPerformanceByModules = studentPerformanceByModules;
         this.eventsByModules = eventsByModules;
         this.studentEventsByModules = studentEventsByModules;
@@ -44,7 +44,7 @@ class EventsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return eventsByModules.get(modules.get(groupPosition)).size();
+        return eventsByModules.get(String.valueOf(modules.get(groupPosition))).size();
     }
 
     @Override
@@ -54,7 +54,7 @@ class EventsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return eventsByModules.get(modules.get(groupPosition)).get(childPosition);
+        return eventsByModules.get(String.valueOf(modules.get(groupPosition))).get(childPosition);
     }
 
     @Override
@@ -75,22 +75,22 @@ class EventsAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View view, ViewGroup parent) {
         String moduleTitle = "Модуль " + modules.get(groupPosition);
-        ModuleInfo moduleInfo = moduleInfoByModules.get(modules.get(groupPosition));
-        StudentPerformanceInModule studentPerformanceInModule = studentPerformanceByModules.get(modules.get(groupPosition));
+        Module module = moduleByModules.get(String.valueOf(modules.get(groupPosition)));
+        StudentPerformanceInModule studentPerformanceInModule = studentPerformanceByModules.get(String.valueOf(modules.get(groupPosition)));
 
         if (view == null) {
             view = inflater.inflate(R.layout.holder_module_performance, null);
         }
 
         TextView moduleTitleWithPointsView = view.findViewById(R.id.moduleTitleWithPoints);
-        moduleTitleWithPointsView.setText(moduleTitle + " (" + moduleInfo.getMinPoints() +
-                "-" + moduleInfo.getMaxPoints() + ")");
-        moduleTitleWithPointsView.setTextColor(studentPerformanceInModule.getEarnedPoints() > moduleInfo.getMinPoints() ?
+        moduleTitleWithPointsView.setText(moduleTitle + " (" + module.getMinPoints() +
+                "-" + module.getMaxPoints() + ")");
+        moduleTitleWithPointsView.setTextColor(studentPerformanceInModule.getEarnedPoints() > module.getMinPoints() ?
                 inflater.getContext().getColor(R.color.green) : inflater.getContext().getColor(R.color.red));
 
         TextView earnedModulePointsView = view.findViewById(R.id.earnedModulePoints);
         earnedModulePointsView.setText(String.valueOf(studentPerformanceInModule.getEarnedPoints()));
-        earnedModulePointsView.setTextColor(studentPerformanceInModule.getEarnedPoints() > moduleInfo.getMinPoints() ?
+        earnedModulePointsView.setTextColor(studentPerformanceInModule.getEarnedPoints() > module.getMinPoints() ?
                 inflater.getContext().getColor(R.color.green) : inflater.getContext().getColor(R.color.red));
 
         return view;
@@ -98,13 +98,13 @@ class EventsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isExpanded, View view, ViewGroup parent) {
-        Event event = eventsByModules.get(modules.get(groupPosition)).get(childPosition);
-        List<StudentEvent> studentEvents = studentEventsByModules.get(modules.get(groupPosition));
+        Event event = eventsByModules.get(String.valueOf(modules.get(groupPosition))).get(childPosition);
+        List<StudentEvent> studentEvents = studentEventsByModules.get(String.valueOf(modules.get(groupPosition)));
 
         int lastAttempt = 0;
         StudentEvent studentEvent = null;
         for (int i = 0; i < studentEvents.size(); i++) {
-            if (event.getId() == studentEvents.get(i).getEventId() && studentEvents.get(i).getAttemptNumber() > lastAttempt) {
+            if (event.getId() == studentEvents.get(i).getEvent().getId() && studentEvents.get(i).getAttemptNumber() > lastAttempt) {
                 studentEvent = studentEvents.get(i);
                 lastAttempt = studentEvents.get(i).getAttemptNumber();
             }

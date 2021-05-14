@@ -35,12 +35,10 @@ public class SemesterEditingDialogFragment extends DialogFragment {
         CheckBox isFirstHalf = root.findViewById(R.id.isSemesterFirstHalfEditing);
 
         semesterEditingViewModel.getSemester().observe(this, semester -> {
-            if (semester == null) {
-                return;
+            if (semester != null) {
+                semesterYear.setText(String.valueOf(semester.getYear()));
+                isFirstHalf.setChecked(semester.isFirstHalf());
             }
-
-            semesterYear.setText(String.valueOf(semester.getYear()));
-            isFirstHalf.setChecked(semester.isFirstHalf());
         });
 
         TextWatcher afterTextChangedListener = new TextWatcher() {

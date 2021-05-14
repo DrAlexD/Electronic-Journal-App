@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.admin.SemesterFormState;
+import com.example.electronicdiary.data_classes.Semester;
 
 public class SemesterAddingViewModel extends ViewModel {
     private final MutableLiveData<SemesterFormState> semesterFormState = new MutableLiveData<>();
@@ -19,6 +20,6 @@ public class SemesterAddingViewModel extends ViewModel {
     }
 
     public void addSemester(int semesterYear, boolean isFirstHalf) {
-        Repository.getInstance().addSemester(semesterYear, isFirstHalf);
+        Repository.getInstance().addSemester(new Semester(semesterYear, isFirstHalf));
     }
 }

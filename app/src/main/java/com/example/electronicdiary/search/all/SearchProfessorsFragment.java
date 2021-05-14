@@ -31,30 +31,28 @@ public class SearchProfessorsFragment extends Fragment {
 
         final RecyclerView recyclerView = root.findViewById(R.id.searchedProfessorsList);
         searchProfessorsViewModel.getProfessors().observe(getViewLifecycleOwner(), professors -> {
-            if (professors == null) {
-                return;
+            if (professors != null) {
+                View.OnClickListener onItemClickListener = view -> {
+                    RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
+                    int position = viewHolder.getAdapterPosition();
+
+                    if (actionCode == 1) {
+                        Bundle bundle = new Bundle();
+                        bundle.putLong("professorId", professors.get(position).getId());
+                        Navigation.findNavController(view).navigate(R.id.action_search_professors_to_dialog_professor_editing, bundle);
+                    } else if (actionCode == 2) {
+                        searchProfessorsViewModel.deleteProfessor(professors.get(position).getId());
+
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("openPage", 2);
+                        Navigation.findNavController(view).navigate(R.id.action_search_professors_to_admin_actions, bundle);
+                    }
+                };
+
+                professorsAdapter = new ProfessorsAdapter(getContext(), professors, onItemClickListener);
+                recyclerView.setAdapter(professorsAdapter);
+                recyclerView.setHasFixedSize(false);
             }
-
-            View.OnClickListener onItemClickListener = view -> {
-                RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
-                int position = viewHolder.getAdapterPosition();
-
-                if (actionCode == 1) {
-                    Bundle bundle = new Bundle();
-                    bundle.putLong("professorId", professors.get(position).getId());
-                    Navigation.findNavController(view).navigate(R.id.action_search_professors_to_dialog_professor_editing, bundle);
-                } else if (actionCode == 2) {
-                    searchProfessorsViewModel.deleteProfessor(professors.get(position).getId());
-
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("openPage", 2);
-                    Navigation.findNavController(view).navigate(R.id.action_search_professors_to_admin_actions, bundle);
-                }
-            };
-
-            professorsAdapter = new ProfessorsAdapter(getContext(), professors, onItemClickListener);
-            recyclerView.setAdapter(professorsAdapter);
-            recyclerView.setHasFixedSize(false);
         });
 
         final SearchView searchView = root.findViewById(R.id.professorsSearch);

@@ -17,6 +17,6 @@ public class SettingsViewModel extends ViewModel {
     }
 
     public void downloadSemesters() {
-        this.semesters.setValue(Repository.getInstance().getSemesters());
+        Repository.getInstance().getSemesters(semesters);
     }
 }

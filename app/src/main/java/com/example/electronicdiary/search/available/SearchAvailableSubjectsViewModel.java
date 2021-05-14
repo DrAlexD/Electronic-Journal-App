@@ -6,21 +6,32 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.data_classes.Subject;
+import com.example.electronicdiary.data_classes.SubjectInfo;
 
 import java.util.List;
+import java.util.Map;
 
 public class SearchAvailableSubjectsViewModel extends ViewModel {
     private final MutableLiveData<List<Subject>> availableSubjects = new MutableLiveData<>();
+    private final MutableLiveData<Map<String, List<SubjectInfo>>> availableSubjectsWithGroups = new MutableLiveData<>();
 
     public LiveData<List<Subject>> getAvailableSubjects() {
         return availableSubjects;
     }
 
-    public void downloadAvailableSubjects(long semesterId) {
-        this.availableSubjects.setValue(Repository.getInstance().getAvailableSubjects(semesterId));
+    public LiveData<Map<String, List<SubjectInfo>>> getAvailableSubjectsWithGroups() {
+        return availableSubjectsWithGroups;
     }
 
-    public void deleteAvailableSubject(long professorId, long subjectId, long semesterId) {
-        Repository.getInstance().deleteAvailableSubject(professorId, subjectId, semesterId);
+    public void downloadAvailableSubjects(long professorId, long semesterId) {
+        Repository.getInstance().getAvailableSubjects(professorId, semesterId, availableSubjects);
+    }
+
+    public void downloadAvailableSubjectsWithGroups(long professorId, long semesterId) {
+        Repository.getInstance().getAvailableSubjectsWithGroups(professorId, semesterId, availableSubjectsWithGroups);
+    }
+
+    public void deleteAvailableSubject(long subjectInfoId, long professorId) {
+        Repository.getInstance().deleteSubjectInfo(subjectInfoId, professorId);
     }
 }

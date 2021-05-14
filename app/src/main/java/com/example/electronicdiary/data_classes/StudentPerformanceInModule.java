@@ -1,80 +1,65 @@
 package com.example.electronicdiary.data_classes;
 
 public class StudentPerformanceInModule {
-    private final int moduleNumber;
-    private final long studentId;
-    private final long groupId;
-    private final long subjectId;
-    private final long lecturerId;
-    private final long seminarianId;
-    private final long semesterId;
+    private final Module module;
+    private final StudentPerformanceInSubject studentPerformanceInSubject;
+    private long id;
+    private Integer earnedPoints = null;
+    private Boolean isHaveCredit = null;
 
-    private int earnedPoints = -1;
-    private boolean isHaveCredit = false;
-
-    public StudentPerformanceInModule(int moduleNumber, long studentId, long groupId, long subjectId, long lecturerId, long seminarianId, long semesterId) {
-        this.moduleNumber = moduleNumber;
-        this.studentId = studentId;
-        this.groupId = groupId;
-        this.subjectId = subjectId;
-        this.lecturerId = lecturerId;
-        this.seminarianId = seminarianId;
-        this.semesterId = semesterId;
+    public StudentPerformanceInModule(Module module, StudentPerformanceInSubject studentPerformanceInSubject) {
+        this.module = module;
+        this.studentPerformanceInSubject = studentPerformanceInSubject;
     }
 
-    public StudentPerformanceInModule(int moduleNumber, long studentId, long groupId, long subjectId, long lecturerId, long seminarianId, long semesterId, int earnedPoints, boolean isHaveCredit) {
-        this.moduleNumber = moduleNumber;
-        this.studentId = studentId;
-        this.groupId = groupId;
-        this.subjectId = subjectId;
-        this.lecturerId = lecturerId;
-        this.seminarianId = seminarianId;
-        this.semesterId = semesterId;
+    public StudentPerformanceInModule(long id, Module module, StudentPerformanceInSubject studentPerformanceInSubject) {
+        this.id = id;
+        this.module = module;
+        this.studentPerformanceInSubject = studentPerformanceInSubject;
+    }
+
+    public StudentPerformanceInModule(Module module, StudentPerformanceInSubject studentPerformanceInSubject,
+                                      Integer earnedPoints, Boolean isHaveCredit) {
+        this.module = module;
+        this.studentPerformanceInSubject = studentPerformanceInSubject;
         this.earnedPoints = earnedPoints;
         this.isHaveCredit = isHaveCredit;
     }
 
-    public int getModuleNumber() {
-        return moduleNumber;
+    public StudentPerformanceInModule(long id, Module module, StudentPerformanceInSubject studentPerformanceInSubject,
+                                      Integer earnedPoints, Boolean isHaveCredit) {
+        this.id = id;
+        this.module = module;
+        this.studentPerformanceInSubject = studentPerformanceInSubject;
+        this.earnedPoints = earnedPoints;
+        this.isHaveCredit = isHaveCredit;
     }
 
-    public long getStudentId() {
-        return studentId;
+    public long getId() {
+        return id;
     }
 
-    public long getGroupId() {
-        return groupId;
+    public Module getModule() {
+        return module;
     }
 
-    public long getSubjectId() {
-        return subjectId;
+    public StudentPerformanceInSubject getStudentPerformanceInSubject() {
+        return studentPerformanceInSubject;
     }
 
-    public long getLecturerId() {
-        return lecturerId;
-    }
-
-    public long getSeminarianId() {
-        return seminarianId;
-    }
-
-    public long getSemesterId() {
-        return semesterId;
-    }
-
-    public int getEarnedPoints() {
+    public Integer getEarnedPoints() {
         return earnedPoints;
     }
 
-    public void setEarnedPoints(int earnedPoints) {
+    public void setEarnedPoints(Integer earnedPoints) {
         this.earnedPoints = earnedPoints;
     }
 
-    public boolean isHaveCredit() {
+    public Boolean isHaveCredit() {
         return isHaveCredit;
     }
 
-    public void setHaveCredit(boolean haveCredit) {
+    public void setHaveCredit(Boolean haveCredit) {
         isHaveCredit = haveCredit;
     }
 }

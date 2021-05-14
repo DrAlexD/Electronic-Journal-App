@@ -13,11 +13,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.Repository;
+import com.example.electronicdiary.Result;
+import com.example.electronicdiary.data_classes.Group;
+import com.example.electronicdiary.data_classes.Student;
 import com.example.electronicdiary.data_classes.Subject;
 
 public class StudentProfileFragment extends Fragment {
@@ -31,12 +36,12 @@ public class StudentProfileFragment extends Fragment {
 
         if (getArguments() != null) {
             studentId = getArguments().getLong("studentId");
-            semesterId = getArguments().getLong("semesterId");
         } else {
             studentId = Repository.getInstance().getUser().getId();
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-            semesterId = Long.parseLong(sharedPreferences.getString(getString(R.string.current_semester), "-1"));
         }
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        semesterId = Long.parseLong(sharedPreferences.getString(getString(R.string.current_semester), "-1"));
 
         StudentProfileViewModel studentProfileViewModel = new ViewModelProvider(this).get(StudentProfileViewModel.class);
         studentProfileViewModel.downloadStudentById(studentId);
@@ -44,51 +49,50 @@ public class StudentProfileFragment extends Fragment {
         studentProfileViewModel.downloadAvailableStudentSubjects(studentId, semesterId);
 
         studentProfileViewModel.getSemester().observe(getViewLifecycleOwner(), semester -> {
-            if (semester == null) {
-                return;
+            if (semester != null) {
+                TextView semesterView = root.findViewById(R.id.semester_text);
+                semesterView.setText(semester.toString());
             }
-
-            TextView semesterView = root.findViewById(R.id.semester_text);
-            semesterView.setText(semester.toString());
         });
 
-        studentProfileViewModel.getStudent().observe(getViewLifecycleOwner(), student -> {
-            if (student == null) {
-                return;
+        LiveData<Result<Student>> studentLiveData = studentProfileViewModel.getStudent();
+        LiveData<Group> groupLiveData =
+                Transformations.switchMap(studentLiveData, student -> {
+                    if (student instanceof Result.Success) {
+                        Student studentData = ((Result.Success<Student>) student).getData();
+
+                        TextView username = root.findViewById(R.id.user_name_text);
+                        username.setText(studentData.getFullName());
+
+                        studentProfileViewModel.downloadGroupById(studentData.getGroup().getId());
+
+                        return studentProfileViewModel.getGroup();
+                    } else
+                        return null;
+                });
+
+        groupLiveData.observe(getViewLifecycleOwner(), group -> {
+            if (group != null) {
+                TextView userGroup = root.findViewById(R.id.user_group_text);
+                userGroup.setVisibility(View.VISIBLE);
+                userGroup.setText(group.getTitle());
             }
-
-            TextView username = root.findViewById(R.id.user_name_text);
-            username.setText(student.getFullName());
-
-            studentProfileViewModel.downloadGroupById(student.getGroupId());
-        });
-
-        studentProfileViewModel.getGroup().observe(getViewLifecycleOwner(), group -> {
-            if (group == null) {
-                return;
-            }
-
-            TextView userGroup = root.findViewById(R.id.user_group_text);
-            userGroup.setVisibility(View.VISIBLE);
-            userGroup.setText(group.getTitle());
         });
 
         final ListView listView = root.findViewById(R.id.studentSubjectsList);
         studentProfileViewModel.getAvailableStudentSubjects().observe(getViewLifecycleOwner(), availableStudentSubjects -> {
-            if (availableStudentSubjects == null) {
-                return;
+            if (availableStudentSubjects != null) {
+                ArrayAdapter<Subject> subjectsAdapter = new ArrayAdapter<>(getContext(), R.layout.holder_subject_with_group, R.id.subjectTitle, availableStudentSubjects);
+                listView.setAdapter(subjectsAdapter);
+                listView.setOnItemClickListener((parent, view, position, id) -> {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("openPage", 0);
+                    bundle.putLong("studentId", studentId);
+                    bundle.putLong("subjectId", availableStudentSubjects.get(position).getId());
+                    bundle.putLong("semesterId", semesterId);
+                    Navigation.findNavController(view).navigate(R.id.action_student_profile_to_student_performance, bundle);
+                });
             }
-
-            ArrayAdapter<Subject> subjectsAdapter = new ArrayAdapter<>(getContext(), R.layout.holder_subject_with_group, R.id.subjectTitle, availableStudentSubjects);
-            listView.setAdapter(subjectsAdapter);
-            listView.setOnItemClickListener((parent, view, position, id) -> {
-                Bundle bundle = new Bundle();
-                bundle.putInt("openPage", 0);
-                bundle.putLong("studentId", studentId);
-                bundle.putLong("subjectId", availableStudentSubjects.get(position).getId());
-                bundle.putLong("semesterId", semesterId);
-                Navigation.findNavController(view).navigate(R.id.action_student_profile_to_student_performance, bundle);
-            });
         });
         return root;
     }

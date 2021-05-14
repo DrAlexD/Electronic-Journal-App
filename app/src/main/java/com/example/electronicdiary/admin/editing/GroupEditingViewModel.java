@@ -16,7 +16,7 @@ public class GroupEditingViewModel extends ViewModel {
         return groupFormState;
     }
 
-    public MutableLiveData<Group> getGroup() {
+    public LiveData<Group> getGroup() {
         return group;
     }
 
@@ -25,10 +25,10 @@ public class GroupEditingViewModel extends ViewModel {
     }
 
     public void downloadGroupById(long groupId) {
-        this.group.setValue(Repository.getInstance().getGroupById(groupId));
+        Repository.getInstance().getGroupById(groupId, group);
     }
 
     public void editGroup(long groupId, String groupTitle) {
-        Repository.getInstance().editGroup(groupId, groupTitle);
+        Repository.getInstance().editGroup(groupId, new Group(groupTitle));
     }
 }

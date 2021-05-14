@@ -5,36 +5,44 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Date;
 
 public class StudentEvent {
+    private final StudentPerformanceInModule studentPerformanceInModule;
     private final int attemptNumber;
-    private final long eventId;
-    private final int moduleNumber;
-    private final long studentId;
-    private final long groupId;
-    private final long subjectId;
-    private final long lecturerId;
-    private final long seminarianId;
-    private final long semesterId;
+    private final Event event;
+    private long id;
 
     private final boolean isAttended;
     private final int variantNumber;
 
     private Date finishDate = null;
-    private int earnedPoints = -1;
-    private int bonusPoints = -1;
-    private boolean isHaveCredit = false;
+    private Integer earnedPoints = null;
+    private Integer bonusPoints = null;
+    private Boolean isHaveCredit = null;
 
-    public StudentEvent(int attemptNumber, long eventId, int moduleNumber, long studentId, long groupId, long subjectId,
-                        long lecturerId, long seminarianId, long semesterId, boolean isAttended, int variantNumber,
-                        Date finishDate, int earnedPoints, int bonusPoints, boolean isHaveCredit) {
+    public StudentEvent(int attemptNumber, StudentPerformanceInModule studentPerformanceInModule,
+                        Event event, boolean isAttended, int variantNumber) {
         this.attemptNumber = attemptNumber;
-        this.eventId = eventId;
-        this.moduleNumber = moduleNumber;
-        this.studentId = studentId;
-        this.groupId = groupId;
-        this.subjectId = subjectId;
-        this.lecturerId = lecturerId;
-        this.seminarianId = seminarianId;
-        this.semesterId = semesterId;
+        this.studentPerformanceInModule = studentPerformanceInModule;
+        this.event = event;
+        this.isAttended = isAttended;
+        this.variantNumber = variantNumber;
+    }
+
+    public StudentEvent(long id, int attemptNumber, StudentPerformanceInModule studentPerformanceInModule,
+                        Event event, boolean isAttended, int variantNumber) {
+        this.id = id;
+        this.attemptNumber = attemptNumber;
+        this.studentPerformanceInModule = studentPerformanceInModule;
+        this.event = event;
+        this.isAttended = isAttended;
+        this.variantNumber = variantNumber;
+    }
+
+    public StudentEvent(int attemptNumber, StudentPerformanceInModule studentPerformanceInModule,
+                        Event event, boolean isAttended, int variantNumber, Date finishDate, Integer earnedPoints,
+                        Integer bonusPoints, Boolean isHaveCredit) {
+        this.attemptNumber = attemptNumber;
+        this.studentPerformanceInModule = studentPerformanceInModule;
+        this.event = event;
         this.isAttended = isAttended;
         this.variantNumber = variantNumber;
         this.finishDate = finishDate;
@@ -43,19 +51,19 @@ public class StudentEvent {
         this.isHaveCredit = isHaveCredit;
     }
 
-    public StudentEvent(int attemptNumber, long eventId, int moduleNumber, long studentId, long groupId, long subjectId,
-                        long lecturerId, long seminarianId, long semesterId, boolean isAttended, int variantNumber) {
+    public StudentEvent(long id, int attemptNumber, StudentPerformanceInModule studentPerformanceInModule,
+                        Event event, boolean isAttended, int variantNumber, Date finishDate, Integer earnedPoints,
+                        Integer bonusPoints, Boolean isHaveCredit) {
+        this.id = id;
         this.attemptNumber = attemptNumber;
-        this.eventId = eventId;
-        this.moduleNumber = moduleNumber;
-        this.studentId = studentId;
-        this.groupId = groupId;
-        this.subjectId = subjectId;
-        this.lecturerId = lecturerId;
-        this.seminarianId = seminarianId;
-        this.semesterId = semesterId;
+        this.studentPerformanceInModule = studentPerformanceInModule;
+        this.event = event;
         this.isAttended = isAttended;
         this.variantNumber = variantNumber;
+        this.finishDate = finishDate;
+        this.earnedPoints = earnedPoints;
+        this.bonusPoints = bonusPoints;
+        this.isHaveCredit = isHaveCredit;
     }
 
     @NotNull
@@ -71,36 +79,16 @@ public class StudentEvent {
         return attemptNumber;
     }
 
-    public long getEventId() {
-        return eventId;
+    public long getId() {
+        return id;
     }
 
-    public int getModuleNumber() {
-        return moduleNumber;
+    public Event getEvent() {
+        return event;
     }
 
-    public long getStudentId() {
-        return studentId;
-    }
-
-    public long getGroupId() {
-        return groupId;
-    }
-
-    public long getSubjectId() {
-        return subjectId;
-    }
-
-    public long getLecturerId() {
-        return lecturerId;
-    }
-
-    public long getSeminarianId() {
-        return seminarianId;
-    }
-
-    public long getSemesterId() {
-        return semesterId;
+    public StudentPerformanceInModule getStudentPerformanceInModule() {
+        return studentPerformanceInModule;
     }
 
     public boolean isAttended() {
@@ -119,27 +107,27 @@ public class StudentEvent {
         this.finishDate = finishDate;
     }
 
-    public int getEarnedPoints() {
+    public Integer getEarnedPoints() {
         return earnedPoints;
     }
 
-    public void setEarnedPoints(int earnedPoints) {
+    public void setEarnedPoints(Integer earnedPoints) {
         this.earnedPoints = earnedPoints;
     }
 
-    public int getBonusPoints() {
+    public Integer getBonusPoints() {
         return bonusPoints;
     }
 
-    public void setBonusPoints(int bonusPoints) {
+    public void setBonusPoints(Integer bonusPoints) {
         this.bonusPoints = bonusPoints;
     }
 
-    public boolean isHaveCredit() {
+    public Boolean isHaveCredit() {
         return isHaveCredit;
     }
 
-    public void setHaveCredit(boolean haveCredit) {
+    public void setHaveCredit(Boolean haveCredit) {
         isHaveCredit = haveCredit;
     }
 }

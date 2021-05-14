@@ -9,15 +9,15 @@ import com.example.electronicdiary.data_classes.Semester;
 import com.example.electronicdiary.data_classes.Subject;
 import com.example.electronicdiary.data_classes.SubjectInfo;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProfileViewModel extends ViewModel {
     private final MutableLiveData<Semester> semester = new MutableLiveData<>();
     private final MutableLiveData<List<Subject>> availableSubjects = new MutableLiveData<>();
-    private final MutableLiveData<HashMap<Subject, List<SubjectInfo>>> availableSubjectsWithGroups = new MutableLiveData<>();
+    private final MutableLiveData<Map<String, List<SubjectInfo>>> availableSubjectsWithGroups = new MutableLiveData<>();
 
-    public MutableLiveData<Semester> getSemester() {
+    public LiveData<Semester> getSemester() {
         return semester;
     }
 
@@ -25,16 +25,19 @@ public class ProfileViewModel extends ViewModel {
         return availableSubjects;
     }
 
-    public LiveData<HashMap<Subject, List<SubjectInfo>>> getAvailableSubjectsWithGroups() {
+    public LiveData<Map<String, List<SubjectInfo>>> getAvailableSubjectsWithGroups() {
         return availableSubjectsWithGroups;
     }
 
     public void downloadSemesterById(long semesterId) {
-        this.semester.setValue(Repository.getInstance().getSemesterById(semesterId));
+        Repository.getInstance().getSemesterById(semesterId, semester);
+    }
+
+    public void downloadAvailableSubjects(long professorId, long semesterId) {
+        Repository.getInstance().getAvailableSubjects(professorId, semesterId, availableSubjects);
     }
 
     public void downloadAvailableSubjectsWithGroups(long professorId, long semesterId) {
-        this.availableSubjects.setValue(Repository.getInstance().getAvailableSubjects(semesterId));
-        this.availableSubjectsWithGroups.setValue(Repository.getInstance().getAvailableSubjectsWithGroups(professorId, semesterId));
+        Repository.getInstance().getAvailableSubjectsWithGroups(professorId, semesterId, availableSubjectsWithGroups);
     }
 }

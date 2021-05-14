@@ -29,12 +29,7 @@ public class LessonAddingDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_lesson_adding, null);
 
-        int moduleNumber = getArguments().getInt("moduleNumber");
-        long groupId = getArguments().getLong("groupId");
-        long subjectId = getArguments().getLong("subjectId");
-        long lecturerId = getArguments().getLong("lecturerId");
-        long seminarianId = getArguments().getLong("seminarianId");
-        long semesterId = getArguments().getLong("semesterId");
+        long moduleId = getArguments().getLong("moduleId");
 
         LessonAddingViewModel lessonAddingViewModel = new ViewModelProvider(this).get(LessonAddingViewModel.class);
 
@@ -79,24 +74,26 @@ public class LessonAddingDialogFragment extends DialogFragment {
         dialog = builder.setView(root)
                 .setTitle("Введите данные занятия")
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    String date = dateAndTime.getText().toString().split(" ")[0];
-                    String time = dateAndTime.getText().toString().split(" ")[1];
-                    String[] splitedDate = date.split("\\.");
-                    String[] splitedTime = time.split(":");
-                    lessonAddingViewModel.addLesson(moduleNumber, groupId, subjectId, lecturerId, seminarianId, semesterId,
-                            new Date(Integer.parseInt(splitedDate[2]), Integer.parseInt(splitedDate[1]) - 1,
-                                    Integer.parseInt(splitedDate[0]), Integer.parseInt(splitedTime[0]), Integer.parseInt(splitedTime[1])),
-                            isLecture.isChecked(), Integer.parseInt(pointsPerVisit.getText().toString()));
+                    lessonAddingViewModel.downloadModuleById(moduleId);
 
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("openPage", moduleNumber - 1);
-                    bundle.putLong("groupId", groupId);
-                    bundle.putLong("subjectId", subjectId);
-                    bundle.putLong("lecturerId", lecturerId);
-                    bundle.putLong("seminarianId", seminarianId);
-                    bundle.putLong("semesterId", semesterId);
+                    lessonAddingViewModel.getModule().observe(this, module -> {
+                        if (module != null) {
+                            String date = dateAndTime.getText().toString().split(" ")[0];
+                            String time = dateAndTime.getText().toString().split(" ")[1];
+                            String[] splitedDate = date.split("\\.");
+                            String[] splitedTime = time.split(":");
+                            lessonAddingViewModel.addLesson(module,
+                                    new Date(Integer.parseInt(splitedDate[2]), Integer.parseInt(splitedDate[1]) - 1,
+                                            Integer.parseInt(splitedDate[0]), Integer.parseInt(splitedTime[0]), Integer.parseInt(splitedTime[1])),
+                                    isLecture.isChecked(), Integer.parseInt(pointsPerVisit.getText().toString()));
 
-                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_lesson_adding_to_group_performance, bundle);
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("openPage", module.getModuleNumber() - 1);
+                            bundle.putLong("subjectInfoId", module.getSubjectInfo().getId());
+
+                            Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_lesson_adding_to_group_performance, bundle);
+                        }
+                    });
                 }).create();
 
         dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false));

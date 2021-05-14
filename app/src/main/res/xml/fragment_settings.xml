@@ -2,8 +2,7 @@
     <PreferenceCategory app:title="@string/general_header">
         <ListPreference
             app:key="@string/current_semester"
-            app:title="@string/current_semester"
-            app:useSimpleSummaryProvider="true" />
+            app:title="@string/current_semester" />
         <SwitchPreferenceCompat
             app:defaultValue="false"
             app:key="@string/is_remember_me"

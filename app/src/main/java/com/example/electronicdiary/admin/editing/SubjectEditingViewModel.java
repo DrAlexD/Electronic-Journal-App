@@ -16,7 +16,7 @@ public class SubjectEditingViewModel extends ViewModel {
         return subjectFormState;
     }
 
-    public MutableLiveData<Subject> getSubject() {
+    public LiveData<Subject> getSubject() {
         return subject;
     }
 
@@ -25,10 +25,10 @@ public class SubjectEditingViewModel extends ViewModel {
     }
 
     public void downloadSubjectById(long subjectId) {
-        this.subject.setValue(Repository.getInstance().getSubjectById(subjectId));
+        Repository.getInstance().getSubjectById(subjectId, subject);
     }
 
     public void editSubject(long subjectId, String subjectTitle) {
-        Repository.getInstance().editSubject(subjectId, subjectTitle);
+        Repository.getInstance().editSubject(subjectId, new Subject(subjectTitle));
     }
 }

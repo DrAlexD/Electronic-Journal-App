@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.data_classes.SubjectInfo;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -23,28 +24,22 @@ public class SubjectInfoEditingDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_subject_info_editing, null);
 
-        long groupId = getArguments().getLong("groupId");
-        long subjectId = getArguments().getLong("subjectId");
-        long lecturerId = getArguments().getLong("lecturerId");
-        long seminarianId = getArguments().getLong("seminarianId");
-        long semesterId = getArguments().getLong("semesterId");
+        long subjectInfoId = getArguments().getLong("subjectInfoId");
 
         SubjectInfoEditingViewModel subjectInfoEditingViewModel = new ViewModelProvider(this).get(SubjectInfoEditingViewModel.class);
-        subjectInfoEditingViewModel.downloadSubjectInfo(groupId, subjectId, lecturerId, seminarianId, semesterId);
+        subjectInfoEditingViewModel.downloadSubjectInfo(subjectInfoId);
 
-        CheckBox isSwapLecturerAndSeminarian = root.findViewById(R.id.subjectInfoIsSwapLecturerAndSeminarianEditing);
+        /*        CheckBox isSwapLecturerAndSeminarian = root.findViewById(R.id.subjectInfoIsSwapLecturerAndSeminarianEditing);*/
         CheckBox isExam = root.findViewById(R.id.subjectInfoIsExamEditing);
         CheckBox isDifferentiatedCredit = root.findViewById(R.id.subjectInfoIsDifferentiatedCreditEditing);
-        CheckBox isForAllGroups = root.findViewById(R.id.subjectInfoIsForAllGroupsEditing);
+        /*        CheckBox isForAllGroups = root.findViewById(R.id.subjectInfoIsForAllGroupsEditing);*/
 
         subjectInfoEditingViewModel.getSubjectInfo().observe(this, subjectInfo -> {
-            if (subjectInfo == null) {
-                return;
+            if (subjectInfo != null) {
+                isExam.setChecked(subjectInfo.isExam());
+                isDifferentiatedCredit.setChecked(subjectInfo.isDifferentiatedCredit());
             }
-
-            isExam.setChecked(subjectInfo.isExam());
-            isDifferentiatedCredit.setChecked(subjectInfo.isDifferentiatedCredit());
-            isSwapLecturerAndSeminarian.setVisibility(subjectInfo.getLecturerId() != subjectInfo.getSeminarianId() ? View.VISIBLE : View.GONE);
+            /*            isSwapLecturerAndSeminarian.setVisibility(subjectInfo.getLecturerId() != subjectInfo.getSeminarian().getId() ? View.VISIBLE : View.GONE);*/
         });
 
         isExam.setOnClickListener(view -> {
@@ -63,15 +58,14 @@ public class SubjectInfoEditingDialogFragment extends DialogFragment {
         dialog = builder.setView(root)
                 .setTitle("Изменить данные по предмету")
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    subjectInfoEditingViewModel.editSubjectInfo(groupId, subjectId, lecturerId, seminarianId, semesterId,
-                            isSwapLecturerAndSeminarian.isChecked(), isExam.isChecked(), isDifferentiatedCredit.isChecked(), isForAllGroups.isChecked());
+                    SubjectInfo subjectInfo = subjectInfoEditingViewModel.getSubjectInfo().getValue();
+
+                    subjectInfoEditingViewModel.editSubjectInfo(subjectInfoId, subjectInfo.getGroup(), subjectInfo.getSubject(),
+                            subjectInfo.getLecturerId(), subjectInfo.getSeminarian(), subjectInfo.getSemester(),
+                            isExam.isChecked(), isDifferentiatedCredit.isChecked());
 
                     Bundle bundle = new Bundle();
-                    bundle.putLong("groupId", groupId);
-                    bundle.putLong("subjectId", subjectId);
-                    bundle.putLong("lecturerId", lecturerId);
-                    bundle.putLong("seminarianId", seminarianId);
-                    bundle.putLong("semesterId", semesterId);
+                    bundle.putLong("subjectInfoId", subjectInfoId);
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_subject_info_editing_to_group_performance, bundle);
                 }).create();

@@ -1,18 +1,19 @@
 package com.example.electronicdiary.data_classes;
 
 public class User {
-    final long id;
     final String firstName;
     final String secondName;
     final String role;
+    final String username;
+    final String password;
     final boolean isProfessor;
-    String username;
-    String password;
+    long id;
 
-    User(long id, String firstName, String secondName, String role, boolean isProfessor) {
-        this.id = id;
+    User(String firstName, String secondName, String username, String password, String role, boolean isProfessor) {
         this.firstName = firstName;
         this.secondName = secondName;
+        this.username = username;
+        this.password = password;
         this.role = role;
         this.isProfessor = isProfessor;
     }

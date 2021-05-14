@@ -31,37 +31,39 @@ public class SearchAllStudentsFragment extends Fragment {
 
         final RecyclerView recyclerView = root.findViewById(R.id.searchedAllStudentsList);
         searchAllStudentsViewModel.getAllStudents().observe(getViewLifecycleOwner(), allStudents -> {
-            if (allStudents == null) {
-                return;
+            if (allStudents != null) {
+                View.OnClickListener onItemClickListener = view -> {
+                    RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
+                    int position = viewHolder.getAdapterPosition();
+
+                    if (actionCode == 1) {
+                        Bundle bundle = new Bundle();
+                        bundle.putLong("studentId", allStudents.get(position).getId());
+                        Navigation.findNavController(view).navigate(R.id.action_search_all_students_to_dialog_student_editing, bundle);
+                    } else if (actionCode == 2) {
+                        searchAllStudentsViewModel.deleteStudent(allStudents.get(position).getId());
+
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("openPage", actionCode);
+                        Navigation.findNavController(view).navigate(R.id.action_search_all_students_to_admin_actions, bundle);
+                    } else if (actionCode == 3) {
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("actionCode", actionCode);
+                        bundle.putLong("studentId", allStudents.get(position).getId());
+                        bundle.putString("studentFirstName", allStudents.get(position).getFirstName());
+                        bundle.putString("studentSecondName", allStudents.get(position).getSecondName());
+                        bundle.putString("studentUsername", allStudents.get(position).getUsername());
+                        bundle.putString("studentPassword", allStudents.get(position).getPassword());
+                        bundle.putLong("groupId", allStudents.get(position).getGroup().getId());
+
+                        Navigation.findNavController(view).navigate(R.id.action_search_all_students_to_search_all_groups, bundle);
+                    }
+                };
+
+                studentsAdapter = new StudentsAdapter(getContext(), allStudents, onItemClickListener);
+                recyclerView.setAdapter(studentsAdapter);
+                recyclerView.setHasFixedSize(false);
             }
-
-            View.OnClickListener onItemClickListener = view -> {
-                RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
-                int position = viewHolder.getAdapterPosition();
-
-                if (actionCode == 1) {
-                    Bundle bundle = new Bundle();
-                    bundle.putLong("studentId", allStudents.get(position).getId());
-                    Navigation.findNavController(view).navigate(R.id.action_search_all_students_to_dialog_student_editing, bundle);
-                } else if (actionCode == 2) {
-                    searchAllStudentsViewModel.deleteStudent(allStudents.get(position).getId());
-
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("openPage", actionCode);
-                    Navigation.findNavController(view).navigate(R.id.action_search_all_students_to_admin_actions, bundle);
-                } else if (actionCode == 3) {
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("actionCode", actionCode);
-                    bundle.putLong("studentId", allStudents.get(position).getId());
-                    bundle.putLong("groupId", allStudents.get(position).getGroupId());
-
-                    Navigation.findNavController(view).navigate(R.id.action_search_all_students_to_search_all_groups, bundle);
-                }
-            };
-
-            studentsAdapter = new StudentsAdapter(getContext(), allStudents, onItemClickListener);
-            recyclerView.setAdapter(studentsAdapter);
-            recyclerView.setHasFixedSize(false);
         });
 
         final SearchView searchView = root.findViewById(R.id.allStudentsSearch);

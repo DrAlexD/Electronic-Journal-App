@@ -17,11 +17,10 @@ public class SearchAvailableGroupsInSubjectViewModel extends ViewModel {
     }
 
     public void downloadAvailableGroupsInSubject(long professorId, long subjectId, long semesterId) {
-        this.availableGroupsInSubject.setValue(Repository.getInstance().
-                getAvailableGroupsInSubject(professorId, subjectId, semesterId));
+        Repository.getInstance().getAvailableGroupsInSubject(professorId, subjectId, semesterId, availableGroupsInSubject);
     }
 
-    public void deleteGroupInAvailableSubject(long professorId, long groupId, long subjectId, long semesterId) {
-        Repository.getInstance().deleteGroupInAvailableSubject(professorId, groupId, subjectId, semesterId);
+    public void deleteSubjectInfo(long subjectInfoId, long professorId) {
+        Repository.getInstance().deleteSubjectInfo(subjectInfoId, professorId);
     }
 }

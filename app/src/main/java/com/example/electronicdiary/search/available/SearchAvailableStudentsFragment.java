@@ -16,6 +16,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.search.StudentsAdapter;
 
 public class SearchAvailableStudentsFragment extends Fragment {
@@ -35,27 +36,25 @@ public class SearchAvailableStudentsFragment extends Fragment {
         }
 
         SearchAvailableStudentsViewModel searchAvailableStudentsViewModel = new ViewModelProvider(this).get(SearchAvailableStudentsViewModel.class);
-        searchAvailableStudentsViewModel.downloadAvailableStudents(semesterId);
+        searchAvailableStudentsViewModel.downloadAvailableStudents(Repository.getInstance().getUser().getId(), semesterId);
 
         final RecyclerView recyclerView = root.findViewById(R.id.searchedAvailableStudentsList);
         searchAvailableStudentsViewModel.getAvailableStudents().observe(getViewLifecycleOwner(), availableStudents -> {
-            if (availableStudents == null) {
-                return;
+            if (availableStudents != null) {
+                View.OnClickListener onItemClickListener = view -> {
+                    RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
+                    int position = viewHolder.getAdapterPosition();
+
+                    Bundle bundle = new Bundle();
+                    bundle.putLong("studentId", availableStudents.get(position).getId());
+                    bundle.putLong("semesterId", semesterId);
+                    Navigation.findNavController(view).navigate(R.id.action_search_available_students_to_student_profile, bundle);
+                };
+
+                studentsAdapter = new StudentsAdapter(getContext(), availableStudents, onItemClickListener);
+                recyclerView.setAdapter(studentsAdapter);
+                recyclerView.setHasFixedSize(false);
             }
-
-            View.OnClickListener onItemClickListener = view -> {
-                RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
-                int position = viewHolder.getAdapterPosition();
-
-                Bundle bundle = new Bundle();
-                bundle.putLong("studentId", availableStudents.get(position).getId());
-                bundle.putLong("semesterId", semesterId);
-                Navigation.findNavController(view).navigate(R.id.action_search_available_students_to_student_profile, bundle);
-            };
-
-            studentsAdapter = new StudentsAdapter(getContext(), availableStudents, onItemClickListener);
-            recyclerView.setAdapter(studentsAdapter);
-            recyclerView.setHasFixedSize(false);
         });
 
         final SearchView searchView = root.findViewById(R.id.availableStudentsSearch);

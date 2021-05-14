@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.electronicdiary.Repository;
+import com.example.electronicdiary.Result;
 import com.example.electronicdiary.data_classes.Group;
 import com.example.electronicdiary.data_classes.Semester;
 import com.example.electronicdiary.data_classes.Student;
@@ -14,20 +15,20 @@ import java.util.List;
 
 public class StudentProfileViewModel extends ViewModel {
     private final MutableLiveData<Semester> semester = new MutableLiveData<>();
-    private final MutableLiveData<Student> student = new MutableLiveData<>();
+    private final MutableLiveData<Result<Student>> student = new MutableLiveData<>();
     private final MutableLiveData<Group> group = new MutableLiveData<>();
     private final MutableLiveData<List<Subject>> availableStudentSubjects = new MutableLiveData<>();
 
-    public MutableLiveData<Semester> getSemester() {
+    public LiveData<Semester> getSemester() {
         return semester;
     }
 
 
-    public LiveData<Student> getStudent() {
+    public LiveData<Result<Student>> getStudent() {
         return student;
     }
 
-    public MutableLiveData<Group> getGroup() {
+    public LiveData<Group> getGroup() {
         return group;
     }
 
@@ -36,7 +37,7 @@ public class StudentProfileViewModel extends ViewModel {
     }
 
     public void downloadSemesterById(long semesterId) {
-        this.semester.setValue(Repository.getInstance().getSemesterById(semesterId));
+        Repository.getInstance().getSemesterById(semesterId, semester);
     }
 
     public void downloadStudentById(long studentId) {
@@ -44,10 +45,10 @@ public class StudentProfileViewModel extends ViewModel {
     }
 
     public void downloadGroupById(long groupId) {
-        this.group.setValue(Repository.getInstance().getGroupById(groupId));
+        Repository.getInstance().getGroupById(groupId, group);
     }
 
     public void downloadAvailableStudentSubjects(long studentId, long semesterId) {
-        this.availableStudentSubjects.setValue(Repository.getInstance().getAvailableStudentSubjects(studentId, semesterId));
+        Repository.getInstance().getAvailableStudentSubjects(studentId, semesterId, availableStudentSubjects);
     }
 }

@@ -31,30 +31,28 @@ public class SearchSemestersFragment extends Fragment {
 
         final RecyclerView recyclerView = root.findViewById(R.id.searchedSemestersList);
         searchSemestersViewModel.getSemesters().observe(getViewLifecycleOwner(), semesters -> {
-            if (semesters == null) {
-                return;
+            if (semesters != null) {
+                View.OnClickListener onItemClickListener = view -> {
+                    RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
+                    int position = viewHolder.getAdapterPosition();
+
+                    if (actionCode == 1) {
+                        Bundle bundle = new Bundle();
+                        bundle.putLong("semesterId", semesters.get(position).getId());
+                        Navigation.findNavController(view).navigate(R.id.action_search_semesters_to_dialog_semester_editing, bundle);
+                    } else if (actionCode == 2) {
+                        searchSemestersViewModel.deleteSemester(semesters.get(position).getId());
+
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("openPage", 2);
+                        Navigation.findNavController(view).navigate(R.id.action_search_semesters_to_admin_actions, bundle);
+                    }
+                };
+
+                semestersAdapter = new SemestersAdapter(getContext(), semesters, onItemClickListener);
+                recyclerView.setAdapter(semestersAdapter);
+                recyclerView.setHasFixedSize(false);
             }
-
-            View.OnClickListener onItemClickListener = view -> {
-                RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
-                int position = viewHolder.getAdapterPosition();
-
-                if (actionCode == 1) {
-                    Bundle bundle = new Bundle();
-                    bundle.putLong("semesterId", semesters.get(position).getId());
-                    Navigation.findNavController(view).navigate(R.id.action_search_semesters_to_dialog_semester_editing, bundle);
-                } else if (actionCode == 2) {
-                    searchSemestersViewModel.deleteSemester(semesters.get(position).getId());
-
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("openPage", 2);
-                    Navigation.findNavController(view).navigate(R.id.action_search_semesters_to_admin_actions, bundle);
-                }
-            };
-
-            semestersAdapter = new SemestersAdapter(getContext(), semesters, onItemClickListener);
-            recyclerView.setAdapter(semestersAdapter);
-            recyclerView.setHasFixedSize(false);
         });
 
         final SearchView searchView = root.findViewById(R.id.semestersSearch);

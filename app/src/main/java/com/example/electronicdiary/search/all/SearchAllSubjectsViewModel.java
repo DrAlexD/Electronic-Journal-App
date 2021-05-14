@@ -11,13 +11,22 @@ import java.util.List;
 
 public class SearchAllSubjectsViewModel extends ViewModel {
     private final MutableLiveData<List<Subject>> allSubjects = new MutableLiveData<>();
+    private final MutableLiveData<List<Subject>> availableSubjects = new MutableLiveData<>();
 
     public LiveData<List<Subject>> getAllSubjects() {
         return allSubjects;
     }
 
+    public LiveData<List<Subject>> getAvailableSubjects() {
+        return availableSubjects;
+    }
+
     public void downloadAllSubjects() {
-        this.allSubjects.setValue(Repository.getInstance().getAllSubjects());
+        Repository.getInstance().getAllSubjects(allSubjects);
+    }
+
+    public void downloadAvailableSubjects(long professorId, long semesterId) {
+        Repository.getInstance().getAvailableSubjects(professorId, semesterId, availableSubjects);
     }
 
     public void deleteSubject(long subjectId) {

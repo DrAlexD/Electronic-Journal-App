@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.data_classes.Lesson;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -38,20 +39,18 @@ public class LessonEditingDialogFragment extends DialogFragment {
         CheckBox isLecture = root.findViewById(R.id.lessonIsLectureEditing);
         EditText pointsPerVisit = root.findViewById(R.id.lessonPointsPerVisitEditing);
         lessonEditingViewModel.getLesson().observe(this, lesson -> {
-            if (lesson == null) {
-                return;
+            if (lesson != null) {
+                dateAndTime.setText(((lesson.getDateAndTime().getDate()) < 10 ? "0" + (lesson.getDateAndTime().getDate()) :
+                        (lesson.getDateAndTime().getDate())) + "." +
+                        ((lesson.getDateAndTime().getMonth() + 1) < 10 ? "0" + (lesson.getDateAndTime().getMonth() + 1) :
+                                (lesson.getDateAndTime().getMonth() + 1)) + "." + lesson.getDateAndTime().getYear() + " " +
+                        ((lesson.getDateAndTime().getHours()) < 10 ? "0" + (lesson.getDateAndTime().getHours()) :
+                                (lesson.getDateAndTime().getHours())) + ":" +
+                        ((lesson.getDateAndTime().getMinutes()) < 10 ? "0" + (lesson.getDateAndTime().getMinutes()) :
+                                (lesson.getDateAndTime().getMinutes())));
+                isLecture.setChecked(lesson.isLecture());
+                pointsPerVisit.setText(String.valueOf(lesson.getPointsPerVisit()));
             }
-
-            dateAndTime.setText(((lesson.getDateAndTime().getDate()) < 10 ? "0" + (lesson.getDateAndTime().getDate()) :
-                    (lesson.getDateAndTime().getDate())) + "." +
-                    ((lesson.getDateAndTime().getMonth() + 1) < 10 ? "0" + (lesson.getDateAndTime().getMonth() + 1) :
-                            (lesson.getDateAndTime().getMonth() + 1)) + "." + lesson.getDateAndTime().getYear() + " " +
-                    ((lesson.getDateAndTime().getHours()) < 10 ? "0" + (lesson.getDateAndTime().getHours()) :
-                            (lesson.getDateAndTime().getHours())) + ":" +
-                    ((lesson.getDateAndTime().getMinutes()) < 10 ? "0" + (lesson.getDateAndTime().getMinutes()) :
-                            (lesson.getDateAndTime().getMinutes())));
-            isLecture.setChecked(lesson.isLecture());
-            pointsPerVisit.setText(String.valueOf(lesson.getPointsPerVisit()));
         });
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
@@ -96,18 +95,16 @@ public class LessonEditingDialogFragment extends DialogFragment {
                     String[] splitedDate = date.split("\\.");
                     String[] splitedTime = time.split(":");
 
-                    lessonEditingViewModel.editLesson(lessonId, new Date(Integer.parseInt(splitedDate[2]),
+                    Lesson lesson = lessonEditingViewModel.getLesson().getValue();
+
+                    lessonEditingViewModel.editLesson(lessonId, lesson.getModule(), new Date(Integer.parseInt(splitedDate[2]),
                                     Integer.parseInt(splitedDate[1]) - 1, Integer.parseInt(splitedDate[0]),
                                     Integer.parseInt(splitedTime[0]), Integer.parseInt(splitedTime[1])), isLecture.isChecked(),
                             Integer.parseInt(pointsPerVisit.getText().toString()));
 
                     Bundle bundle = new Bundle();
-                    bundle.putInt("openPage", lessonEditingViewModel.getLesson().getValue().getModuleNumber() - 1);
-                    bundle.putLong("groupId", lessonEditingViewModel.getLesson().getValue().getGroupId());
-                    bundle.putLong("subjectId", lessonEditingViewModel.getLesson().getValue().getSubjectId());
-                    bundle.putLong("lecturerId", lessonEditingViewModel.getLesson().getValue().getLecturerId());
-                    bundle.putLong("seminarianId", lessonEditingViewModel.getLesson().getValue().getSeminarianId());
-                    bundle.putLong("semesterId", lessonEditingViewModel.getLesson().getValue().getSemesterId());
+                    bundle.putInt("openPage", lesson.getModule().getModuleNumber() - 1);
+                    bundle.putLong("subjectInfoId", lesson.getModule().getSubjectInfo().getId());
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_lesson_editing_to_group_performance, bundle);
                 })
@@ -117,13 +114,11 @@ public class LessonEditingDialogFragment extends DialogFragment {
                 .setNeutralButton("Удалить", (dialog, id) -> {
                     lessonEditingViewModel.deleteLesson(lessonId);
 
+                    Lesson lesson = lessonEditingViewModel.getLesson().getValue();
+
                     Bundle bundle = new Bundle();
-                    bundle.putInt("openPage", lessonEditingViewModel.getLesson().getValue().getModuleNumber() - 1);
-                    bundle.putLong("groupId", lessonEditingViewModel.getLesson().getValue().getGroupId());
-                    bundle.putLong("subjectId", lessonEditingViewModel.getLesson().getValue().getSubjectId());
-                    bundle.putLong("lecturerId", lessonEditingViewModel.getLesson().getValue().getLecturerId());
-                    bundle.putLong("seminarianId", lessonEditingViewModel.getLesson().getValue().getSeminarianId());
-                    bundle.putLong("semesterId", lessonEditingViewModel.getLesson().getValue().getSemesterId());
+                    bundle.putInt("openPage", lesson.getModule().getModuleNumber() - 1);
+                    bundle.putLong("subjectInfoId", lesson.getModule().getSubjectInfo().getId());
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_lesson_editing_to_group_performance, bundle);
                 }).create();

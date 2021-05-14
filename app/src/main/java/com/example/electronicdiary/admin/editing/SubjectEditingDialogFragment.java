@@ -33,11 +33,9 @@ public class SubjectEditingDialogFragment extends DialogFragment {
         EditText subjectTitle = root.findViewById(R.id.subjectTitleEditing);
 
         subjectEditingViewModel.getSubject().observe(this, subject -> {
-            if (subject == null) {
-                return;
+            if (subject != null) {
+                subjectTitle.setText(subject.getTitle());
             }
-
-            subjectTitle.setText(subject.getTitle());
         });
 
         TextWatcher afterTextChangedListener = new TextWatcher() {

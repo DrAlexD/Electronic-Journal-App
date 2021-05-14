@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.electronicdiary.JwtResponse;
@@ -21,6 +23,10 @@ import com.example.electronicdiary.MainActivity;
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.Result;
+import com.example.electronicdiary.data_classes.Semester;
+import com.example.electronicdiary.data_classes.User;
+
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -46,18 +52,16 @@ public class LoginActivity extends AppCompatActivity {
             loginViewModel.getLoggedUser(new JwtResponse(sharedPreferences.getString("jwtToken", ""),
                     sharedPreferences.getLong("userId", -1), sharedPreferences.getBoolean("isUserProfessor", true)));
             loginViewModel.getUser().observe(this, user -> {
-                if (user == null) {
-                    return;
+                if (user != null) {
+                    if (user instanceof Result.Success) {
+                        Repository.getInstance().setUser(((Result.Success<User>) user).getData());
+                        openMainActivity();
+                    } else {
+                        initLoginListeners(isRememberMe, sharedPreferences);
+                    }
                 }
-
-                Repository.getInstance().setUser(user);
-                openMainActivity();
             });
         } else {
-            if (Long.parseLong(sharedPreferences.getString(getString(R.string.current_semester), "-1")) == -1)
-                sharedPreferences.edit().putString(getString(R.string.current_semester),
-                        String.valueOf(Repository.getInstance().getLastSemesterId())).apply();
-
             initLoginListeners(isRememberMe, sharedPreferences);
         }
     }
@@ -87,7 +91,51 @@ public class LoginActivity extends AppCompatActivity {
             loginButton.setEnabled(loginFormState.isDataValid());
         });
 
-        loginViewModel.getResponse().observe(this, response -> {
+        LiveData<Result<JwtResponse>> responseLiveData = loginViewModel.getResponse();
+        LiveData<Result<User>> userLiveData = Transformations.switchMap(responseLiveData, response -> {
+            if (response instanceof Result.Success) {
+                String jwtToken = ((Result.Success<JwtResponse>) response).getData().getToken();
+                Long userId = ((Result.Success<JwtResponse>) response).getData().getId();
+                Boolean isUserProfessor = ((Result.Success<JwtResponse>) response).getData().isProfessor();
+                sharedPreferences.edit().putBoolean(getString(R.string.is_remember_me), isRememberMe.isChecked()).apply();
+                sharedPreferences.edit().putString("jwtToken", jwtToken).apply();
+                sharedPreferences.edit().putLong("userId", userId).apply();
+                sharedPreferences.edit().putBoolean("isUserProfessor", isUserProfessor).apply();
+
+                loginViewModel.getLoggedUser(new JwtResponse(jwtToken, userId, isUserProfessor));
+
+                return loginViewModel.getUser();
+            } else {
+                String error = ((Result.Error) response).getError();
+                Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
+                return null;
+            }
+        });
+        LiveData<List<Semester>> semestersLiveData = Transformations.switchMap(userLiveData, user -> {
+            if (user instanceof Result.Success) {
+                Repository.getInstance().setUser(((Result.Success<User>) user).getData());
+                if (Long.parseLong(sharedPreferences.getString(getString(R.string.current_semester), "-1")) == -1) {
+                    loginViewModel.downloadSemesters();
+
+                    return loginViewModel.getSemesters();
+                } else {
+                    openMainActivity();
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        });
+
+        semestersLiveData.observe(this, semesters -> {
+            if (semesters != null) {
+                sharedPreferences.edit().putString(getString(R.string.current_semester),
+                        String.valueOf(semesters.get(semesters.size() - 1).getId())).apply();
+                openMainActivity();
+            }
+        });
+
+        /*loginViewModel.getResponse().observe(this, response -> {
             if (response == null) {
                 return;
             }
@@ -107,15 +155,29 @@ public class LoginActivity extends AppCompatActivity {
                         return;
                     }
 
-                    Repository.getInstance().setUser(user);
-                    openMainActivity();
+                    if (user instanceof Result.Success) {
+                        Repository.getInstance().setUser(((Result.Success<User>) user).getData());
+                        if (Long.parseLong(sharedPreferences.getString(getString(R.string.current_semester), "-1")) == -1) {
+                            loginViewModel.downloadSemesters();
+
+                            loginViewModel.getSemesters().observe(this, semesters -> {
+                                if (semesters == null)
+                                    return;
+
+                                sharedPreferences.edit().putString(getString(R.string.current_semester),
+                                        String.valueOf(semesters.get(semesters.size() - 1).getId())).apply();
+                                openMainActivity();
+                            });
+                        } else {
+                            openMainActivity();
+                        }
+                    }
                 });
             } else {
                 String error = ((Result.Error) response).getError();
                 Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
             }
-            //setResult(Activity.RESULT_OK);
-        });
+        });*/
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override

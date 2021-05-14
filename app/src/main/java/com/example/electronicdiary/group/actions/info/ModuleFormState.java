@@ -4,14 +4,14 @@ import androidx.annotation.Nullable;
 
 import com.example.electronicdiary.R;
 
-public class ModuleInfoFormState {
+public class ModuleFormState {
     @Nullable
     private final Integer minPointsError;
     @Nullable
     private final Integer maxPointsError;
     private final boolean isDataValid;
 
-    public ModuleInfoFormState(String minPoints, String maxPoints) {
+    public ModuleFormState(String minPoints, String maxPoints) {
         boolean isMinPointsValid = !minPoints.trim().isEmpty();
         boolean isMaxPointsValid = !maxPoints.trim().isEmpty();
 

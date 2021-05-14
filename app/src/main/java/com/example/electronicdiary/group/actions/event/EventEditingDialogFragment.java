@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.data_classes.Event;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -38,20 +39,18 @@ public class EventEditingDialogFragment extends DialogFragment {
         EditText minPoints = root.findViewById(R.id.eventMinPointsEditing);
         EditText maxPoints = root.findViewById(R.id.eventMaxPointsEditing);
         eventEditingViewModel.getEvent().observe(this, event -> {
-            if (event == null) {
-                return;
+            if (event != null) {
+                startDate.setText(((event.getStartDate().getDate() + 1) < 10 ? "0" + (event.getStartDate().getDate() + 1) :
+                        (event.getStartDate().getDate() + 1)) + "." +
+                        ((event.getStartDate().getMonth() + 1) < 10 ? "0" + (event.getStartDate().getMonth() + 1) :
+                                (event.getStartDate().getMonth() + 1)) + "." + event.getStartDate().getYear());
+                deadlineDate.setText(((event.getDeadlineDate().getDate() + 1) < 10 ? "0" + (event.getDeadlineDate().getDate() + 1) :
+                        (event.getDeadlineDate().getDate() + 1)) + "." +
+                        ((event.getDeadlineDate().getMonth() + 1) < 10 ? "0" + (event.getDeadlineDate().getMonth() + 1) :
+                                (event.getDeadlineDate().getMonth() + 1)) + "." + event.getDeadlineDate().getYear());
+                minPoints.setText(String.valueOf(event.getMinPoints()));
+                maxPoints.setText(String.valueOf(event.getMaxPoints()));
             }
-
-            startDate.setText(((event.getStartDate().getDate() + 1) < 10 ? "0" + (event.getStartDate().getDate() + 1) :
-                    (event.getStartDate().getDate() + 1)) + "." +
-                    ((event.getStartDate().getMonth() + 1) < 10 ? "0" + (event.getStartDate().getMonth() + 1) :
-                            (event.getStartDate().getMonth() + 1)) + "." + event.getStartDate().getYear());
-            deadlineDate.setText(((event.getDeadlineDate().getDate() + 1) < 10 ? "0" + (event.getDeadlineDate().getDate() + 1) :
-                    (event.getDeadlineDate().getDate() + 1)) + "." +
-                    ((event.getDeadlineDate().getMonth() + 1) < 10 ? "0" + (event.getDeadlineDate().getMonth() + 1) :
-                            (event.getDeadlineDate().getMonth() + 1)) + "." + event.getDeadlineDate().getYear());
-            minPoints.setText(String.valueOf(event.getMinPoints()));
-            maxPoints.setText(String.valueOf(event.getMaxPoints()));
         });
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
@@ -99,7 +98,8 @@ public class EventEditingDialogFragment extends DialogFragment {
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
                     String[] splitedStartDate = startDate.getText().toString().split("\\.");
                     String[] splitedDeadlineDate = deadlineDate.getText().toString().split("\\.");
-                    eventEditingViewModel.editEvent(eventId, new Date(Integer.parseInt(splitedStartDate[2]), Integer.parseInt(splitedStartDate[1]) - 1,
+                    Event event = eventEditingViewModel.getEvent().getValue();
+                    eventEditingViewModel.editEvent(eventId, event.getModule(), event.getTypeNumber(), event.getNumber(), new Date(Integer.parseInt(splitedStartDate[2]), Integer.parseInt(splitedStartDate[1]) - 1,
                                     Integer.parseInt(splitedStartDate[0])), new Date(Integer.parseInt(splitedDeadlineDate[2]),
                                     Integer.parseInt(splitedDeadlineDate[1]) - 1, Integer.parseInt(splitedDeadlineDate[0])),
                             Integer.parseInt(minPoints.getText().toString()), Integer.parseInt(maxPoints.getText().toString()));
@@ -113,11 +113,7 @@ public class EventEditingDialogFragment extends DialogFragment {
                     eventEditingViewModel.deleteEvent(eventId);
 
                     Bundle bundle = new Bundle();
-                    bundle.putLong("groupId", eventEditingViewModel.getEvent().getValue().getGroupId());
-                    bundle.putLong("subjectId", eventEditingViewModel.getEvent().getValue().getSubjectId());
-                    bundle.putLong("lecturerId", eventEditingViewModel.getEvent().getValue().getLecturerId());
-                    bundle.putLong("seminarianId", eventEditingViewModel.getEvent().getValue().getSeminarianId());
-                    bundle.putLong("semesterId", eventEditingViewModel.getEvent().getValue().getSemesterId());
+                    bundle.putLong("subjectInfoId", eventEditingViewModel.getEvent().getValue().getModule().getSubjectInfo().getId());
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_event_editing_to_group_performance, bundle);
                 }).create();

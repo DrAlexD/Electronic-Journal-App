@@ -5,36 +5,62 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Date;
 
 public class Event {
-    private final long id;
-    private final int moduleNumber;
-    private final long groupId;
-    private final long subjectId;
-    private final long lecturerId;
-    private final long seminarianId;
-    private final long semesterId;
-
-    private final String type;
+    private final Module module;
+    private final int type;
     private final int number;
     private final Date startDate;
     private final Date deadlineDate;
     private final int minPoints;
     private final int maxPoints;
+    private long id;
 
-    public Event(long id, int moduleNumber, long groupId, long subjectId, long lecturerId, long seminarianId,
-                 long semesterId, String type, int number, Date startDate, Date deadlineDate, int minPoints, int maxPoints) {
-        this.id = id;
-        this.moduleNumber = moduleNumber;
-        this.groupId = groupId;
-        this.subjectId = subjectId;
-        this.lecturerId = lecturerId;
-        this.seminarianId = seminarianId;
-        this.semesterId = semesterId;
+    public Event(Module module, int type, int number, Date startDate, Date deadlineDate,
+                 int minPoints, int maxPoints) {
+        this.module = module;
         this.type = type;
         this.number = number;
         this.startDate = startDate;
         this.deadlineDate = deadlineDate;
         this.minPoints = minPoints;
         this.maxPoints = maxPoints;
+    }
+
+    public Event(long id, Module module, int type, int number, Date startDate, Date deadlineDate,
+                 int minPoints, int maxPoints) {
+        this.id = id;
+        this.module = module;
+        this.type = type;
+        this.number = number;
+        this.startDate = startDate;
+        this.deadlineDate = deadlineDate;
+        this.minPoints = minPoints;
+        this.maxPoints = maxPoints;
+    }
+
+    public static int convertTypeToInt(String type) {
+        switch (type) {
+            case "ДЗ":
+                return 0;
+            case "ЛР":
+                return 1;
+            case "РК":
+                return 2;
+        }
+
+        return -1;
+    }
+
+    public static String convertTypeToString(int type) {
+        switch (type) {
+            case 0:
+                return "ДЗ";
+            case 1:
+                return "ЛР";
+            case 2:
+                return "РК";
+        }
+
+        return "ERROR";
     }
 
     @NotNull
@@ -48,37 +74,20 @@ public class Event {
         return id;
     }
 
-    public int getModuleNumber() {
-        return moduleNumber;
-    }
-
-    public long getGroupId() {
-        return groupId;
-    }
-
-
-    public long getSubjectId() {
-        return subjectId;
-    }
-
-    public long getLecturerId() {
-        return lecturerId;
-    }
-
-    public long getSeminarianId() {
-        return seminarianId;
-    }
-
-    public long getSemesterId() {
-        return semesterId;
+    public Module getModule() {
+        return module;
     }
 
     public String getTitle() {
-        return type + number;
+        return getTypeString() + number;
     }
 
-    public String getType() {
+    public int getTypeNumber() {
         return type;
+    }
+
+    public String getTypeString() {
+        return convertTypeToString(type);
     }
 
     public int getNumber() {

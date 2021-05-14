@@ -16,6 +16,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.Result;
+import com.example.electronicdiary.data_classes.Group;
+import com.example.electronicdiary.data_classes.Student;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -30,6 +33,7 @@ public class StudentEditingDialogFragment extends DialogFragment {
     private EditText studentLogin;
     private EditText studentPassword;
     private CheckBox generateCheckBox;
+    private Group group;
 
     @NotNull
     @Override
@@ -47,8 +51,8 @@ public class StudentEditingDialogFragment extends DialogFragment {
                 .setTitle("Измените данные студента")
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
                     studentEditingViewModel.editStudent(studentId, studentName.getText().toString(),
-                            studentSecondName.getText().toString(), studentLogin.getText().toString(),
-                            studentPassword.getText().toString());
+                            studentSecondName.getText().toString(), group, studentLogin.getText().toString(),
+                            studentPassword.getText().toString(), "ROLE_STUDENT");
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", 1);
@@ -68,15 +72,18 @@ public class StudentEditingDialogFragment extends DialogFragment {
         studentPassword = root.findViewById(R.id.studentPasswordEditing);
 
         studentEditingViewModel.getStudent().observe(this, student -> {
-            if (student == null) {
-                return;
-            }
+            if (student != null) {
+                if (student instanceof Result.Success) {
+                    Student studentData = ((Result.Success<Student>) student).getData();
 
-            studentName.setText(student.getFirstName());
-            studentSecondName.setText(student.getSecondName());
-            studentLogin.setText(student.getUsername());
-            studentPassword.setText(student.getPassword());
-            generateCheckBox.setEnabled(true);
+                    studentName.setText(studentData.getFirstName());
+                    studentSecondName.setText(studentData.getSecondName());
+                    studentLogin.setText(studentData.getUsername());
+                    studentPassword.setText(studentData.getPassword());
+                    group = studentData.getGroup();
+                    generateCheckBox.setEnabled(true);
+                }
+            }
         });
 
         TextWatcher afterNameAndSecondNameChangedListener = new TextWatcher() {

@@ -18,6 +18,8 @@ import com.example.electronicdiary.R;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Random;
+
 public class ProfessorAddingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
     private ProfessorAddingViewModel professorAddingViewModel;
@@ -34,7 +36,6 @@ public class ProfessorAddingDialogFragment extends DialogFragment {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_professor_adding, null);
 
         professorAddingViewModel = new ViewModelProvider(this).get(ProfessorAddingViewModel.class);
-        professorAddingViewModel.downloadLastProfessorId();
 
         setupAutoGenerate(root);
 
@@ -44,7 +45,7 @@ public class ProfessorAddingDialogFragment extends DialogFragment {
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
                     professorAddingViewModel.addProfessor(professorName.getText().toString(),
                             professorSecondName.getText().toString(), professorLogin.getText().toString(),
-                            professorPassword.getText().toString());
+                            professorPassword.getText().toString(), "ROLE_PROFESSOR");
                     dismiss();
                 }).create();
 
@@ -142,9 +143,10 @@ public class ProfessorAddingDialogFragment extends DialogFragment {
     }
 
     private void setGeneratedLoginAndPassword() {
+        int randomNumber = new Random().nextInt(100);
         professorLogin.setText(professorName.getText().toString().toLowerCase() +
-                professorSecondName.getText().toString().toLowerCase() + professorAddingViewModel.getLastProfessorId().getValue().toString());
-        professorPassword.setText("123456" + professorAddingViewModel.getLastProfessorId().getValue().toString());
+                professorSecondName.getText().toString().toLowerCase() + randomNumber);
+        professorPassword.setText("123456" + randomNumber);
     }
 
     private void setEmptyLoginAndPassword() {

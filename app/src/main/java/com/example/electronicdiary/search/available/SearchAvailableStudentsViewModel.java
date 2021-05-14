@@ -16,7 +16,7 @@ public class SearchAvailableStudentsViewModel extends ViewModel {
         return availableStudents;
     }
 
-    public void downloadAvailableStudents(long semesterId) {
-        this.availableStudents.setValue(Repository.getInstance().getAvailableStudents(semesterId));
+    public void downloadAvailableStudents(long professorId, long semesterId) {
+        Repository.getInstance().getAvailableStudents(professorId, semesterId, availableStudents);
     }
 }

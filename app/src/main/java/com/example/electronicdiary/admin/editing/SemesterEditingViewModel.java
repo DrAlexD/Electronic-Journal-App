@@ -16,7 +16,7 @@ public class SemesterEditingViewModel extends ViewModel {
         return semesterFormState;
     }
 
-    public MutableLiveData<Semester> getSemester() {
+    public LiveData<Semester> getSemester() {
         return semester;
     }
 
@@ -25,10 +25,10 @@ public class SemesterEditingViewModel extends ViewModel {
     }
 
     public void downloadSemesterById(long semesterId) {
-        this.semester.setValue(Repository.getInstance().getSemesterById(semesterId));
+        Repository.getInstance().getSemesterById(semesterId, semester);
     }
 
     public void editSemester(long semesterId, int semesterYear, boolean isFirstHalf) {
-        Repository.getInstance().editSemester(semesterId, semesterYear, isFirstHalf);
+        Repository.getInstance().editSemester(semesterId, new Semester(semesterYear, isFirstHalf));
     }
 }

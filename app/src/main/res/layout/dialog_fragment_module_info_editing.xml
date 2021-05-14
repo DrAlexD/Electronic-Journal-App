@@ -7,7 +7,7 @@
     android:paddingRight="32dp">
 
     <EditText
-        android:id="@+id/moduleInfoMinPointsEditing"
+        android:id="@+id/moduleMinPointsEditing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -17,7 +17,7 @@
         android:textSize="20sp" />
 
     <EditText
-        android:id="@+id/moduleInfoMaxPointsEditing"
+        android:id="@+id/moduleMaxPointsEditing"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"

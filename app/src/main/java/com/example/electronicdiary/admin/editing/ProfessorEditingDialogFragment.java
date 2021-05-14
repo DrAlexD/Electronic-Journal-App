@@ -16,6 +16,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.Result;
+import com.example.electronicdiary.data_classes.Professor;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -48,7 +50,7 @@ public class ProfessorEditingDialogFragment extends DialogFragment {
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
                     professorEditingViewModel.editProfessor(professorId, professorName.getText().toString(),
                             professorSecondName.getText().toString(), professorLogin.getText().toString(),
-                            professorPassword.getText().toString());
+                            professorPassword.getText().toString(), "ROLE_PROFESSOR");
 
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", 1);
@@ -68,15 +70,16 @@ public class ProfessorEditingDialogFragment extends DialogFragment {
         professorPassword = root.findViewById(R.id.professorPasswordEditing);
 
         professorEditingViewModel.getProfessor().observe(this, professor -> {
-            if (professor == null) {
-                return;
+            if (professor != null) {
+                if (professor instanceof Result.Success) {
+                    Professor professorData = ((Result.Success<Professor>) professor).getData();
+                    professorName.setText(professorData.getFirstName());
+                    professorSecondName.setText(professorData.getSecondName());
+                    professorLogin.setText(professorData.getUsername());
+                    professorPassword.setText(professorData.getPassword());
+                    generateCheckBox.setEnabled(true);
+                }
             }
-
-            professorName.setText(professor.getFirstName());
-            professorSecondName.setText(professor.getSecondName());
-            professorLogin.setText(professor.getUsername());
-            professorPassword.setText(professor.getPassword());
-            generateCheckBox.setEnabled(true);
         });
 
         TextWatcher afterNameAndSecondNameChangedListener = new TextWatcher() {

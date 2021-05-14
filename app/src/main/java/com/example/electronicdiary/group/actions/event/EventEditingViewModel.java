@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.data_classes.Event;
+import com.example.electronicdiary.data_classes.Module;
 
 import java.util.Date;
 
@@ -17,7 +18,7 @@ public class EventEditingViewModel extends ViewModel {
         return eventFormState;
     }
 
-    public MutableLiveData<Event> getEvent() {
+    public LiveData<Event> getEvent() {
         return event;
     }
 
@@ -26,11 +27,11 @@ public class EventEditingViewModel extends ViewModel {
     }
 
     public void downloadEventById(long eventId) {
-        this.event.setValue(Repository.getInstance().getEventById(eventId));
+        Repository.getInstance().getEventById(eventId, event);
     }
 
-    public void editEvent(long eventId, Date startDate, Date deadlineDate, int minPoints, int maxPoints) {
-        Repository.getInstance().editEvent(eventId, startDate, deadlineDate, minPoints, maxPoints);
+    public void editEvent(long eventId, Module module, int type, int number, Date startDate, Date deadlineDate, int minPoints, int maxPoints) {
+        Repository.getInstance().editEvent(eventId, new Event(module, type, number, startDate, deadlineDate, minPoints, maxPoints));
     }
 
     public void deleteEvent(long eventId) {

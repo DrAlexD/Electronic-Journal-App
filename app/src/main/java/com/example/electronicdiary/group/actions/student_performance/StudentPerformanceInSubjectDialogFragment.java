@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.data_classes.StudentPerformanceInSubject;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -25,87 +26,69 @@ public class StudentPerformanceInSubjectDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_student_performance_in_subject, null);
 
-        long studentId = getArguments().getLong("studentId");
-        long groupId = getArguments().getLong("groupId");
-        long subjectId = getArguments().getLong("subjectId");
-        long lecturerId = getArguments().getLong("lecturerId");
-        long seminarianId = getArguments().getLong("seminarianId");
-        long semesterId = getArguments().getLong("semesterId");
+        long studentPerformanceInSubjectId = getArguments().getLong("studentPerformanceInSubjectId");
 
         StudentPerformanceInSubjectViewModel studentPerformanceViewModel =
                 new ViewModelProvider(this).get(StudentPerformanceInSubjectViewModel.class);
-        studentPerformanceViewModel.downloadSubjectInfo(groupId, subjectId, lecturerId, seminarianId, semesterId);
+        studentPerformanceViewModel.downloadStudentPerformanceInSubject(studentPerformanceInSubjectId);
 
         EditText earnedPoints = root.findViewById(R.id.studentPerformanceInSubjectEarnedPoints);
         EditText bonusPoints = root.findViewById(R.id.studentPerformanceInSubjectBonusPoints);
         CheckBox isHaveCreditOrAdmission = root.findViewById(R.id.studentPerformanceInSubjectIsHaveCreditOrAdmission);
         EditText examEarnedPoints = root.findViewById(R.id.studentPerformanceInSubjectExamEarnedPoints);
         EditText mark = root.findViewById(R.id.studentPerformanceInSubjectMark);
-        studentPerformanceViewModel.getSubjectInfo().observe(this, subjectInfo -> {
-            if (subjectInfo == null) {
-                return;
-            }
-
-            studentPerformanceViewModel.downloadStudentPerformanceInSubject(studentId, groupId, subjectId, lecturerId,
-                    seminarianId, semesterId);
-
-            isHaveCreditOrAdmission.setText(subjectInfo.isExam() ? "Допуск к экзамену" : "Зачет");
-            examEarnedPoints.setVisibility(subjectInfo.isExam() ? View.VISIBLE : View.GONE);
-            mark.setVisibility(subjectInfo.isExam() || subjectInfo.isDifferentiatedCredit() ? View.VISIBLE : View.GONE);
-
-            studentPerformanceViewModel.getStudentPerformanceInSubject().observe(this, studentPerformanceInSubject -> {
-                if (studentPerformanceInSubject == null) {
-                    return;
-                }
+        studentPerformanceViewModel.getStudentPerformanceInSubject().observe(this, studentPerformanceInSubject -> {
+            if (studentPerformanceInSubject != null) {
+                isHaveCreditOrAdmission.setText(studentPerformanceInSubject.getSubjectInfo().isExam() ? "Допуск к экзамену" : "Зачет");
+                examEarnedPoints.setVisibility(studentPerformanceInSubject.getSubjectInfo().isExam() ? View.VISIBLE : View.GONE);
+                mark.setVisibility(studentPerformanceInSubject.getSubjectInfo().isExam() ||
+                        studentPerformanceInSubject.getSubjectInfo().isDifferentiatedCredit() ? View.VISIBLE : View.GONE);
 
                 if (studentPerformanceInSubject.getEarnedPoints() != -1)
                     earnedPoints.setText(String.valueOf(studentPerformanceInSubject.getEarnedPoints()));
                 if (studentPerformanceInSubject.getBonusPoints() != -1)
                     bonusPoints.setText(String.valueOf(studentPerformanceInSubject.getBonusPoints()));
-                if (subjectInfo.isExam()) {
+                if (studentPerformanceInSubject.getSubjectInfo().isExam()) {
                     if (studentPerformanceInSubject.getEarnedExamPoints() != -1)
                         examEarnedPoints.setText(String.valueOf(studentPerformanceInSubject.getEarnedExamPoints()));
                     if (studentPerformanceInSubject.getMark() != -1)
                         mark.setText(String.valueOf(studentPerformanceInSubject.getMark()));
                 }
 
-                if (subjectInfo.isDifferentiatedCredit()) {
+                if (studentPerformanceInSubject.getSubjectInfo().isDifferentiatedCredit()) {
                     if (studentPerformanceInSubject.getMark() != -1)
                         mark.setText(String.valueOf(studentPerformanceInSubject.getMark()));
                 }
-            });
+            }
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
                 .setTitle("Изменить успеваемость по предмету")
                 .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    if (studentPerformanceViewModel.getSubjectInfo().getValue().isExam()) {
-                        studentPerformanceViewModel.editStudentPerformance(studentId, groupId, subjectId, lecturerId, seminarianId, semesterId,
-                                Integer.parseInt(earnedPoints.getText().toString().isEmpty() ? "-1" : earnedPoints.getText().toString()),
+                    StudentPerformanceInSubject studentPerformanceInSubject = studentPerformanceViewModel.getStudentPerformanceInSubject().getValue();
+                    if (studentPerformanceInSubject.getSubjectInfo().isExam()) {
+                        studentPerformanceViewModel.editStudentPerformance(studentPerformanceInSubjectId, studentPerformanceInSubject.getSubjectInfo(),
+                                studentPerformanceInSubject.getStudent(), Integer.parseInt(earnedPoints.getText().toString().isEmpty() ? "-1" : earnedPoints.getText().toString()),
                                 Integer.parseInt(bonusPoints.getText().toString().isEmpty() ? "-1" : bonusPoints.getText().toString()),
                                 isHaveCreditOrAdmission.isChecked(), Integer.parseInt(examEarnedPoints.getText().toString().isEmpty() ? "-1" :
                                         examEarnedPoints.getText().toString()),
                                 Integer.parseInt(mark.getText().toString().isEmpty() ? "-1" : mark.getText().toString()));
-                    } else if (studentPerformanceViewModel.getSubjectInfo().getValue().isDifferentiatedCredit()) {
-                        studentPerformanceViewModel.editStudentPerformance(studentId, groupId, subjectId, lecturerId, seminarianId, semesterId,
-                                Integer.parseInt(earnedPoints.getText().toString().isEmpty() ? "-1" : earnedPoints.getText().toString()),
+                    } else if (studentPerformanceInSubject.getSubjectInfo().isDifferentiatedCredit()) {
+                        studentPerformanceViewModel.editStudentPerformance(studentPerformanceInSubjectId, studentPerformanceInSubject.getSubjectInfo(),
+                                studentPerformanceInSubject.getStudent(), Integer.parseInt(earnedPoints.getText().toString().isEmpty() ? "-1" : earnedPoints.getText().toString()),
                                 Integer.parseInt(bonusPoints.getText().toString().isEmpty() ? "-1" : bonusPoints.getText().toString()),
                                 isHaveCreditOrAdmission.isChecked(),
                                 Integer.parseInt(mark.getText().toString().isEmpty() ? "-1" : mark.getText().toString()));
                     } else {
-                        studentPerformanceViewModel.editStudentPerformance(studentId, groupId, subjectId, lecturerId, seminarianId, semesterId,
-                                Integer.parseInt(earnedPoints.getText().toString().isEmpty() ? "-1" : earnedPoints.getText().toString()),
+                        studentPerformanceViewModel.editStudentPerformance(studentPerformanceInSubjectId, studentPerformanceInSubject.getSubjectInfo(),
+                                studentPerformanceInSubject.getStudent(), Integer.parseInt(earnedPoints.getText().toString().isEmpty() ? "-1" : earnedPoints.getText().toString()),
                                 Integer.parseInt(bonusPoints.getText().toString().isEmpty() ? "-1" : bonusPoints.getText().toString()),
                                 isHaveCreditOrAdmission.isChecked());
                     }
 
                     Bundle bundle = new Bundle();
-                    bundle.putLong("groupId", groupId);
-                    bundle.putLong("subjectId", subjectId);
-                    bundle.putLong("lecturerId", lecturerId);
-                    bundle.putLong("seminarianId", seminarianId);
-                    bundle.putLong("semesterId", semesterId);
+                    bundle.putLong("subjectInfoId", studentPerformanceViewModel.getStudentPerformanceInSubject().getValue().getSubjectInfo().getId());
 
                     Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_performance_in_subject_to_group_performance, bundle);
                 }).create();

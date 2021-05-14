@@ -11,15 +11,15 @@ import com.example.electronicdiary.R;
 import com.example.electronicdiary.data_classes.Subject;
 import com.example.electronicdiary.data_classes.SubjectInfo;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class SubjectsWithGroupsAdapter extends BaseExpandableListAdapter {
     private final LayoutInflater inflater;
     private final List<Subject> subjects;
-    private final HashMap<Subject, List<SubjectInfo>> subjectsWithGroups;
+    private final Map<String, List<SubjectInfo>> subjectsWithGroups;
 
-    SubjectsWithGroupsAdapter(Context context, List<Subject> subjects, HashMap<Subject, List<SubjectInfo>> subjectWithGroups) {
+    SubjectsWithGroupsAdapter(Context context, List<Subject> subjects, Map<String, List<SubjectInfo>> subjectWithGroups) {
         this.inflater = LayoutInflater.from(context);
         this.subjects = subjects;
         this.subjectsWithGroups = subjectWithGroups;
@@ -32,7 +32,7 @@ class SubjectsWithGroupsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return subjectsWithGroups.get(subjects.get(groupPosition)).size();
+        return subjectsWithGroups.get(String.valueOf(subjects.get(groupPosition).getId())).size();
     }
 
     @Override
@@ -42,7 +42,7 @@ class SubjectsWithGroupsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return subjectsWithGroups.get(subjects.get(groupPosition)).get(childPosition);
+        return subjectsWithGroups.get(String.valueOf(subjects.get(groupPosition).getId())).get(childPosition);
     }
 
     @Override
@@ -75,7 +75,7 @@ class SubjectsWithGroupsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isExpanded, View view, ViewGroup parent) {
-        SubjectInfo subjectInfo = subjectsWithGroups.get(subjects.get(groupPosition)).get(childPosition);
+        SubjectInfo subjectInfo = subjectsWithGroups.get(String.valueOf(subjects.get(groupPosition).getId())).get(childPosition);
         if (view == null) {
             view = inflater.inflate(R.layout.holder_group_in_subject, null);
         }

@@ -9,29 +9,29 @@ import android.widget.TextView;
 
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.data_classes.Lesson;
-import com.example.electronicdiary.data_classes.ModuleInfo;
+import com.example.electronicdiary.data_classes.Module;
 import com.example.electronicdiary.data_classes.StudentLesson;
 import com.example.electronicdiary.data_classes.StudentPerformanceInModule;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class LessonsAdapter extends BaseExpandableListAdapter {
     private final LayoutInflater inflater;
 
     private final List<Integer> modules;
-    private final HashMap<Integer, ModuleInfo> moduleInfoByModules;
-    private final HashMap<Integer, StudentPerformanceInModule> studentPerformanceByModules;
-    private final HashMap<Integer, List<Lesson>> lessonsByModules;
-    private final HashMap<Integer, List<StudentLesson>> studentLessonsByModules;
+    private final Map<String, Module> moduleByModules;
+    private final Map<String, StudentPerformanceInModule> studentPerformanceByModules;
+    private final Map<String, List<Lesson>> lessonsByModules;
+    private final Map<String, List<StudentLesson>> studentLessonsByModules;
 
-    LessonsAdapter(Context context, List<Integer> modules, HashMap<Integer, ModuleInfo> moduleInfoByModules,
-                   HashMap<Integer, StudentPerformanceInModule> studentPerformanceByModules,
-                   HashMap<Integer, List<Lesson>> lessonsByModules,
-                   HashMap<Integer, List<StudentLesson>> studentLessonsByModules) {
+    LessonsAdapter(Context context, List<Integer> modules, Map<String, Module> moduleByModules,
+                   Map<String, StudentPerformanceInModule> studentPerformanceByModules,
+                   Map<String, List<Lesson>> lessonsByModules,
+                   Map<String, List<StudentLesson>> studentLessonsByModules) {
         this.inflater = LayoutInflater.from(context);
         this.modules = modules;
-        this.moduleInfoByModules = moduleInfoByModules;
+        this.moduleByModules = moduleByModules;
         this.studentPerformanceByModules = studentPerformanceByModules;
         this.lessonsByModules = lessonsByModules;
         this.studentLessonsByModules = studentLessonsByModules;
@@ -44,7 +44,7 @@ class LessonsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return lessonsByModules.get(modules.get(groupPosition)).size();
+        return lessonsByModules.get(String.valueOf(modules.get(groupPosition))).size();
     }
 
     @Override
@@ -54,7 +54,7 @@ class LessonsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return lessonsByModules.get(modules.get(groupPosition)).get(childPosition);
+        return lessonsByModules.get(String.valueOf(modules.get(groupPosition))).get(childPosition);
     }
 
     @Override
@@ -75,22 +75,22 @@ class LessonsAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View view, ViewGroup parent) {
         String moduleTitle = "Модуль " + modules.get(groupPosition);
-        ModuleInfo moduleInfo = moduleInfoByModules.get(modules.get(groupPosition));
-        StudentPerformanceInModule studentPerformanceInModule = studentPerformanceByModules.get(modules.get(groupPosition));
+        Module module = moduleByModules.get(String.valueOf(modules.get(groupPosition)));
+        StudentPerformanceInModule studentPerformanceInModule = studentPerformanceByModules.get(String.valueOf(modules.get(groupPosition)));
 
         if (view == null) {
             view = inflater.inflate(R.layout.holder_module_performance, null);
         }
 
         TextView moduleTitleWithPointsView = view.findViewById(R.id.moduleTitleWithPoints);
-        moduleTitleWithPointsView.setText(moduleTitle + " (" + moduleInfo.getMinPoints() +
-                "-" + moduleInfo.getMaxPoints() + ")");
-        moduleTitleWithPointsView.setTextColor(studentPerformanceInModule.getEarnedPoints() > moduleInfo.getMinPoints() ?
+        moduleTitleWithPointsView.setText(moduleTitle + " (" + module.getMinPoints() +
+                "-" + module.getMaxPoints() + ")");
+        moduleTitleWithPointsView.setTextColor(studentPerformanceInModule.getEarnedPoints() > module.getMinPoints() ?
                 inflater.getContext().getColor(R.color.green) : inflater.getContext().getColor(R.color.red));
 
         TextView earnedModulePointsView = view.findViewById(R.id.earnedModulePoints);
         earnedModulePointsView.setText(String.valueOf(studentPerformanceInModule.getEarnedPoints()));
-        earnedModulePointsView.setTextColor(studentPerformanceInModule.getEarnedPoints() > moduleInfo.getMinPoints() ?
+        earnedModulePointsView.setTextColor(studentPerformanceInModule.getEarnedPoints() > module.getMinPoints() ?
                 inflater.getContext().getColor(R.color.green) : inflater.getContext().getColor(R.color.red));
 
         return view;
@@ -98,12 +98,12 @@ class LessonsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isExpanded, View view, ViewGroup parent) {
-        Lesson lesson = lessonsByModules.get(modules.get(groupPosition)).get(childPosition);
-        List<StudentLesson> studentLessons = studentLessonsByModules.get(modules.get(groupPosition));
+        Lesson lesson = lessonsByModules.get(String.valueOf(modules.get(groupPosition))).get(childPosition);
+        List<StudentLesson> studentLessons = studentLessonsByModules.get(String.valueOf(modules.get(groupPosition)));
 
         StudentLesson studentLesson = null;
         for (int i = 0; i < studentLessons.size(); i++) {
-            if (lesson.getId() == studentLessons.get(i).getLessonId()) {
+            if (lesson.getId() == studentLessons.get(i).getLesson().getId()) {
                 studentLesson = studentLessons.get(i);
             }
         }

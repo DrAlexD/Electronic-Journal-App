@@ -3,9 +3,14 @@ package com.example.electronicdiary.data_classes;
 import org.jetbrains.annotations.NotNull;
 
 public class Semester {
-    private final long id;
+    private long id;
     private final int year;
     private final boolean isFirstHalf;
+
+    public Semester(int year, boolean isFirstHalf) {
+        this.year = year;
+        this.isFirstHalf = isFirstHalf;
+    }
 
     public Semester(long id, int year, boolean isFirstHalf) {
         this.id = id;
