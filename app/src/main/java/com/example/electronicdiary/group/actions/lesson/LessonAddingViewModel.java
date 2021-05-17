@@ -13,6 +13,11 @@ import java.util.Date;
 public class LessonAddingViewModel extends ViewModel {
     private final MutableLiveData<LessonFormState> lessonFormState = new MutableLiveData<>();
     private final MutableLiveData<Module> module = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> answer = new MutableLiveData<>();
+
+    public LiveData<Boolean> getAnswer() {
+        return answer;
+    }
 
     LiveData<LessonFormState> getLessonFormState() {
         return lessonFormState;
@@ -31,6 +36,6 @@ public class LessonAddingViewModel extends ViewModel {
     }
 
     public void addLesson(Module module, Date dateAndTime, boolean isLecture, int pointsPerVisit) {
-        Repository.getInstance().addLesson(new Lesson(module, dateAndTime, isLecture, pointsPerVisit));
+        Repository.getInstance().addLesson(new Lesson(module, dateAndTime, isLecture, pointsPerVisit), answer);
     }
 }

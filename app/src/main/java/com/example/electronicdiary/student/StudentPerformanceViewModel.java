@@ -82,8 +82,6 @@ public class StudentPerformanceViewModel extends ViewModel {
     public void downloadStudentPerformanceInSubject(long studentPerformanceInSubjectId) {
         Repository.getInstance().getStudentPerformanceInSubjectById(studentPerformanceInSubjectId, studentPerformanceInSubject);
         Repository.getInstance().getStudentPerformanceInModules(studentPerformanceInSubjectId, studentPerformanceInModules);
-        Repository.getInstance().getStudentEvents(studentPerformanceInSubjectId, studentEvents);
-        Repository.getInstance().getStudentLessons(studentPerformanceInSubjectId, studentLessons);
     }
 
     public void downloadEventsAndLessons(long subjectInfoId) {
@@ -91,5 +89,13 @@ public class StudentPerformanceViewModel extends ViewModel {
         Repository.getInstance().getEvents(subjectInfoId, events);
         Repository.getInstance().getLectures(subjectInfoId, lectures);
         Repository.getInstance().getSeminars(subjectInfoId, seminars);
+    }
+
+    public void downloadStudentEvents(long studentPerformanceInSubjectId) {
+        Repository.getInstance().getStudentEvents(studentPerformanceInSubjectId, studentEvents);
+    }
+
+    public void downloadStudentLessons(long studentPerformanceInSubjectId) {
+        Repository.getInstance().getStudentLessons(studentPerformanceInSubjectId, studentLessons);
     }
 }

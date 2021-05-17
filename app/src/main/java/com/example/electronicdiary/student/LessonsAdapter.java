@@ -13,6 +13,8 @@ import com.example.electronicdiary.data_classes.Module;
 import com.example.electronicdiary.data_classes.StudentLesson;
 import com.example.electronicdiary.data_classes.StudentPerformanceInModule;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +46,10 @@ class LessonsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return lessonsByModules.get(String.valueOf(modules.get(groupPosition))).size();
+        if (lessonsByModules.get(String.valueOf(modules.get(groupPosition))) != null)
+            return lessonsByModules.get(String.valueOf(modules.get(groupPosition))).size();
+        else
+            return 0;
     }
 
     @Override
@@ -85,13 +90,17 @@ class LessonsAdapter extends BaseExpandableListAdapter {
         TextView moduleTitleWithPointsView = view.findViewById(R.id.moduleTitleWithPoints);
         moduleTitleWithPointsView.setText(moduleTitle + " (" + module.getMinPoints() +
                 "-" + module.getMaxPoints() + ")");
-        moduleTitleWithPointsView.setTextColor(studentPerformanceInModule.getEarnedPoints() > module.getMinPoints() ?
-                inflater.getContext().getColor(R.color.green) : inflater.getContext().getColor(R.color.red));
+        if (studentPerformanceInModule.getEarnedPoints() != null) {
+            moduleTitleWithPointsView.setTextColor(studentPerformanceInModule.getEarnedPoints() > module.getMinPoints() ?
+                    inflater.getContext().getColor(R.color.green) : inflater.getContext().getColor(R.color.red));
+        }
 
         TextView earnedModulePointsView = view.findViewById(R.id.earnedModulePoints);
         earnedModulePointsView.setText(String.valueOf(studentPerformanceInModule.getEarnedPoints()));
-        earnedModulePointsView.setTextColor(studentPerformanceInModule.getEarnedPoints() > module.getMinPoints() ?
-                inflater.getContext().getColor(R.color.green) : inflater.getContext().getColor(R.color.red));
+        if (studentPerformanceInModule.getEarnedPoints() != null) {
+            earnedModulePointsView.setTextColor(studentPerformanceInModule.getEarnedPoints() > module.getMinPoints() ?
+                    inflater.getContext().getColor(R.color.green) : inflater.getContext().getColor(R.color.red));
+        }
 
         return view;
     }
@@ -99,12 +108,17 @@ class LessonsAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isExpanded, View view, ViewGroup parent) {
         Lesson lesson = lessonsByModules.get(String.valueOf(modules.get(groupPosition))).get(childPosition);
-        List<StudentLesson> studentLessons = studentLessonsByModules.get(String.valueOf(modules.get(groupPosition)));
+        List<StudentLesson> studentLessons = null;
+        if (studentLessonsByModules != null) {
+            studentLessons = studentLessonsByModules.get(String.valueOf(modules.get(groupPosition)));
+        }
 
         StudentLesson studentLesson = null;
-        for (int i = 0; i < studentLessons.size(); i++) {
-            if (lesson.getId() == studentLessons.get(i).getLesson().getId()) {
-                studentLesson = studentLessons.get(i);
+        if (studentLessons != null) {
+            for (int i = 0; i < studentLessons.size(); i++) {
+                if (lesson.getId() == studentLessons.get(i).getLesson().getId()) {
+                    studentLesson = studentLessons.get(i);
+                }
             }
         }
 
@@ -116,21 +130,17 @@ class LessonsAdapter extends BaseExpandableListAdapter {
         TextView lessonTimeView = view.findViewById(R.id.lessonTime);
         TextView bonusPointsView = view.findViewById(R.id.bonusPoints);
 
-        lessonDateView.setText(((lesson.getDateAndTime().getDate()) < 10 ? "0" + (lesson.getDateAndTime().getDate()) :
-                (lesson.getDateAndTime().getDate())) + "." +
-                ((lesson.getDateAndTime().getMonth() + 1) < 10 ? "0" + (lesson.getDateAndTime().getMonth() + 1) :
-                        (lesson.getDateAndTime().getMonth() + 1)) + "." + lesson.getDateAndTime().getYear());
-        lessonTimeView.setText(((lesson.getDateAndTime().getHours()) < 10 ? "0" + (lesson.getDateAndTime().getHours()) :
-                (lesson.getDateAndTime().getHours())) + ":" +
-                ((lesson.getDateAndTime().getMinutes()) < 10 ? "0" + (lesson.getDateAndTime().getMinutes()) :
-                        (lesson.getDateAndTime().getMinutes())));
+        DateFormat dateFormat1 = new SimpleDateFormat("dd.MM.yyyy");
+        DateFormat dateFormat2 = new SimpleDateFormat("HH:mm");
+        lessonDateView.setText(dateFormat1.format(lesson.getDateAndTime()));
+        lessonTimeView.setText(dateFormat2.format(lesson.getDateAndTime()));
 
         if (studentLesson == null) {
             bonusPointsView.setText("Нет данных");
         } else {
             lessonDateView.setTextColor(studentLesson.isAttended() ? inflater.getContext().getColor(R.color.green) : inflater.getContext().getColor(R.color.red));
             lessonTimeView.setTextColor(studentLesson.isAttended() ? inflater.getContext().getColor(R.color.green) : inflater.getContext().getColor(R.color.red));
-            if (studentLesson.getBonusPoints() != 0) {
+            if (studentLesson.getBonusPoints() != null && studentLesson.getBonusPoints() != 0) {
                 bonusPointsView.setVisibility(View.VISIBLE);
                 bonusPointsView.setText(String.valueOf(studentLesson.getBonusPoints()));
                 bonusPointsView.setTextColor(studentLesson.isAttended() ? inflater.getContext().getColor(R.color.green) : inflater.getContext().getColor(R.color.red));

@@ -99,6 +99,11 @@
             android:id="@+id/pop_out_dialog_module_info_editing_to_group_performance"
             app:popUpTo="@id/nav_group_performance"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_dialog_module_info_editing_to_group_performance"
+            app:destination="@id/nav_group_performance"
+            app:popUpTo="@id/nav_group_performance"
+            app:popUpToInclusive="true" />
     </dialog>
 
     <dialog
@@ -205,8 +210,7 @@
 
     <fragment
         android:id="@+id/nav_student_profile"
-        android:name="com.example.electronicdiary.student.StudentProfileFragment"
-        android:label="@string/menu_student_profile">
+        android:name="com.example.electronicdiary.student.StudentProfileFragment">
         <action
             android:id="@+id/pop_out_student_profile_to_group_performance"
             app:popUpTo="@id/nav_group_performance"

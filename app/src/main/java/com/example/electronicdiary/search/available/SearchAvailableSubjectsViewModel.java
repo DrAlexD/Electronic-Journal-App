@@ -14,6 +14,11 @@ import java.util.Map;
 public class SearchAvailableSubjectsViewModel extends ViewModel {
     private final MutableLiveData<List<Subject>> availableSubjects = new MutableLiveData<>();
     private final MutableLiveData<Map<String, List<SubjectInfo>>> availableSubjectsWithGroups = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> answer = new MutableLiveData<>();
+
+    public LiveData<Boolean> getAnswer() {
+        return answer;
+    }
 
     public LiveData<List<Subject>> getAvailableSubjects() {
         return availableSubjects;
@@ -32,6 +37,6 @@ public class SearchAvailableSubjectsViewModel extends ViewModel {
     }
 
     public void deleteAvailableSubject(long subjectInfoId, long professorId) {
-        Repository.getInstance().deleteSubjectInfo(subjectInfoId, professorId);
+        Repository.getInstance().deleteSubjectInfo(subjectInfoId, professorId, answer);
     }
 }

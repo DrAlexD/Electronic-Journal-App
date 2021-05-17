@@ -12,6 +12,11 @@ import com.example.electronicdiary.data_classes.Professor;
 public class ProfessorEditingViewModel extends ViewModel {
     private final MutableLiveData<ProfessorFormState> professorFormState = new MutableLiveData<>();
     private final MutableLiveData<Result<Professor>> professor = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> answer = new MutableLiveData<>();
+
+    public LiveData<Boolean> getAnswer() {
+        return answer;
+    }
 
     LiveData<ProfessorFormState> getProfessorFormState() {
         return professorFormState;
@@ -32,6 +37,6 @@ public class ProfessorEditingViewModel extends ViewModel {
     }
 
     public void editProfessor(long professorId, String professorName, String professorSecondName, String professorLogin, String professorPassword, String role) {
-        Repository.getInstance().editProfessor(professorId, new Professor(professorName, professorSecondName, professorLogin, professorPassword, role));
+        Repository.getInstance().editProfessor(professorId, new Professor(professorName, professorSecondName, professorLogin, professorPassword, role), answer);
     }
 }

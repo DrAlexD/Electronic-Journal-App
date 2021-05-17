@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="event_types">
+        <item>ДЗ</item>
         <item>ЛР</item>
         <item>РК</item>
-        <item>ДЗ</item>
     </string-array>
     <string-array name="modules">
         <item>1</item>

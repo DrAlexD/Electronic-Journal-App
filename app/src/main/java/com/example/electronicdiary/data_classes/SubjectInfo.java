@@ -6,12 +6,12 @@ public class SubjectInfo {
     private final Professor seminarian;
     private final Semester semester;
     private long id;
-    private final long lecturerId;
+    private final Long lecturerId;
 
     private final boolean isExam;
     private final boolean isDifferentiatedCredit;
 
-    public SubjectInfo(Group group, Subject subject, long lecturerId, Professor seminarian, Semester semester, boolean isExam, boolean isDifferentiatedCredit) {
+    public SubjectInfo(Group group, Subject subject, Long lecturerId, Professor seminarian, Semester semester, boolean isExam, boolean isDifferentiatedCredit) {
         this.group = group;
         this.subject = subject;
         this.lecturerId = lecturerId;
@@ -21,7 +21,7 @@ public class SubjectInfo {
         this.isDifferentiatedCredit = isDifferentiatedCredit;
     }
 
-    public SubjectInfo(long id, Group group, Subject subject, long lecturerId, Professor seminarian, Semester semester, boolean isExam, boolean isDifferentiatedCredit) {
+    public SubjectInfo(long id, Group group, Subject subject, Long lecturerId, Professor seminarian, Semester semester, boolean isExam, boolean isDifferentiatedCredit) {
         this.id = id;
         this.group = group;
         this.subject = subject;
@@ -44,7 +44,7 @@ public class SubjectInfo {
         return subject;
     }
 
-    public long getLecturerId() {
+    public Long getLecturerId() {
         return lecturerId;
     }
 

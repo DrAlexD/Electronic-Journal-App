@@ -46,6 +46,10 @@ public class SemestersAdapter extends RecyclerView.Adapter<SemestersAdapter.View
         holder.semesterYearAndHalfView.setText(semester.getFirstHalf() + " половина " + semester.getYear());
     }
 
+    public List<Semester> getSemesters() {
+        return semesters;
+    }
+
     @Override
     public int getItemCount() {
         return semesters.size();

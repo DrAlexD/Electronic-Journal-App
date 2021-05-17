@@ -13,6 +13,11 @@ import java.util.Date;
 public class EventEditingViewModel extends ViewModel {
     private final MutableLiveData<EventFormState> eventFormState = new MutableLiveData<>();
     private final MutableLiveData<Event> event = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> answer = new MutableLiveData<>();
+
+    public LiveData<Boolean> getAnswer() {
+        return answer;
+    }
 
     LiveData<EventFormState> getEventFormState() {
         return eventFormState;
@@ -31,10 +36,10 @@ public class EventEditingViewModel extends ViewModel {
     }
 
     public void editEvent(long eventId, Module module, int type, int number, Date startDate, Date deadlineDate, int minPoints, int maxPoints) {
-        Repository.getInstance().editEvent(eventId, new Event(module, type, number, startDate, deadlineDate, minPoints, maxPoints));
+        Repository.getInstance().editEvent(eventId, new Event(module, type, number, startDate, deadlineDate, minPoints, maxPoints), answer);
     }
 
     public void deleteEvent(long eventId) {
-        Repository.getInstance().deleteEvent(eventId);
+        Repository.getInstance().deleteEvent(eventId, answer);
     }
 }

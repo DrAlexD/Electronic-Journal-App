@@ -21,14 +21,17 @@ import org.jetbrains.annotations.NotNull;
 
 public class SemesterEditingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
+    private View root;
+    private SemesterEditingViewModel semesterEditingViewModel;
+    private long semesterId;
 
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_semester_editing, null);
+        root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_semester_editing, null);
 
-        SemesterEditingViewModel semesterEditingViewModel = new ViewModelProvider(this).get(SemesterEditingViewModel.class);
-        long semesterId = getArguments().getLong("semesterId");
+        semesterEditingViewModel = new ViewModelProvider(this).get(SemesterEditingViewModel.class);
+        semesterId = getArguments().getLong("semesterId");
         semesterEditingViewModel.downloadSemesterById(semesterId);
 
         EditText semesterYear = root.findViewById(R.id.semesterYearEditing);
@@ -84,5 +87,25 @@ public class SemesterEditingDialogFragment extends DialogFragment {
         dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true));
 
         return dialog;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        EditText semesterYear = root.findViewById(R.id.semesterYearEditing);
+        CheckBox isFirstHalf = root.findViewById(R.id.isSemesterFirstHalfEditing);
+
+        dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(view -> {
+            semesterEditingViewModel.editSemester(semesterId, Integer.parseInt(semesterYear.getText().toString()), isFirstHalf.isChecked());
+
+            semesterEditingViewModel.getAnswer().observe(getParentFragment().getViewLifecycleOwner(), answer -> {
+                if (answer != null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("openPage", 1);
+                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_semester_editing_to_admin_actions, bundle);
+                }
+            });
+        });
     }
 }

@@ -26,7 +26,10 @@ import com.example.electronicdiary.data_classes.Module;
 import com.example.electronicdiary.data_classes.Student;
 import com.example.electronicdiary.data_classes.StudentLesson;
 import com.example.electronicdiary.data_classes.StudentPerformanceInModule;
+import com.example.electronicdiary.data_classes.StudentPerformanceInSubject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -63,26 +66,21 @@ public class ModuleFragment extends Fragment {
     }
 
     private void generateLessonsTable(View root) {
-        Map<String, Map<String, List<StudentLesson>>> studentsLessons = groupPerformanceViewModel.getStudentsLessons().getValue();
         TableLayout studentsInModuleLessonsTable = root.findViewById(R.id.studentsInModuleLessonsTable);
         int padding2inDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics());
         int padding5inDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
 
-        List<Integer> modules = Repository.getInstance().getModulesNumbers();
-        List<Lesson> lessons = groupPerformanceViewModel.getLessons().getValue().get(String.valueOf(modules.get(moduleNumber - 1)));
-        TableRow lessonsRow = generateLessonsRow(padding2inDp, padding5inDp, lessons);
+        TableRow lessonsRow = generateLessonsRow(padding2inDp, padding5inDp);
         studentsInModuleLessonsTable.addView(lessonsRow);
 
         List<Student> students = groupPerformanceViewModel.getStudentsInGroup().getValue();
-        for (int i = 0; i < students.size(); i++) {
-            TableRow pointsRow = generatePointsRow(padding2inDp, padding5inDp, students.get(i), lessons,
-                    studentsLessons.get(String.valueOf(modules.get(moduleNumber - 1))).get(String.valueOf(i)),
-                    groupPerformanceViewModel.getStudentsPerformancesInModules().getValue().get(String.valueOf(moduleNumber)).get(i));
+        for (Student student : students) {
+            TableRow pointsRow = generatePointsRow(padding2inDp, padding5inDp, student);
             studentsInModuleLessonsTable.addView(pointsRow);
         }
     }
 
-    private TableRow generateLessonsRow(int padding2inDp, int padding5inDp, List<Lesson> lessons) {
+    private TableRow generateLessonsRow(int padding2inDp, int padding5inDp) {
         TableRow lessonsRow = new TableRow(getContext());
         lessonsRow.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE |
                 LinearLayout.SHOW_DIVIDER_BEGINNING | LinearLayout.SHOW_DIVIDER_END);
@@ -95,13 +93,14 @@ public class ModuleFragment extends Fragment {
         infoView.setGravity(Gravity.CENTER);
         lessonsRow.addView(infoView);
 
+        List<Integer> modulesNumbers = Repository.getInstance().getModulesNumbers();
+        List<Lesson> lessons = groupPerformanceViewModel.getLessons().getValue().get(String.valueOf(modulesNumbers.get(moduleNumber - 1)));
+
         for (Lesson lesson : lessons) {
             TextView lessonView = new TextView(getContext());
             lessonView.setTextSize(20);
-            lessonView.setText(((lesson.getDateAndTime().getDate()) < 10 ? "0" + (lesson.getDateAndTime().getDate()) :
-                    (lesson.getDateAndTime().getDate())) + "." +
-                    ((lesson.getDateAndTime().getMonth() + 1) < 10 ? "0" + (lesson.getDateAndTime().getMonth() + 1) :
-                            (lesson.getDateAndTime().getMonth() + 1)));
+            DateFormat dateFormat = new SimpleDateFormat("dd.MM");
+            lessonView.setText(dateFormat.format(lesson.getDateAndTime()));
             lessonView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
             lessonView.setGravity(Gravity.CENTER);
             lessonView.setOnClickListener(view -> {
@@ -123,6 +122,7 @@ public class ModuleFragment extends Fragment {
         moduleView.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
             bundle.putLong("moduleId", modules.get(String.valueOf(moduleNumber)).getId());
+            bundle.putInt("moduleNumber", moduleNumber);
             Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_module_info_editing, bundle);
         });
         lessonsRow.addView(moduleView);
@@ -130,12 +130,34 @@ public class ModuleFragment extends Fragment {
         return lessonsRow;
     }
 
-    private TableRow generatePointsRow(int padding2inDp, int padding5inDp, Student student, List<Lesson> lessons,
-                                       List<StudentLesson> studentLessons, StudentPerformanceInModule studentPerformanceInModule) {
+    private TableRow generatePointsRow(int padding2inDp, int padding5inDp, Student student) {
         TableRow pointsRow = new TableRow(getContext());
         pointsRow.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE |
                 LinearLayout.SHOW_DIVIDER_BEGINNING | LinearLayout.SHOW_DIVIDER_END);
         pointsRow.setDividerDrawable(getResources().getDrawable(R.drawable.divider));
+
+        List<Integer> modulesNumbers = Repository.getInstance().getModulesNumbers();
+
+        List<Lesson> lessons = groupPerformanceViewModel.getLessons().getValue()
+                .get(String.valueOf(modulesNumbers.get(moduleNumber - 1)));
+
+        List<StudentLesson> studentLessons = null;
+        if (groupPerformanceViewModel.getStudentsLessons().getValue() != null &&
+                groupPerformanceViewModel.getStudentsLessons().getValue()
+                        .get(String.valueOf(modulesNumbers.get(moduleNumber - 1))) != null) {
+            studentLessons = groupPerformanceViewModel.getStudentsLessons().getValue()
+                    .get(String.valueOf(modulesNumbers.get(moduleNumber - 1))).get(String.valueOf(student.getId()));
+        }
+
+        StudentPerformanceInModule studentPerformanceInModule = null;
+        for (StudentPerformanceInModule st : groupPerformanceViewModel.getStudentsPerformancesInModules()
+                .getValue().get(String.valueOf(moduleNumber))) {
+            if (st.getStudentPerformanceInSubject().getStudent().getId() == student.getId()) {
+                studentPerformanceInModule = st;
+            }
+        }
+
+        StudentPerformanceInSubject studentPerformanceInSubject = studentPerformanceInModule.getStudentPerformanceInSubject();
 
         TextView studentView = new TextView(getContext());
         studentView.setText(student.getFullName());
@@ -155,22 +177,22 @@ public class ModuleFragment extends Fragment {
             pointsView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
             boolean isHasData = false;
             Long studentLessonId = null;
-            Long studentPerformanceInSubjectId = null;
-            for (StudentLesson studentLesson : studentLessons) {
-                if (studentLesson.getStudentPerformanceInModule().getStudentPerformanceInSubject().getStudent().getId()
-                        == student.getId() && studentLesson.getLesson().getId() == lesson.getId()) {
-                    if (!studentLesson.isAttended()) {
-                        pointsView.setText("Н");
-                    } else {
-                        if (studentLesson.getBonusPoints() == -1)
-                            pointsView.setText(String.valueOf(lesson.getPointsPerVisit()));
-                        else
-                            pointsView.setText(String.valueOf(lesson.getPointsPerVisit() + studentLesson.getBonusPoints()));
+            if (studentLessons != null) {
+                for (StudentLesson studentLesson : studentLessons) {
+                    if (studentLesson.getStudentPerformanceInModule().getStudentPerformanceInSubject().getStudent().getId()
+                            == student.getId() && studentLesson.getLesson().getId() == lesson.getId()) {
+                        if (!studentLesson.isAttended()) {
+                            pointsView.setText("Н");
+                        } else {
+                            if (studentLesson.getBonusPoints() == null)
+                                pointsView.setText(String.valueOf(lesson.getPointsPerVisit()));
+                            else
+                                pointsView.setText(String.valueOf(lesson.getPointsPerVisit() + studentLesson.getBonusPoints()));
+                        }
+                        isHasData = true;
+                        studentLessonId = studentLesson.getId();
+                        break;
                     }
-                    isHasData = true;
-                    studentPerformanceInSubjectId = studentLesson.getStudentPerformanceInModule().getStudentPerformanceInSubject().getId();
-                    studentLessonId = studentLesson.getId();
-                    break;
                 }
             }
             if (!isHasData)
@@ -179,22 +201,17 @@ public class ModuleFragment extends Fragment {
 
             boolean finalIsHasData = isHasData;
             Long finalStudentLessonId = studentLessonId;
-            Long finalStudentPerformanceInSubjectId = studentPerformanceInSubjectId;
+            Long finalStudentPerformanceInSubjectId = studentPerformanceInSubject.getId();
             pointsView.setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("isFromGroupPerformance", true);
                 bundle.putBoolean("isHasData", finalIsHasData);
-                bundle.putString("lessonDate", ((lesson.getDateAndTime().getDate()) < 10 ? "0" + (lesson.getDateAndTime().getDate()) :
-                        (lesson.getDateAndTime().getDate())) + "." +
-                        ((lesson.getDateAndTime().getMonth() + 1) < 10 ? "0" + (lesson.getDateAndTime().getMonth() + 1) :
-                                (lesson.getDateAndTime().getMonth() + 1)) + "." + lesson.getDateAndTime().getYear() + " " +
-                        ((lesson.getDateAndTime().getHours()) < 10 ? "0" + (lesson.getDateAndTime().getHours()) :
-                                (lesson.getDateAndTime().getHours())) + ":" +
-                        ((lesson.getDateAndTime().getMinutes()) < 10 ? "0" + (lesson.getDateAndTime().getMinutes()) :
-                                (lesson.getDateAndTime().getMinutes())));
+                DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+                bundle.putString("lessonDate", dateFormat.format(lesson.getDateAndTime()));
                 bundle.putLong("lessonId", lesson.getId());
                 bundle.putLong("studentPerformanceInSubjectId", finalStudentPerformanceInSubjectId);
-                bundle.putLong("studentLessonId", finalStudentLessonId);
+                if (finalStudentLessonId != null)
+                    bundle.putLong("studentLessonId", finalStudentLessonId);
                 bundle.putLong("subjectInfoId", groupPerformanceViewModel.getSubjectInfo().getValue().getId());
                 Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_student_lesson, bundle);
             });
@@ -203,7 +220,7 @@ public class ModuleFragment extends Fragment {
 
         TextView moduleView = new TextView(getContext());
         moduleView.setTextSize(20);
-        if (studentPerformanceInModule.getEarnedPoints() == -1) {
+        if (studentPerformanceInModule.getEarnedPoints() == null) {
             moduleView.setText("-");
         } else {
             moduleView.setText(String.valueOf(studentPerformanceInModule.getEarnedPoints()));

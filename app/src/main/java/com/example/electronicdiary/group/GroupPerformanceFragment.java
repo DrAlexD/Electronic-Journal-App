@@ -118,6 +118,7 @@ public class GroupPerformanceFragment extends Fragment {
 
     private void generateEventsTable(View root) {
         TableLayout studentsInModuleEventsTable = root.findViewById(R.id.studentsInModuleEventsTable);
+        studentsInModuleEventsTable.removeAllViews();
         int padding2inDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics());
         int padding5inDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
 
@@ -126,7 +127,7 @@ public class GroupPerformanceFragment extends Fragment {
         List<Student> students = groupPerformanceViewModel.getStudentsInGroup().getValue();
 
         for (Student student : students) {
-            TableRow pointsRow = generatePointsRow(student.getId(), padding2inDp, padding5inDp, student);
+            TableRow pointsRow = generatePointsRow(padding2inDp, padding5inDp, student);
             studentsInModuleEventsTable.addView(pointsRow);
         }
     }
@@ -149,78 +150,89 @@ public class GroupPerformanceFragment extends Fragment {
         Map<String, Module> modules = groupPerformanceViewModel.getModules().getValue();
 
         for (Integer moduleNumber : modulesNumbers) {
-            for (Event event : events.get(String.valueOf(moduleNumber))) {
-                TextView eventView = new TextView(getContext());
-                eventView.setTextSize(20);
-                eventView.setText(event.getTitle());
-                eventView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
-                eventView.setGravity(Gravity.CENTER);
-                eventView.setOnClickListener(view -> {
+            if (events.get(String.valueOf(moduleNumber)) != null) {
+                for (Event event : events.get(String.valueOf(moduleNumber))) {
+                    TextView eventView = new TextView(getContext());
+                    eventView.setTextSize(20);
+                    eventView.setText(event.getTitle());
+                    eventView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
+                    eventView.setGravity(Gravity.CENTER);
+                    eventView.setOnClickListener(view -> {
+                        Bundle bundle = new Bundle();
+                        bundle.putLong("eventId", event.getId());
+                        bundle.putString("eventTitle", event.getTitle());
+                        Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_event_editing, bundle);
+                    });
+                    eventsRow.addView(eventView);
+                }
+
+                TextView moduleView = new TextView(getContext());
+                moduleView.setTextSize(20);
+                moduleView.setText("Модуль " + moduleNumber);
+                moduleView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
+                moduleView.setGravity(Gravity.CENTER);
+                moduleView.setOnClickListener(view -> {
                     Bundle bundle = new Bundle();
-                    bundle.putLong("eventId", event.getId());
-                    Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_event_editing, bundle);
+                    bundle.putLong("moduleId", modules.get(String.valueOf(moduleNumber)).getId());
+                    bundle.putInt("moduleNumber", moduleNumber);
+                    Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_module_info_editing, bundle);
                 });
-                eventsRow.addView(eventView);
+                eventsRow.addView(moduleView);
+            }
+        }
+
+        if ((events.get(String.valueOf(1)) != null && events.get(String.valueOf(2)) != null) ||
+                (events.get(String.valueOf(2)) != null && events.get(String.valueOf(3)) != null) ||
+                (events.get(String.valueOf(1)) != null && events.get(String.valueOf(3)) != null)) {
+            TextView resultPointsView = new TextView(getContext());
+            resultPointsView.setTextSize(20);
+            resultPointsView.setText("Итоговые баллы");
+            resultPointsView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
+            resultPointsView.setGravity(Gravity.CENTER);
+            resultPointsView.setOnClickListener(view -> {
+                Bundle bundle = new Bundle();
+                bundle.putLong("subjectInfoId", subjectInfoId);
+                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_subject_info_editing, bundle);
+            });
+            eventsRow.addView(resultPointsView);
+        }
+
+        if (events.get(String.valueOf(1)) != null && events.get(String.valueOf(2)) != null &&
+                events.get(String.valueOf(3)) != null) {
+            SubjectInfo subjectInfo = groupPerformanceViewModel.getSubjectInfo().getValue();
+            if (subjectInfo.isExam()) {
+                TextView examPointsView = new TextView(getContext());
+                examPointsView.setTextSize(20);
+                examPointsView.setText("Экзамен");
+                examPointsView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
+                examPointsView.setGravity(Gravity.CENTER);
+                examPointsView.setOnClickListener(view -> {
+                    Bundle bundle = new Bundle();
+                    bundle.putLong("subjectInfoId", subjectInfoId);
+                    Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_subject_info_editing, bundle);
+                });
+                eventsRow.addView(examPointsView);
             }
 
-            TextView moduleView = new TextView(getContext());
-            moduleView.setTextSize(20);
-            moduleView.setText("Модуль " + moduleNumber);
-            moduleView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
-            moduleView.setGravity(Gravity.CENTER);
-            moduleView.setOnClickListener(view -> {
-                Bundle bundle = new Bundle();
-                bundle.putLong("moduleId", modules.get(String.valueOf(moduleNumber)).getId());
-                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_module_info_editing, bundle);
-            });
-            eventsRow.addView(moduleView);
-        }
-
-        TextView resultPointsView = new TextView(getContext());
-        resultPointsView.setTextSize(20);
-        resultPointsView.setText("Итоговые баллы");
-        resultPointsView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
-        resultPointsView.setGravity(Gravity.CENTER);
-        resultPointsView.setOnClickListener(view -> {
-            Bundle bundle = new Bundle();
-            bundle.putLong("subjectInfoId", subjectInfoId);
-            Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_subject_info_editing, bundle);
-        });
-        eventsRow.addView(resultPointsView);
-
-        SubjectInfo subjectInfo = groupPerformanceViewModel.getSubjectInfo().getValue();
-        if (subjectInfo.isExam()) {
-            TextView examPointsView = new TextView(getContext());
-            examPointsView.setTextSize(20);
-            examPointsView.setText("Экзамен");
-            examPointsView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
-            examPointsView.setGravity(Gravity.CENTER);
-            examPointsView.setOnClickListener(view -> {
-                Bundle bundle = new Bundle();
-                bundle.putLong("subjectInfoId", subjectInfoId);
-                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_subject_info_editing, bundle);
-            });
-            eventsRow.addView(examPointsView);
-        }
-
-        if (subjectInfo.isExam() || subjectInfo.isDifferentiatedCredit()) {
-            TextView markView = new TextView(getContext());
-            markView.setTextSize(20);
-            markView.setText("Оценка");
-            markView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
-            markView.setGravity(Gravity.CENTER);
-            markView.setOnClickListener(view -> {
-                Bundle bundle = new Bundle();
-                bundle.putLong("subjectInfoId", subjectInfoId);
-                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_subject_info_editing, bundle);
-            });
-            eventsRow.addView(markView);
+            if (subjectInfo.isExam() || subjectInfo.isDifferentiatedCredit()) {
+                TextView markView = new TextView(getContext());
+                markView.setTextSize(20);
+                markView.setText("Оценка");
+                markView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
+                markView.setGravity(Gravity.CENTER);
+                markView.setOnClickListener(view -> {
+                    Bundle bundle = new Bundle();
+                    bundle.putLong("subjectInfoId", subjectInfoId);
+                    Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_subject_info_editing, bundle);
+                });
+                eventsRow.addView(markView);
+            }
         }
 
         return eventsRow;
     }
 
-    private TableRow generatePointsRow(long i, int padding2inDp, int padding5inDp, Student student) {
+    private TableRow generatePointsRow(int padding2inDp, int padding5inDp, Student student) {
         Map<String, List<Event>> events = groupPerformanceViewModel.getEvents().getValue();
         Map<String, Map<String, List<StudentEvent>>> studentsEvents = groupPerformanceViewModel.getStudentsEvents().getValue();
 
@@ -241,165 +253,175 @@ public class GroupPerformanceFragment extends Fragment {
         });
         pointsRow.addView(studentView);
 
+        StudentPerformanceInSubject studentPerformanceInSubject = null;
+        for (StudentPerformanceInSubject st : groupPerformanceViewModel.getStudentsPerformancesInSubject().getValue()) {
+            if (st.getStudent().getId() == student.getId()) {
+                studentPerformanceInSubject = st;
+            }
+        }
+
         List<Integer> modulesNumbers = Repository.getInstance().getModulesNumbers();
         for (int moduleNumber : modulesNumbers) {
-            for (Event event : events.get(String.valueOf(moduleNumber))) {
-                TextView pointsView = new TextView(getContext());
-                pointsView.setTextSize(20);
-                pointsView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
+            if (events.get(String.valueOf(moduleNumber)) != null) {
+                for (Event event : events.get(String.valueOf(moduleNumber))) {
+                    TextView pointsView = new TextView(getContext());
+                    pointsView.setTextSize(20);
+                    pointsView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
 
-                StudentEvent studentEventChosen = null;
-                int lastAttempt = 0;
-                Long studentPerformanceInSubjectId = null;
-                for (StudentEvent studentEvent : studentsEvents.get(String.valueOf(moduleNumber)).get(String.valueOf(i))) {
-                    if (studentEvent.getStudentPerformanceInModule().getStudentPerformanceInSubject().getStudent().getId()
-                            == student.getId() && studentEvent.getEvent().getId() == event.getId()
-                            && studentEvent.getAttemptNumber() > lastAttempt) {
-                        studentEventChosen = studentEvent;
-                        studentPerformanceInSubjectId = studentEvent.getStudentPerformanceInModule().getStudentPerformanceInSubject().getId();
-                        lastAttempt = studentEvent.getAttemptNumber();
-                    }
-                }
-
-                if (lastAttempt != 0) {
-                    if (!studentEventChosen.isAttended()) {
-                        pointsView.setText("Н");
-                    } else {
-                        if (studentEventChosen.getEarnedPoints() == -1 && studentEventChosen.getBonusPoints() == -1) {
-                            pointsView.setText("-");
-                        } else if (studentEventChosen.getEarnedPoints() == -1) {
-                            pointsView.setText(String.valueOf(studentEventChosen.getBonusPoints()));
-                            pointsView.setTextColor(studentEventChosen.isHaveCredit() ?
-                                    getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
-                        } else if (studentEventChosen.getBonusPoints() == -1) {
-                            pointsView.setText(String.valueOf(studentEventChosen.getEarnedPoints()));
-                            pointsView.setTextColor(studentEventChosen.isHaveCredit() ?
-                                    getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
-                        } else {
-                            pointsView.setText(String.valueOf(studentEventChosen.getEarnedPoints() + studentEventChosen.getBonusPoints()));
-                            pointsView.setTextColor(studentEventChosen.isHaveCredit() ?
-                                    getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
+                    StudentEvent studentEventChosen = null;
+                    int lastAttempt = 0;
+                    if (studentsEvents != null && studentsEvents.get(String.valueOf(moduleNumber)) != null &&
+                            studentsEvents.get(String.valueOf(moduleNumber)).get(String.valueOf(student.getId())) != null) {
+                        for (StudentEvent studentEvent : studentsEvents.get(String.valueOf(moduleNumber)).get(String.valueOf(student.getId()))) {
+                            if (studentEvent.getStudentPerformanceInModule().getStudentPerformanceInSubject().getStudent().getId()
+                                    == student.getId() && studentEvent.getEvent().getId() == event.getId()
+                                    && studentEvent.getAttemptNumber() > lastAttempt) {
+                                studentEventChosen = studentEvent;
+                                lastAttempt = studentEvent.getAttemptNumber();
+                            }
                         }
                     }
-                } else
-                    pointsView.setText("");
-                pointsView.setGravity(Gravity.CENTER);
+                    if (lastAttempt != 0) {
+                        if (!studentEventChosen.isAttended()) {
+                            pointsView.setText("Н");
+                        } else {
+                            if (studentEventChosen.getEarnedPoints() == null && studentEventChosen.getBonusPoints() == null) {
+                                pointsView.setText("-");
+                            } else if (studentEventChosen.getEarnedPoints() == null) {
+                                pointsView.setText(String.valueOf(studentEventChosen.getBonusPoints()));
+                                pointsView.setTextColor(studentEventChosen.isHaveCredit() ?
+                                        getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
+                            } else if (studentEventChosen.getBonusPoints() == null) {
+                                pointsView.setText(String.valueOf(studentEventChosen.getEarnedPoints()));
+                                pointsView.setTextColor(studentEventChosen.isHaveCredit() ?
+                                        getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
+                            } else {
+                                pointsView.setText(String.valueOf(studentEventChosen.getEarnedPoints() + studentEventChosen.getBonusPoints()));
+                                pointsView.setTextColor(studentEventChosen.isHaveCredit() ?
+                                        getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
+                            }
+                        }
+                    } else
+                        pointsView.setText("");
+                    pointsView.setGravity(Gravity.CENTER);
 
-                int finalLastAttempt = lastAttempt;
-                Long finalStudentEventId = studentEventChosen.getId();
-                Long finalStudentPerformanceInSubjectId = studentPerformanceInSubjectId;
-                pointsView.setOnClickListener(view -> {
-                    Bundle bundle = new Bundle();
-                    bundle.putBoolean("isFromGroupPerformance", true);
-                    bundle.putInt("attemptNumber", finalLastAttempt);
-                    bundle.putLong("studentEventId", finalStudentEventId);
-                    bundle.putLong("eventId", event.getId());
-                    bundle.putString("eventTitle", event.getTitle());
-                    bundle.putLong("studentPerformanceInSubjectId", finalStudentPerformanceInSubjectId);
-                    bundle.putLong("subjectInfoId", subjectInfoId);
-                    Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_student_event, bundle);
-                });
-                pointsRow.addView(pointsView);
-            }
-
-            StudentPerformanceInModule studentPerformanceInModule = null;
-            for (StudentPerformanceInModule st : groupPerformanceViewModel.getStudentsPerformancesInModules().getValue().get(String.valueOf(moduleNumber))) {
-                if (st.getStudentPerformanceInSubject().getStudent().getId() == i) {
-                    studentPerformanceInModule = st;
+                    int finalLastAttempt = lastAttempt;
+                    Long finalStudentEventId;
+                    if (studentEventChosen != null)
+                        finalStudentEventId = studentEventChosen.getId();
+                    else
+                        finalStudentEventId = null;
+                    Long finalStudentPerformanceInSubjectId = studentPerformanceInSubject.getId();
+                    pointsView.setOnClickListener(view -> {
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean("isFromGroupPerformance", true);
+                        bundle.putInt("attemptNumber", finalLastAttempt);
+                        if (finalStudentEventId != null)
+                            bundle.putLong("studentEventId", finalStudentEventId);
+                        bundle.putLong("eventId", event.getId());
+                        bundle.putString("eventTitle", event.getTitle());
+                        bundle.putLong("studentPerformanceInSubjectId", finalStudentPerformanceInSubjectId);
+                        bundle.putLong("subjectInfoId", subjectInfoId);
+                        Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_student_event, bundle);
+                    });
+                    pointsRow.addView(pointsView);
                 }
-            }
 
-            TextView moduleView = new TextView(getContext());
-            moduleView.setTextSize(20);
-            if (studentPerformanceInModule != null) {
-                if (studentPerformanceInModule.getEarnedPoints() == -1) {
+                StudentPerformanceInModule studentPerformanceInModule = null;
+                for (StudentPerformanceInModule st : groupPerformanceViewModel.getStudentsPerformancesInModules().getValue().get(String.valueOf(moduleNumber))) {
+                    if (st.getStudentPerformanceInSubject().getStudent().getId() == student.getId()) {
+                        studentPerformanceInModule = st;
+                    }
+                }
+
+                TextView moduleView = new TextView(getContext());
+                moduleView.setTextSize(20);
+                if (studentPerformanceInModule.getEarnedPoints() == null) {
                     moduleView.setText("-");
                 } else {
                     moduleView.setText(String.valueOf(studentPerformanceInModule.getEarnedPoints()));
                     moduleView.setTextColor(studentPerformanceInModule.isHaveCredit() ?
                             getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
                 }
-            } else {
-                moduleView.setText("");
-            }
-            moduleView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
-            moduleView.setGravity(Gravity.CENTER);
-            pointsRow.addView(moduleView);
-        }
-
-        StudentPerformanceInSubject studentPerformanceInSubject = null;
-        for (StudentPerformanceInSubject st : groupPerformanceViewModel.getStudentsPerformancesInSubject().getValue()) {
-            if (st.getStudent().getId() == i) {
-                studentPerformanceInSubject = st;
+                moduleView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
+                moduleView.setGravity(Gravity.CENTER);
+                pointsRow.addView(moduleView);
             }
         }
 
-        TextView resultPointsView = new TextView(getContext());
-        resultPointsView.setTextSize(20);
-        if (studentPerformanceInSubject.getEarnedPoints() == -1 && studentPerformanceInSubject.getBonusPoints() == -1) {
-            resultPointsView.setText("-");
-        } else if (studentPerformanceInSubject.getEarnedPoints() == -1) {
-            resultPointsView.setText(String.valueOf(studentPerformanceInSubject.getBonusPoints()));
-            resultPointsView.setTextColor(studentPerformanceInSubject.isHaveCreditOrAdmission() ?
-                    getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
-        } else if (studentPerformanceInSubject.getBonusPoints() == -1) {
-            resultPointsView.setText(String.valueOf(studentPerformanceInSubject.getEarnedPoints()));
-            resultPointsView.setTextColor(studentPerformanceInSubject.isHaveCreditOrAdmission() ?
-                    getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
-        } else {
-            resultPointsView.setText(String.valueOf(studentPerformanceInSubject.getEarnedPoints() + studentPerformanceInSubject.getBonusPoints()));
-            resultPointsView.setTextColor(studentPerformanceInSubject.isHaveCreditOrAdmission() ?
-                    getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
-        }
-        resultPointsView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
-        resultPointsView.setGravity(Gravity.CENTER);
-        resultPointsView.setOnClickListener(view -> {
-            Bundle bundle = new Bundle();
-            bundle.putLong("studentId", student.getId());
-            bundle.putLong("subjectInfoId", subjectInfoId);
-            Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_student_performance_in_subject, bundle);
-        });
-        pointsRow.addView(resultPointsView);
-
-        SubjectInfo subjectInfo = groupPerformanceViewModel.getSubjectInfo().getValue();
-        if (subjectInfo.isExam()) {
-            TextView examPointsView = new TextView(getContext());
-            examPointsView.setTextSize(20);
-            if (studentPerformanceInSubject.getEarnedExamPoints() == -1) {
-                examPointsView.setText("-");
+        if ((events.get(String.valueOf(1)) != null && events.get(String.valueOf(2)) != null) ||
+                (events.get(String.valueOf(2)) != null && events.get(String.valueOf(3)) != null) ||
+                (events.get(String.valueOf(1)) != null && events.get(String.valueOf(3)) != null)) {
+            TextView resultPointsView = new TextView(getContext());
+            resultPointsView.setTextSize(20);
+            if (studentPerformanceInSubject.getEarnedPoints() == null && studentPerformanceInSubject.getBonusPoints() == null) {
+                resultPointsView.setText("-");
+            } else if (studentPerformanceInSubject.getEarnedPoints() == null) {
+                resultPointsView.setText(String.valueOf(studentPerformanceInSubject.getBonusPoints()));
+                resultPointsView.setTextColor(studentPerformanceInSubject.isHaveCreditOrAdmission() ?
+                        getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
+            } else if (studentPerformanceInSubject.getBonusPoints() == null) {
+                resultPointsView.setText(String.valueOf(studentPerformanceInSubject.getEarnedPoints()));
+                resultPointsView.setTextColor(studentPerformanceInSubject.isHaveCreditOrAdmission() ?
+                        getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
             } else {
-                examPointsView.setText(String.valueOf(studentPerformanceInSubject.getEarnedExamPoints()));
-                examPointsView.setTextColor(studentPerformanceInSubject.getEarnedExamPoints() >= 18 ?
+                resultPointsView.setText(String.valueOf(studentPerformanceInSubject.getEarnedPoints() + studentPerformanceInSubject.getBonusPoints()));
+                resultPointsView.setTextColor(studentPerformanceInSubject.isHaveCreditOrAdmission() ?
                         getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
             }
-            examPointsView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
-            examPointsView.setGravity(Gravity.CENTER);
-            examPointsView.setOnClickListener(view -> {
+            resultPointsView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
+            resultPointsView.setGravity(Gravity.CENTER);
+            StudentPerformanceInSubject finalStudentPerformanceInSubject = studentPerformanceInSubject;
+            resultPointsView.setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
-                bundle.putLong("studentId", student.getId());
-                bundle.putLong("subjectInfoId", subjectInfoId);
+                bundle.putLong("studentPerformanceInSubjectId", finalStudentPerformanceInSubject.getId());
                 Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_student_performance_in_subject, bundle);
             });
-            pointsRow.addView(examPointsView);
+            pointsRow.addView(resultPointsView);
         }
 
-        if (subjectInfo.isExam() || subjectInfo.isDifferentiatedCredit()) {
-            TextView markView = new TextView(getContext());
-            markView.setTextSize(20);
-            if (studentPerformanceInSubject.getMark() == -1) {
-                markView.setText("-");
-            } else {
-                markView.setText(String.valueOf(studentPerformanceInSubject.getMark()));
+        SubjectInfo subjectInfo = groupPerformanceViewModel.getSubjectInfo().getValue();
+        if (events.get(String.valueOf(1)) != null && events.get(String.valueOf(2)) != null &&
+                events.get(String.valueOf(3)) != null) {
+            if (subjectInfo.isExam()) {
+                TextView examPointsView = new TextView(getContext());
+                examPointsView.setTextSize(20);
+                if (studentPerformanceInSubject.getEarnedExamPoints() == null) {
+                    examPointsView.setText("");
+                } else {
+                    examPointsView.setText(String.valueOf(studentPerformanceInSubject.getEarnedExamPoints()));
+                    examPointsView.setTextColor(studentPerformanceInSubject.getEarnedExamPoints() >= 18 ?
+                            getResources().getColor(R.color.green) : getResources().getColor(R.color.red));
+                }
+                examPointsView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
+                examPointsView.setGravity(Gravity.CENTER);
+                StudentPerformanceInSubject finalStudentPerformanceInSubject2 = studentPerformanceInSubject;
+                examPointsView.setOnClickListener(view -> {
+                    Bundle bundle = new Bundle();
+                    bundle.putLong("studentPerformanceInSubjectId", finalStudentPerformanceInSubject2.getId());
+                    Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_student_performance_in_subject, bundle);
+                });
+                pointsRow.addView(examPointsView);
             }
-            markView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
-            markView.setGravity(Gravity.CENTER);
-            markView.setOnClickListener(view -> {
-                Bundle bundle = new Bundle();
-                bundle.putLong("studentId", student.getId());
-                bundle.putLong("subjectInfoId", subjectInfoId);
-                Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_student_performance_in_subject, bundle);
-            });
-            pointsRow.addView(markView);
+
+            if (subjectInfo.isExam() || subjectInfo.isDifferentiatedCredit()) {
+                TextView markView = new TextView(getContext());
+                markView.setTextSize(20);
+                if (studentPerformanceInSubject.getMark() == null) {
+                    markView.setText("");
+                } else {
+                    markView.setText(String.valueOf(studentPerformanceInSubject.getMark()));
+                }
+                markView.setPadding(padding5inDp, padding2inDp, padding5inDp, padding2inDp);
+                markView.setGravity(Gravity.CENTER);
+                StudentPerformanceInSubject finalStudentPerformanceInSubject1 = studentPerformanceInSubject;
+                markView.setOnClickListener(view -> {
+                    Bundle bundle = new Bundle();
+                    bundle.putLong("studentPerformanceInSubjectId", finalStudentPerformanceInSubject1.getId());
+                    Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_student_performance_in_subject, bundle);
+                });
+                pointsRow.addView(markView);
+            }
         }
 
         return pointsRow;

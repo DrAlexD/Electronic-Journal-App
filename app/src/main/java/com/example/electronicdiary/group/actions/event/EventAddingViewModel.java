@@ -15,6 +15,11 @@ public class EventAddingViewModel extends ViewModel {
     private final MutableLiveData<EventFormState> eventFormState = new MutableLiveData<>();
     private final MutableLiveData<Map<String, Module>> modules = new MutableLiveData<>();
     private final MutableLiveData<Integer> lastNumberOfEventType = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> answer = new MutableLiveData<>();
+
+    public LiveData<Boolean> getAnswer() {
+        return answer;
+    }
 
     LiveData<EventFormState> getEventFormState() {
         return eventFormState;
@@ -41,6 +46,6 @@ public class EventAddingViewModel extends ViewModel {
     }
 
     public void addEvent(Module module, int type, int number, Date startDate, Date deadlineDate, int minPoints, int maxPoints) {
-        Repository.getInstance().addEvent(new Event(module, type, number, startDate, deadlineDate, minPoints, maxPoints));
+        Repository.getInstance().addEvent(new Event(module, type, number, startDate, deadlineDate, minPoints, maxPoints), answer);
     }
 }

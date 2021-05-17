@@ -13,6 +13,8 @@ import com.example.electronicdiary.data_classes.Module;
 import com.example.electronicdiary.data_classes.StudentEvent;
 import com.example.electronicdiary.data_classes.StudentPerformanceInModule;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +46,10 @@ class EventsAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return eventsByModules.get(String.valueOf(modules.get(groupPosition))).size();
+        if (eventsByModules.get(String.valueOf(modules.get(groupPosition))) != null)
+            return eventsByModules.get(String.valueOf(modules.get(groupPosition))).size();
+        else
+            return 0;
     }
 
     @Override
@@ -85,13 +90,17 @@ class EventsAdapter extends BaseExpandableListAdapter {
         TextView moduleTitleWithPointsView = view.findViewById(R.id.moduleTitleWithPoints);
         moduleTitleWithPointsView.setText(moduleTitle + " (" + module.getMinPoints() +
                 "-" + module.getMaxPoints() + ")");
-        moduleTitleWithPointsView.setTextColor(studentPerformanceInModule.getEarnedPoints() > module.getMinPoints() ?
-                inflater.getContext().getColor(R.color.green) : inflater.getContext().getColor(R.color.red));
+        if (studentPerformanceInModule.getEarnedPoints() != null) {
+            moduleTitleWithPointsView.setTextColor(studentPerformanceInModule.getEarnedPoints() > module.getMinPoints() ?
+                    inflater.getContext().getColor(R.color.green) : inflater.getContext().getColor(R.color.red));
+        }
 
         TextView earnedModulePointsView = view.findViewById(R.id.earnedModulePoints);
-        earnedModulePointsView.setText(String.valueOf(studentPerformanceInModule.getEarnedPoints()));
-        earnedModulePointsView.setTextColor(studentPerformanceInModule.getEarnedPoints() > module.getMinPoints() ?
-                inflater.getContext().getColor(R.color.green) : inflater.getContext().getColor(R.color.red));
+        if (studentPerformanceInModule.getEarnedPoints() != null) {
+            earnedModulePointsView.setText(String.valueOf(studentPerformanceInModule.getEarnedPoints()));
+            earnedModulePointsView.setTextColor(studentPerformanceInModule.getEarnedPoints() > module.getMinPoints() ?
+                    inflater.getContext().getColor(R.color.green) : inflater.getContext().getColor(R.color.red));
+        }
 
         return view;
     }
@@ -99,14 +108,20 @@ class EventsAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isExpanded, View view, ViewGroup parent) {
         Event event = eventsByModules.get(String.valueOf(modules.get(groupPosition))).get(childPosition);
-        List<StudentEvent> studentEvents = studentEventsByModules.get(String.valueOf(modules.get(groupPosition)));
+
+        List<StudentEvent> studentEvents = null;
+        if (studentEventsByModules != null) {
+            studentEvents = studentEventsByModules.get(String.valueOf(modules.get(groupPosition)));
+        }
 
         int lastAttempt = 0;
         StudentEvent studentEvent = null;
-        for (int i = 0; i < studentEvents.size(); i++) {
-            if (event.getId() == studentEvents.get(i).getEvent().getId() && studentEvents.get(i).getAttemptNumber() > lastAttempt) {
-                studentEvent = studentEvents.get(i);
-                lastAttempt = studentEvents.get(i).getAttemptNumber();
+        if (studentEvents != null) {
+            for (int i = 0; i < studentEvents.size(); i++) {
+                if (event.getId() == studentEvents.get(i).getEvent().getId() && studentEvents.get(i).getAttemptNumber() > lastAttempt) {
+                    studentEvent = studentEvents.get(i);
+                    lastAttempt = studentEvents.get(i).getAttemptNumber();
+                }
             }
         }
 
@@ -131,14 +146,14 @@ class EventsAdapter extends BaseExpandableListAdapter {
             finishDateView.setText("");
         } else {
             eventTitleView.setText(event.getTitle());
-            attemptNumberView.setText(String.valueOf(studentEvent.getAttemptNumber()));
-            if (studentEvent.getEarnedPoints() == -1 && studentEvent.getBonusPoints() == -1) {
+            attemptNumberView.setText(studentEvent.getAttemptNumber() + " попытка");
+            if (studentEvent.getEarnedPoints() == null && studentEvent.getBonusPoints() == null) {
                 allPointsView.setText("-");
-            } else if (studentEvent.getEarnedPoints() == -1) {
+            } else if (studentEvent.getEarnedPoints() == null) {
                 allPointsView.setText(String.valueOf(studentEvent.getBonusPoints()));
                 allPointsView.setTextColor(inflater.getContext().getColor(studentEvent.isHaveCredit() ?
                         R.color.green : R.color.red));
-            } else if (studentEvent.getBonusPoints() == -1) {
+            } else if (studentEvent.getBonusPoints() == null) {
                 allPointsView.setText(String.valueOf(studentEvent.getEarnedPoints()));
                 allPointsView.setTextColor(inflater.getContext().getColor(studentEvent.isHaveCredit() ?
                         R.color.green : R.color.red));
@@ -149,14 +164,17 @@ class EventsAdapter extends BaseExpandableListAdapter {
             }
 
             if (studentEvent.getFinishDate() != null) {
-                finishDateView.setText(studentEvent.getFinishDate().getDate());
+                DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+                finishDateView.setText(dateFormat.format(studentEvent.getFinishDate()));
                 finishDateView.setTextColor(inflater.getContext().getColor(studentEvent.getFinishDate().after(event.getDeadlineDate())
                         ? R.color.red : R.color.green));
             } else
                 finishDateView.setText("-");
 
-            eventTitleView.setTextColor(inflater.getContext().getColor(studentEvent.isHaveCredit() ? R.color.green : R.color.red));
-            attemptNumberView.setTextColor(inflater.getContext().getColor(studentEvent.isHaveCredit() ? R.color.green : R.color.red));
+            if (studentEvent.isHaveCredit() != null) {
+                eventTitleView.setTextColor(inflater.getContext().getColor(studentEvent.isHaveCredit() ? R.color.green : R.color.red));
+                attemptNumberView.setTextColor(inflater.getContext().getColor(studentEvent.isHaveCredit() ? R.color.green : R.color.red));
+            }
         }
 
         return view;

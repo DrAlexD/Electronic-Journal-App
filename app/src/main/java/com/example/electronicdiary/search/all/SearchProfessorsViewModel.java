@@ -11,6 +11,11 @@ import java.util.List;
 
 public class SearchProfessorsViewModel extends ViewModel {
     private final MutableLiveData<List<Professor>> professors = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> answer = new MutableLiveData<>();
+
+    public LiveData<Boolean> getAnswer() {
+        return answer;
+    }
 
     public LiveData<List<Professor>> getProfessors() {
         return professors;
@@ -21,6 +26,6 @@ public class SearchProfessorsViewModel extends ViewModel {
     }
 
     public void deleteProfessor(long professorId) {
-        Repository.getInstance().deleteProfessor(professorId);
+        Repository.getInstance().deleteProfessor(professorId, answer);
     }
 }

@@ -17,6 +17,11 @@ public class StudentEventViewModel extends ViewModel {
     private final MutableLiveData<StudentEvent> studentEvent = new MutableLiveData<>();
     private final MutableLiveData<Event> event = new MutableLiveData<>();
     private final MutableLiveData<Map<String, StudentPerformanceInModule>> studentPerformanceInModules = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> answer = new MutableLiveData<>();
+
+    public LiveData<Boolean> getAnswer() {
+        return answer;
+    }
 
     LiveData<StudentEventFormState> getStudentEventFormState() {
         return studentEventFormState;
@@ -51,16 +56,16 @@ public class StudentEventViewModel extends ViewModel {
     }
 
     public void addStudentEvent(int attemptNumber, StudentPerformanceInModule studentPerformanceInModule, Event event, boolean isAttended, int variantNumber) {
-        Repository.getInstance().addStudentEvent(new StudentEvent(attemptNumber, studentPerformanceInModule, event, isAttended, variantNumber));
+        Repository.getInstance().addStudentEvent(new StudentEvent(attemptNumber, studentPerformanceInModule, event, isAttended, variantNumber), answer);
     }
 
     public void editStudentEvent(long studentEventId, int attemptNumber, StudentPerformanceInModule studentPerformanceInModule, Event event, boolean isAttended, int variantNumber,
-                                 Date finishDate, int earnedPoints, int bonusPoints, boolean isHaveCredit) {
+                                 Date finishDate, Integer earnedPoints, Integer bonusPoints, Boolean isHaveCredit) {
         Repository.getInstance().editStudentEvent(studentEventId, new StudentEvent(attemptNumber, studentPerformanceInModule, event, isAttended, variantNumber,
-                finishDate, earnedPoints, bonusPoints, isHaveCredit));
+                finishDate, earnedPoints, bonusPoints, isHaveCredit), answer);
     }
 
     public void deleteStudentEvent(long studentEventId) {
-        Repository.getInstance().deleteStudentEvent(studentEventId);
+        Repository.getInstance().deleteStudentEvent(studentEventId, answer);
     }
 }

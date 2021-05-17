@@ -20,14 +20,17 @@ import org.jetbrains.annotations.NotNull;
 
 public class SubjectEditingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
+    private View root;
+    private SubjectEditingViewModel subjectEditingViewModel;
+    private long subjectId;
 
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_subject_editing, null);
+        root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_subject_editing, null);
 
-        SubjectEditingViewModel subjectEditingViewModel = new ViewModelProvider(this).get(SubjectEditingViewModel.class);
-        long subjectId = getArguments().getLong("subjectId");
+        subjectEditingViewModel = new ViewModelProvider(this).get(SubjectEditingViewModel.class);
+        subjectId = getArguments().getLong("subjectId");
         subjectEditingViewModel.downloadSubjectById(subjectId);
 
         EditText subjectTitle = root.findViewById(R.id.subjectTitleEditing);
@@ -81,5 +84,24 @@ public class SubjectEditingDialogFragment extends DialogFragment {
         dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true));
 
         return dialog;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        EditText subjectTitle = root.findViewById(R.id.subjectTitleEditing);
+
+        dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(view -> {
+            subjectEditingViewModel.editSubject(subjectId, subjectTitle.getText().toString());
+
+            subjectEditingViewModel.getAnswer().observe(getParentFragment().getViewLifecycleOwner(), answer -> {
+                if (answer != null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("openPage", 1);
+                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_subject_editing_to_admin_actions, bundle);
+                }
+            });
+        });
     }
 }

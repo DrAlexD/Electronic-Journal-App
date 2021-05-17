@@ -11,6 +11,11 @@ import com.example.electronicdiary.data_classes.SubjectInfo;
 
 public class StudentPerformanceInSubjectViewModel extends ViewModel {
     private final MutableLiveData<StudentPerformanceInSubject> studentPerformanceInSubject = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> answer = new MutableLiveData<>();
+
+    public LiveData<Boolean> getAnswer() {
+        return answer;
+    }
 
     public LiveData<StudentPerformanceInSubject> getStudentPerformanceInSubject() {
         return studentPerformanceInSubject;
@@ -20,21 +25,21 @@ public class StudentPerformanceInSubjectViewModel extends ViewModel {
         Repository.getInstance().getStudentPerformanceInSubjectById(studentPerformanceInSubjectId, studentPerformanceInSubject);
     }
 
-    public void editStudentPerformance(long studentPerformanceInSubjectId, SubjectInfo subjectInfo, Student student, int earnedPoints, int bonusPoints,
-                                       boolean isHaveCreditOrAdmission) {
+    public void editStudentPerformance(long studentPerformanceInSubjectId, SubjectInfo subjectInfo, Student student, Integer earnedPoints, Integer bonusPoints,
+                                       Boolean isHaveCreditOrAdmission) {
         Repository.getInstance().editStudentPerformanceInSubject(studentPerformanceInSubjectId, new StudentPerformanceInSubject(subjectInfo, student,
-                earnedPoints, bonusPoints, isHaveCreditOrAdmission, null, null));
+                earnedPoints, bonusPoints, isHaveCreditOrAdmission, null, null), answer);
     }
 
-    public void editStudentPerformance(long studentPerformanceInSubjectId, SubjectInfo subjectInfo, Student student, int earnedPoints, int bonusPoints,
-                                       boolean isHaveCreditOrAdmission, int mark) {
+    public void editStudentPerformance(long studentPerformanceInSubjectId, SubjectInfo subjectInfo, Student student, Integer earnedPoints, Integer bonusPoints,
+                                       Boolean isHaveCreditOrAdmission, Integer mark) {
         Repository.getInstance().editStudentPerformanceInSubject(studentPerformanceInSubjectId, new StudentPerformanceInSubject(subjectInfo, student,
-                earnedPoints, bonusPoints, isHaveCreditOrAdmission, null, mark));
+                earnedPoints, bonusPoints, isHaveCreditOrAdmission, null, mark), answer);
     }
 
-    public void editStudentPerformance(long studentPerformanceInSubjectId, SubjectInfo subjectInfo, Student student, int earnedPoints, int bonusPoints,
-                                       boolean isHaveCreditOrAdmission, int earnedExamPoints, int mark) {
+    public void editStudentPerformance(long studentPerformanceInSubjectId, SubjectInfo subjectInfo, Student student, Integer earnedPoints, Integer bonusPoints,
+                                       Boolean isHaveCreditOrAdmission, Integer earnedExamPoints, Integer mark) {
         Repository.getInstance().editStudentPerformanceInSubject(studentPerformanceInSubjectId, new StudentPerformanceInSubject(subjectInfo, student,
-                earnedPoints, bonusPoints, isHaveCreditOrAdmission, earnedExamPoints, mark));
+                earnedPoints, bonusPoints, isHaveCreditOrAdmission, earnedExamPoints, mark), answer);
     }
 }

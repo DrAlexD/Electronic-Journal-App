@@ -19,13 +19,15 @@ import org.jetbrains.annotations.NotNull;
 
 public class GroupAddingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
+    private View root;
+    private GroupAddingViewModel groupAddingViewModel;
 
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_group_adding, null);
+        root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_group_adding, null);
 
-        GroupAddingViewModel groupAddingViewModel = new ViewModelProvider(this).get(GroupAddingViewModel.class);
+        groupAddingViewModel = new ViewModelProvider(this).get(GroupAddingViewModel.class);
 
         EditText groupTitle = root.findViewById(R.id.groupTitleAdding);
         TextWatcher afterTextChangedListener = new TextWatcher() {
@@ -60,13 +62,25 @@ public class GroupAddingDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
                 .setTitle("Введите группу")
-                .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    groupAddingViewModel.addGroup(groupTitle.getText().toString());
-                    dismiss();
-                }).create();
+                .setPositiveButton("Подтвердить", null).create();
 
         dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false));
 
         return dialog;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        EditText groupTitle = root.findViewById(R.id.groupTitleAdding);
+
+        dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(view -> {
+            groupAddingViewModel.addGroup(groupTitle.getText().toString());
+            groupAddingViewModel.getAnswer().observe(getParentFragment().getViewLifecycleOwner(), answer -> {
+                if (answer != null)
+                    dismiss();
+            });
+        });
     }
 }

@@ -39,6 +39,10 @@ public class GroupsAdapter extends RecyclerView.Adapter<GroupsAdapter.ViewHolder
         return new ViewHolder(view);
     }
 
+    public List<Group> getGroups() {
+        return groups;
+    }
+
     @Override
     public void onBindViewHolder(@NotNull GroupsAdapter.ViewHolder holder, int position) {
         Group group = groups.get(position);

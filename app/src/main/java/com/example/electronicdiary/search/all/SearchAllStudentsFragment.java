@@ -14,6 +14,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.data_classes.Student;
 import com.example.electronicdiary.search.StudentsAdapter;
 
 public class SearchAllStudentsFragment extends Fragment {
@@ -38,23 +39,27 @@ public class SearchAllStudentsFragment extends Fragment {
 
                     if (actionCode == 1) {
                         Bundle bundle = new Bundle();
-                        bundle.putLong("studentId", allStudents.get(position).getId());
+                        bundle.putLong("studentId", studentsAdapter.getStudents().get(position).getId());
                         Navigation.findNavController(view).navigate(R.id.action_search_all_students_to_dialog_student_editing, bundle);
                     } else if (actionCode == 2) {
-                        searchAllStudentsViewModel.deleteStudent(allStudents.get(position).getId());
-
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("openPage", actionCode);
-                        Navigation.findNavController(view).navigate(R.id.action_search_all_students_to_admin_actions, bundle);
+                        searchAllStudentsViewModel.deleteStudent(studentsAdapter.getStudents().get(position).getId());
+                        searchAllStudentsViewModel.getAnswer().observe(getViewLifecycleOwner(), answer -> {
+                            if (answer != null) {
+                                Bundle bundle = new Bundle();
+                                bundle.putInt("openPage", actionCode);
+                                Navigation.findNavController(view).navigate(R.id.action_search_all_students_to_admin_actions, bundle);
+                            }
+                        });
                     } else if (actionCode == 3) {
                         Bundle bundle = new Bundle();
                         bundle.putInt("actionCode", actionCode);
-                        bundle.putLong("studentId", allStudents.get(position).getId());
-                        bundle.putString("studentFirstName", allStudents.get(position).getFirstName());
-                        bundle.putString("studentSecondName", allStudents.get(position).getSecondName());
-                        bundle.putString("studentUsername", allStudents.get(position).getUsername());
-                        bundle.putString("studentPassword", allStudents.get(position).getPassword());
-                        bundle.putLong("groupId", allStudents.get(position).getGroup().getId());
+                        Student student = studentsAdapter.getStudents().get(position);
+                        bundle.putLong("studentId", student.getId());
+                        bundle.putString("studentFirstName", student.getFirstName());
+                        bundle.putString("studentSecondName", student.getSecondName());
+                        bundle.putString("studentUsername", student.getUsername());
+                        bundle.putString("studentPassword", student.getPassword());
+                        bundle.putLong("groupId", student.getGroup().getId());
 
                         Navigation.findNavController(view).navigate(R.id.action_search_all_students_to_search_all_groups, bundle);
                     }

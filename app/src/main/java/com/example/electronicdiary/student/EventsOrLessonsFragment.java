@@ -22,6 +22,8 @@ import com.example.electronicdiary.data_classes.StudentLesson;
 import com.example.electronicdiary.data_classes.StudentPerformanceInModule;
 import com.example.electronicdiary.data_classes.StudentPerformanceInSubject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -69,22 +71,27 @@ public class EventsOrLessonsFragment extends Fragment {
 
                 StudentEvent studentEventChosen = null;
                 int lastAttempt = 0;
-                for (StudentEvent studentEvent : studentEvents.get(String.valueOf(modulesNumbers.get(groupPosition)))) {
-                    if (studentEvent.getEvent().getId() == event.getId() && studentEvent.getAttemptNumber() > lastAttempt) {
-                        studentEventChosen = studentEvent;
-                        lastAttempt = studentEvent.getAttemptNumber();
+                if (studentEvents != null && studentEvents.get(String.valueOf(modulesNumbers.get(groupPosition))) != null) {
+                    for (StudentEvent studentEvent : studentEvents.get(String.valueOf(modulesNumbers.get(groupPosition)))) {
+                        if (studentEvent.getEvent().getId() == event.getId() && studentEvent.getAttemptNumber() > lastAttempt) {
+                            studentEventChosen = studentEvent;
+                            lastAttempt = studentEvent.getAttemptNumber();
+                        }
                     }
                 }
 
                 int finalLastAttempt = lastAttempt;
-                Long finalStudentEventId = studentEventChosen.getId();
+                Long finalStudentEventId;
+                if (studentEventChosen != null)
+                    finalStudentEventId = studentEventChosen.getId();
+                else
+                    finalStudentEventId = null;
 
                 bundle.putString("eventTitle", event.getTitle());
-                /*TextView attemptNumber = v.findViewById(R.id.attemptNumber);
-                bundle.putInt("attemptNumber", Integer.parseInt(attemptNumber.getText().toString()));*/
                 bundle.putInt("attemptNumber", finalLastAttempt);
                 bundle.putLong("eventId", event.getId());
-                bundle.putLong("studentEventId", finalStudentEventId);
+                if (finalStudentEventId != null)
+                    bundle.putLong("studentEventId", finalStudentEventId);
                 bundle.putLong("studentPerformanceInSubjectId", studentPerformanceInSubject.getId());
                 bundle.putLong("subjectInfoId", studentPerformanceInSubject.getSubjectInfo().getId());
                 Navigation.findNavController(v).navigate(R.id.action_student_performance_to_dialog_student_event, bundle);
@@ -98,10 +105,12 @@ public class EventsOrLessonsFragment extends Fragment {
 
             earnedPoints.setText(String.valueOf(studentPerformanceInSubject.getEarnedPoints()));
             bonusPoints.setText(String.valueOf(studentPerformanceInSubject.getBonusPoints()));
-            earnedPoints.setTextColor(getResources().getColor(studentPerformanceInSubject.isHaveCreditOrAdmission() ?
-                    R.color.red : R.color.green));
-            bonusPoints.setTextColor(getResources().getColor(studentPerformanceInSubject.isHaveCreditOrAdmission() ?
-                    R.color.red : R.color.green));
+            if (studentPerformanceInSubject.isHaveCreditOrAdmission() != null) {
+                earnedPoints.setTextColor(getResources().getColor(studentPerformanceInSubject.isHaveCreditOrAdmission() ?
+                        R.color.red : R.color.green));
+                bonusPoints.setTextColor(getResources().getColor(studentPerformanceInSubject.isHaveCreditOrAdmission() ?
+                        R.color.red : R.color.green));
+            }
             mark.setVisibility(studentPerformanceInSubject.getSubjectInfo().isExam() ||
                     studentPerformanceInSubject.getSubjectInfo().isDifferentiatedCredit() ? View.VISIBLE : View.INVISIBLE);
             mark.setText(String.valueOf(studentPerformanceInSubject.getMark()));
@@ -122,31 +131,32 @@ public class EventsOrLessonsFragment extends Fragment {
                         get(String.valueOf(modulesNumbers.get(groupPosition))).get(childPosition);
 
                 StudentLesson studentLessonChosen = null;
-                for (StudentLesson studentLesson : studentLessons.get(String.valueOf(modulesNumbers.get(groupPosition)))) {
-                    if (studentLesson.getLesson().getId() == lesson.getId()) {
-                        studentLessonChosen = studentLesson;
-                        break;
+                if (studentLessons != null && studentLessons.get(String.valueOf(modulesNumbers.get(groupPosition))) != null) {
+                    for (StudentLesson studentLesson : studentLessons.get(String.valueOf(modulesNumbers.get(groupPosition)))) {
+                        if (studentLesson.getLesson().getId() == lesson.getId()) {
+                            studentLessonChosen = studentLesson;
+                            break;
+                        }
                     }
                 }
 
-                Long finalStudentLessonId = studentLessonChosen.getId();
+                Long finalStudentLessonId;
+                if (studentLessonChosen != null)
+                    finalStudentLessonId = studentLessonChosen.getId();
+                else
+                    finalStudentLessonId = null;
 
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("isFromGroupPerformance", false);
                 bundle.putBoolean("isLecture", true);
                 TextView bonusPoints = v.findViewById(R.id.bonusPoints);
                 bundle.putBoolean("isHasData", !"Нет данных".equals(bonusPoints.getText().toString()));
-                bundle.putString("lessonDate", ((lesson.getDateAndTime().getDate()) < 10 ? "0" + (lesson.getDateAndTime().getDate()) :
-                        (lesson.getDateAndTime().getDate())) + "." +
-                        ((lesson.getDateAndTime().getMonth() + 1) < 10 ? "0" + (lesson.getDateAndTime().getMonth() + 1) :
-                                (lesson.getDateAndTime().getMonth() + 1)) + "." + lesson.getDateAndTime().getYear() + " " +
-                        ((lesson.getDateAndTime().getHours()) < 10 ? "0" + (lesson.getDateAndTime().getHours()) :
-                                (lesson.getDateAndTime().getHours())) + ":" +
-                        ((lesson.getDateAndTime().getMinutes()) < 10 ? "0" + (lesson.getDateAndTime().getMinutes()) :
-                                (lesson.getDateAndTime().getMinutes())));
+                DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+                bundle.putString("lessonDate", dateFormat.format(lesson.getDateAndTime()));
                 bundle.putLong("lessonId", lesson.getId());
                 bundle.putLong("studentPerformanceInSubjectId", studentPerformanceInSubject.getId());
-                bundle.putLong("studentLessonId", finalStudentLessonId);
+                if (finalStudentLessonId != null)
+                    bundle.putLong("studentLessonId", finalStudentLessonId);
                 bundle.putLong("subjectInfoId", studentPerformanceInSubject.getSubjectInfo().getId());
 
                 Navigation.findNavController(v).navigate(R.id.action_student_performance_to_dialog_student_lesson, bundle);
@@ -167,31 +177,32 @@ public class EventsOrLessonsFragment extends Fragment {
                         get(String.valueOf(modulesNumbers.get(groupPosition))).get(childPosition);
 
                 StudentLesson studentLessonChosen = null;
-                for (StudentLesson studentLesson : studentLessons.get(String.valueOf(modulesNumbers.get(groupPosition)))) {
-                    if (studentLesson.getLesson().getId() == lesson.getId()) {
-                        studentLessonChosen = studentLesson;
-                        break;
+                if (studentLessons != null && studentLessons.get(String.valueOf(modulesNumbers.get(groupPosition))) != null) {
+                    for (StudentLesson studentLesson : studentLessons.get(String.valueOf(modulesNumbers.get(groupPosition)))) {
+                        if (studentLesson.getLesson().getId() == lesson.getId()) {
+                            studentLessonChosen = studentLesson;
+                            break;
+                        }
                     }
                 }
 
-                Long finalStudentLessonId = studentLessonChosen.getId();
+                Long finalStudentLessonId;
+                if (studentLessonChosen != null)
+                    finalStudentLessonId = studentLessonChosen.getId();
+                else
+                    finalStudentLessonId = null;
 
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("isFromGroupPerformance", false);
                 bundle.putBoolean("isLecture", false);
                 TextView bonusPoints = v.findViewById(R.id.bonusPoints);
                 bundle.putBoolean("isHasData", !"Нет данных".equals(bonusPoints.getText().toString()));
-                bundle.putString("lessonDate", ((lesson.getDateAndTime().getDate()) < 10 ? "0" + (lesson.getDateAndTime().getDate()) :
-                        (lesson.getDateAndTime().getDate())) + "." +
-                        ((lesson.getDateAndTime().getMonth() + 1) < 10 ? "0" + (lesson.getDateAndTime().getMonth() + 1) :
-                                (lesson.getDateAndTime().getMonth() + 1)) + "." + lesson.getDateAndTime().getYear() + " " +
-                        ((lesson.getDateAndTime().getHours()) < 10 ? "0" + (lesson.getDateAndTime().getHours()) :
-                                (lesson.getDateAndTime().getHours())) + ":" +
-                        ((lesson.getDateAndTime().getMinutes()) < 10 ? "0" + (lesson.getDateAndTime().getMinutes()) :
-                                (lesson.getDateAndTime().getMinutes())));
+                DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+                bundle.putString("lessonDate", dateFormat.format(lesson.getDateAndTime()));
                 bundle.putLong("lessonId", lesson.getId());
                 bundle.putLong("studentPerformanceInSubjectId", studentPerformanceInSubject.getId());
-                bundle.putLong("studentLessonId", finalStudentLessonId);
+                if (finalStudentLessonId != null)
+                    bundle.putLong("studentLessonId", finalStudentLessonId);
                 bundle.putLong("subjectInfoId", studentPerformanceInSubject.getSubjectInfo().getId());
 
                 Navigation.findNavController(v).navigate(R.id.action_student_performance_to_dialog_student_lesson, bundle);

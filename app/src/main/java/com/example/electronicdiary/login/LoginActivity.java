@@ -111,6 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                 return null;
             }
         });
+
         LiveData<List<Semester>> semestersLiveData = Transformations.switchMap(userLiveData, user -> {
             if (user instanceof Result.Success) {
                 Repository.getInstance().setUser(((Result.Success<User>) user).getData());
@@ -134,50 +135,6 @@ public class LoginActivity extends AppCompatActivity {
                 openMainActivity();
             }
         });
-
-        /*loginViewModel.getResponse().observe(this, response -> {
-            if (response == null) {
-                return;
-            }
-            //loadingProgressBar.setVisibility(View.GONE);
-            if (response instanceof Result.Success) {
-                String jwtToken = ((Result.Success<JwtResponse>) response).getData().getToken();
-                Long userId = ((Result.Success<JwtResponse>) response).getData().getId();
-                Boolean isUserProfessor = ((Result.Success<JwtResponse>) response).getData().isProfessor();
-                sharedPreferences.edit().putBoolean(getString(R.string.is_remember_me), isRememberMe.isChecked()).apply();
-                sharedPreferences.edit().putString("jwtToken", jwtToken).apply();
-                sharedPreferences.edit().putLong("userId", userId).apply();
-                sharedPreferences.edit().putBoolean("isUserProfessor", isUserProfessor).apply();
-
-                loginViewModel.getLoggedUser(new JwtResponse(jwtToken, userId, isUserProfessor));
-                loginViewModel.getUser().observe(this, user -> {
-                    if (user == null) {
-                        return;
-                    }
-
-                    if (user instanceof Result.Success) {
-                        Repository.getInstance().setUser(((Result.Success<User>) user).getData());
-                        if (Long.parseLong(sharedPreferences.getString(getString(R.string.current_semester), "-1")) == -1) {
-                            loginViewModel.downloadSemesters();
-
-                            loginViewModel.getSemesters().observe(this, semesters -> {
-                                if (semesters == null)
-                                    return;
-
-                                sharedPreferences.edit().putString(getString(R.string.current_semester),
-                                        String.valueOf(semesters.get(semesters.size() - 1).getId())).apply();
-                                openMainActivity();
-                            });
-                        } else {
-                            openMainActivity();
-                        }
-                    }
-                });
-            } else {
-                String error = ((Result.Error) response).getError();
-                Toast.makeText(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
-            }
-        });*/
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override

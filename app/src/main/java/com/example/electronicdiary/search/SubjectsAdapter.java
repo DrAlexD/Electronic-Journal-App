@@ -39,6 +39,10 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.ViewHo
         return new ViewHolder(view);
     }
 
+    public List<Subject> getSubjects() {
+        return subjects;
+    }
+
     @Override
     public void onBindViewHolder(@NotNull SubjectsAdapter.ViewHolder holder, int position) {
         Subject subject = subjects.get(position);

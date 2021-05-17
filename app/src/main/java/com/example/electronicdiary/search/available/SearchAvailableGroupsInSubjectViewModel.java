@@ -11,6 +11,11 @@ import java.util.List;
 
 public class SearchAvailableGroupsInSubjectViewModel extends ViewModel {
     private final MutableLiveData<List<SubjectInfo>> availableGroupsInSubject = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> answer = new MutableLiveData<>();
+
+    public LiveData<Boolean> getAnswer() {
+        return answer;
+    }
 
     public LiveData<List<SubjectInfo>> getAvailableGroupsInSubject() {
         return availableGroupsInSubject;
@@ -21,6 +26,6 @@ public class SearchAvailableGroupsInSubjectViewModel extends ViewModel {
     }
 
     public void deleteSubjectInfo(long subjectInfoId, long professorId) {
-        Repository.getInstance().deleteSubjectInfo(subjectInfoId, professorId);
+        Repository.getInstance().deleteSubjectInfo(subjectInfoId, professorId, answer);
     }
 }

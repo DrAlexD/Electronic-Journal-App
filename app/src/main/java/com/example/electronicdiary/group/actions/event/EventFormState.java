@@ -16,8 +16,8 @@ public class EventFormState {
     private final boolean isDataValid;
 
     public EventFormState(String startDate, String deadlineDate, String minPoints, String maxPoints) {
-        boolean isStartDateValid = startDate.trim().matches("[0-3][0-9]\\.[0-1][0-9]\\.20[2-9][0-9]");
-        boolean isDeadlineDateValid = deadlineDate.trim().matches("[0-3][0-9]\\.[0-1][0-9]\\.20[2-9][0-9]");
+        boolean isStartDateValid = startDate.trim().matches("[0-3][0-9]\\.[0-1][0-9]\\.20[1-9][0-9]");
+        boolean isDeadlineDateValid = deadlineDate.trim().matches("[0-3][0-9]\\.[0-1][0-9]\\.20[1-9][0-9]");
         boolean isMinPointsValid = !minPoints.trim().isEmpty();
         boolean isMaxPointsValid = !maxPoints.trim().isEmpty();
 

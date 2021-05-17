@@ -9,6 +9,8 @@ import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
@@ -49,12 +51,15 @@ public class SearchAllGroupsFragment extends Fragment {
                         String studentLogin = getArguments().getString("studentLogin");
                         String studentPassword = getArguments().getString("studentPassword");
 
-                        searchAllGroupsViewModel.downloadGroupById(allGroups2.get(position).getId());
+                        searchAllGroupsViewModel.downloadGroupById(groupsAdapter.getGroups().get(position).getId());
+                        LiveData<Group> groupLiveData = searchAllGroupsViewModel.getGroup();
+                        LiveData<Boolean> answerLiveData = Transformations.switchMap(groupLiveData, group -> {
+                            searchAllGroupsViewModel.addStudent(studentName, studentSecondName, group, studentLogin, studentPassword);
+                            return searchAllGroupsViewModel.getAnswer();
+                        });
 
-                        searchAllGroupsViewModel.getGroup().observe(getViewLifecycleOwner(), group -> {
-                            if (group != null) {
-                                searchAllGroupsViewModel.addStudent(studentName, studentSecondName, group, studentLogin, studentPassword);
-
+                        answerLiveData.observe(getViewLifecycleOwner(), answer -> {
+                            if (answer != null) {
                                 Bundle bundle = new Bundle();
                                 bundle.putInt("openPage", actionCode);
                                 Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_admin_actions, bundle);
@@ -62,28 +67,36 @@ public class SearchAllGroupsFragment extends Fragment {
                         });
                     } else if (actionCode == 1) {
                         Bundle bundle = new Bundle();
-                        bundle.putLong("groupId", allGroups2.get(position).getId());
+                        bundle.putLong("groupId", groupsAdapter.getGroups().get(position).getId());
                         Navigation.findNavController(root).navigate(R.id.action_search_all_groups_to_dialog_group_editing, bundle);
                     } else if (actionCode == 2) {
-                        searchAllGroupsViewModel.deleteGroup(allGroups2.get(position).getId());
+                        searchAllGroupsViewModel.deleteGroup(groupsAdapter.getGroups().get(position).getId());
 
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("openPage", actionCode);
-                        Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_admin_actions, bundle);
+                        searchAllGroupsViewModel.getAnswer().observe(getViewLifecycleOwner(), answer -> {
+                            if (answer != null) {
+                                Bundle bundle = new Bundle();
+                                bundle.putInt("openPage", actionCode);
+                                Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_admin_actions, bundle);
+                            }
+                        });
                     } else if (actionCode == 3) {
-                        if (getArguments().getLong("groupId") != allGroups2.get(position).getId()) {
+                        if (getArguments().getLong("groupId") != groupsAdapter.getGroups().get(position).getId()) {
                             String studentName = getArguments().getString("studentFirstName");
                             String studentSecondName = getArguments().getString("studentSecondName");
                             String studentLogin = getArguments().getString("studentUsername");
                             String studentPassword = getArguments().getString("studentPassword");
 
-                            searchAllGroupsViewModel.downloadGroupById(allGroups2.get(position).getId());
+                            searchAllGroupsViewModel.downloadGroupById(groupsAdapter.getGroups().get(position).getId());
+                            LiveData<Group> groupLiveData = searchAllGroupsViewModel.getGroup();
+                            LiveData<Boolean> answerLiveData = Transformations.switchMap(groupLiveData, group -> {
+                                searchAllGroupsViewModel.changeStudentGroup(getArguments().getLong("studentId"), studentName, studentSecondName,
+                                        group, studentLogin, studentPassword);
 
-                            searchAllGroupsViewModel.getGroup().observe(getViewLifecycleOwner(), group -> {
-                                if (group != null) {
-                                    searchAllGroupsViewModel.changeStudentGroup(getArguments().getLong("studentId"), studentName, studentSecondName,
-                                            group, studentLogin, studentPassword);
+                                return searchAllGroupsViewModel.getAnswer();
+                            });
 
+                            answerLiveData.observe(getViewLifecycleOwner(), answer -> {
+                                if (answer != null) {
                                     Bundle bundle = new Bundle();
                                     bundle.putInt("openPage", 1);
                                     Navigation.findNavController(view).navigate(R.id.action_search_all_groups_to_admin_actions, bundle);
@@ -93,7 +106,7 @@ public class SearchAllGroupsFragment extends Fragment {
                     } else if (actionCode == 10 || actionCode == 11) {
                         Bundle bundle = new Bundle();
                         bundle.putLong("professorId", getArguments().getLong("professorId"));
-                        bundle.putLong("groupId", allGroups2.get(position).getId());
+                        bundle.putLong("groupId", groupsAdapter.getGroups().get(position).getId());
                         bundle.putLong("subjectId", getArguments().getLong("subjectId"));
                         bundle.putLong("semesterId", getArguments().getLong("semesterId"));
 

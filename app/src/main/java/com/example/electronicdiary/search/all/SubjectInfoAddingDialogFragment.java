@@ -25,13 +25,16 @@ import org.jetbrains.annotations.NotNull;
 
 public class SubjectInfoAddingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
+    private SubjectInfoAddingViewModel subjectInfoAddingViewModel;
+    private View root;
+    private LiveData<Result<Professor>> professorLiveData;
 
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_subject_info_adding, null);
+        root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_subject_info_adding, null);
 
-        SubjectInfoAddingViewModel subjectInfoAddingViewModel = new ViewModelProvider(this).get(SubjectInfoAddingViewModel.class);
+        subjectInfoAddingViewModel = new ViewModelProvider(this).get(SubjectInfoAddingViewModel.class);
 
         CheckBox isLecturer = root.findViewById(R.id.subjectInfoIsLecturerAdding);
         CheckBox isSeminarian = root.findViewById(R.id.subjectInfoIsSeminarianAdding);
@@ -58,39 +61,58 @@ public class SubjectInfoAddingDialogFragment extends DialogFragment {
             }
         });
 
+        subjectInfoAddingViewModel.downloadEntities(getArguments().getLong("groupId"),
+                getArguments().getLong("semesterId"), getArguments().getLong("subjectId"),
+                getArguments().getLong("professorId"));
+
+        LiveData<Group> groupLiveData = subjectInfoAddingViewModel.getGroup();
+        LiveData<Semester> semesterLiveData = Transformations.switchMap(groupLiveData,
+                g -> subjectInfoAddingViewModel.getSemester());
+        LiveData<Subject> subjectLiveData = Transformations.switchMap(semesterLiveData,
+                s -> subjectInfoAddingViewModel.getSubject());
+        professorLiveData = Transformations.switchMap(subjectLiveData,
+                p -> subjectInfoAddingViewModel.getProfessor());
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
                 .setTitle("Укажите доп. информацию")
-                .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    subjectInfoAddingViewModel.downloadEntities(getArguments().getLong("groupId"),
-                            getArguments().getLong("semesterId"), getArguments().getLong("subjectId"),
-                            getArguments().getLong("professorId"));
+                .setPositiveButton("Подтвердить", null).create();
 
-                    LiveData<Group> groupLiveData = subjectInfoAddingViewModel.getGroup();
-                    LiveData<Semester> semesterLiveData = Transformations.switchMap(groupLiveData,
-                            g -> subjectInfoAddingViewModel.getSemester());
-                    LiveData<Subject> subjectLiveData = Transformations.switchMap(semesterLiveData,
-                            s -> subjectInfoAddingViewModel.getSubject());
-                    LiveData<Result<Professor>> professorLiveData = Transformations.switchMap(subjectLiveData,
-                            p -> subjectInfoAddingViewModel.getProfessor());
+        return dialog;
+    }
 
-                    professorLiveData.observe(this, professor -> {
-                        if (professor != null) {
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        CheckBox isLecturer = root.findViewById(R.id.subjectInfoIsLecturerAdding);
+        CheckBox isSeminarian = root.findViewById(R.id.subjectInfoIsSeminarianAdding);
+        CheckBox isExam = root.findViewById(R.id.subjectInfoIsExamAdding);
+        CheckBox isDifferentiatedCredit = root.findViewById(R.id.subjectInfoIsDifferentiatedCreditAdding);
+
+        dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(view -> {
+            {
+                LiveData<Boolean> answerLiveData = Transformations.switchMap(professorLiveData,
+                        professor -> {
                             if (professor instanceof Result.Success) {
                                 Professor professorData = ((Result.Success<Professor>) professor).getData();
                                 Group group = subjectInfoAddingViewModel.getGroup().getValue();
                                 Subject subject = subjectInfoAddingViewModel.getSubject().getValue();
                                 Semester semester = subjectInfoAddingViewModel.getSemester().getValue();
                                 subjectInfoAddingViewModel.addSubjectInfo(group,
-                                        subject, getArguments().getLong("professorId"), professorData,
+                                        subject, isLecturer.isChecked() ? getArguments().getLong("professorId") : null,
+                                        isSeminarian.isChecked() ? professorData : null,
                                         semester, isExam.isChecked(), isDifferentiatedCredit.isChecked());
+                                return subjectInfoAddingViewModel.getAnswer();
+                            } else
+                                return null;
+                        });
 
-                                Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_subject_info_adding_to_profile);
-                            }
-                        }
-                    });
-                }).create();
-
-        return dialog;
+                answerLiveData.observe(getParentFragment().getViewLifecycleOwner(), answer -> {
+                    if (answer != null)
+                        Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_subject_info_adding_to_profile);
+                });
+            }
+        });
     }
 }

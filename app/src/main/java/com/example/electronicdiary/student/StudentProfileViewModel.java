@@ -9,7 +9,7 @@ import com.example.electronicdiary.Result;
 import com.example.electronicdiary.data_classes.Group;
 import com.example.electronicdiary.data_classes.Semester;
 import com.example.electronicdiary.data_classes.Student;
-import com.example.electronicdiary.data_classes.Subject;
+import com.example.electronicdiary.data_classes.StudentPerformanceInSubject;
 
 import java.util.List;
 
@@ -17,12 +17,11 @@ public class StudentProfileViewModel extends ViewModel {
     private final MutableLiveData<Semester> semester = new MutableLiveData<>();
     private final MutableLiveData<Result<Student>> student = new MutableLiveData<>();
     private final MutableLiveData<Group> group = new MutableLiveData<>();
-    private final MutableLiveData<List<Subject>> availableStudentSubjects = new MutableLiveData<>();
+    private final MutableLiveData<List<StudentPerformanceInSubject>> availableStudentSubjects = new MutableLiveData<>();
 
     public LiveData<Semester> getSemester() {
         return semester;
     }
-
 
     public LiveData<Result<Student>> getStudent() {
         return student;
@@ -32,7 +31,7 @@ public class StudentProfileViewModel extends ViewModel {
         return group;
     }
 
-    public LiveData<List<Subject>> getAvailableStudentSubjects() {
+    public LiveData<List<StudentPerformanceInSubject>> getAvailableStudentSubjects() {
         return availableStudentSubjects;
     }
 

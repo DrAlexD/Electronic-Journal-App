@@ -13,6 +13,11 @@ import java.util.Date;
 public class LessonEditingViewModel extends ViewModel {
     private final MutableLiveData<LessonFormState> lessonFormState = new MutableLiveData<>();
     private final MutableLiveData<Lesson> lesson = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> answer = new MutableLiveData<>();
+
+    public LiveData<Boolean> getAnswer() {
+        return answer;
+    }
 
     LiveData<LessonFormState> getLessonFormState() {
         return lessonFormState;
@@ -31,10 +36,10 @@ public class LessonEditingViewModel extends ViewModel {
     }
 
     public void editLesson(long lessonId, Module module, Date dateAndTime, boolean isLecture, int pointsPerVisit) {
-        Repository.getInstance().editLesson(lessonId, new Lesson(module, dateAndTime, isLecture, pointsPerVisit));
+        Repository.getInstance().editLesson(lessonId, new Lesson(module, dateAndTime, isLecture, pointsPerVisit), answer);
     }
 
     public void deleteLesson(long lessonId) {
-        Repository.getInstance().deleteLesson(lessonId);
+        Repository.getInstance().deleteLesson(lessonId, answer);
     }
 }

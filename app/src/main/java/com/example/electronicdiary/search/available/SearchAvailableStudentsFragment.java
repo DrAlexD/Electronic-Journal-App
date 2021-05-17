@@ -27,13 +27,8 @@ public class SearchAvailableStudentsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_search_available_students, container, false);
 
-        long semesterId;
-        if (getArguments() != null) {
-            semesterId = getArguments().getLong("semesterId");
-        } else {
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-            semesterId = Long.parseLong(sharedPreferences.getString(getString(R.string.current_semester), "-1"));
-        }
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        long semesterId = Long.parseLong(sharedPreferences.getString(getString(R.string.current_semester), "-1"));
 
         SearchAvailableStudentsViewModel searchAvailableStudentsViewModel = new ViewModelProvider(this).get(SearchAvailableStudentsViewModel.class);
         searchAvailableStudentsViewModel.downloadAvailableStudents(Repository.getInstance().getUser().getId(), semesterId);
@@ -46,7 +41,7 @@ public class SearchAvailableStudentsFragment extends Fragment {
                     int position = viewHolder.getAdapterPosition();
 
                     Bundle bundle = new Bundle();
-                    bundle.putLong("studentId", availableStudents.get(position).getId());
+                    bundle.putLong("studentId", studentsAdapter.getStudents().get(position).getId());
                     bundle.putLong("semesterId", semesterId);
                     Navigation.findNavController(view).navigate(R.id.action_search_available_students_to_student_profile, bundle);
                 };

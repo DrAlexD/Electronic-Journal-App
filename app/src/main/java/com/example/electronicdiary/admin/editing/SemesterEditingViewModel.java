@@ -11,6 +11,11 @@ import com.example.electronicdiary.data_classes.Semester;
 public class SemesterEditingViewModel extends ViewModel {
     private final MutableLiveData<SemesterFormState> semesterFormState = new MutableLiveData<>();
     private final MutableLiveData<Semester> semester = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> answer = new MutableLiveData<>();
+
+    public LiveData<Boolean> getAnswer() {
+        return answer;
+    }
 
     LiveData<SemesterFormState> getSemesterFormState() {
         return semesterFormState;
@@ -29,6 +34,6 @@ public class SemesterEditingViewModel extends ViewModel {
     }
 
     public void editSemester(long semesterId, int semesterYear, boolean isFirstHalf) {
-        Repository.getInstance().editSemester(semesterId, new Semester(semesterYear, isFirstHalf));
+        Repository.getInstance().editSemester(semesterId, new Semester(semesterYear, isFirstHalf), answer);
     }
 }

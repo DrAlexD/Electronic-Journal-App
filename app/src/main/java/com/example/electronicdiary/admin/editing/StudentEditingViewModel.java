@@ -13,6 +13,11 @@ import com.example.electronicdiary.data_classes.Student;
 public class StudentEditingViewModel extends ViewModel {
     private final MutableLiveData<StudentFormState> studentFormState = new MutableLiveData<>();
     private final MutableLiveData<Result<Student>> student = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> answer = new MutableLiveData<>();
+
+    public LiveData<Boolean> getAnswer() {
+        return answer;
+    }
 
     LiveData<StudentFormState> getStudentFormState() {
         return studentFormState;
@@ -33,6 +38,6 @@ public class StudentEditingViewModel extends ViewModel {
     }
 
     public void editStudent(long studentId, String studentName, String studentSecondName, Group group, String studentLogin, String studentPassword, String role) {
-        Repository.getInstance().editStudent(studentId, new Student(studentName, studentSecondName, group, studentLogin, studentPassword, role));
+        Repository.getInstance().editStudent(studentId, new Student(studentName, studentSecondName, group, studentLogin, studentPassword, role), answer);
     }
 }

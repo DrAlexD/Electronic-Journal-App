@@ -19,13 +19,15 @@ import org.jetbrains.annotations.NotNull;
 
 public class SubjectAddingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
+    private View root;
+    private SubjectAddingViewModel subjectAddingViewModel;
 
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_subject_adding, null);
+        root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_subject_adding, null);
 
-        SubjectAddingViewModel subjectAddingViewModel = new ViewModelProvider(this).get(SubjectAddingViewModel.class);
+        subjectAddingViewModel = new ViewModelProvider(this).get(SubjectAddingViewModel.class);
 
         EditText subjectTitle = root.findViewById(R.id.subjectTitleAdding);
         TextWatcher afterTextChangedListener = new TextWatcher() {
@@ -60,13 +62,27 @@ public class SubjectAddingDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
                 .setTitle("Введите название предмета")
-                .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    subjectAddingViewModel.addSubject(subjectTitle.getText().toString());
-                    dismiss();
-                }).create();
+                .setPositiveButton("Подтвердить", null).create();
 
         dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false));
 
         return dialog;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        EditText subjectTitle = root.findViewById(R.id.subjectTitleAdding);
+
+        dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(view -> {
+            {
+                subjectAddingViewModel.addSubject(subjectTitle.getText().toString());
+                subjectAddingViewModel.getAnswer().observe(getParentFragment().getViewLifecycleOwner(), answer -> {
+                    if (answer != null)
+                        dismiss();
+                });
+            }
+        });
     }
 }

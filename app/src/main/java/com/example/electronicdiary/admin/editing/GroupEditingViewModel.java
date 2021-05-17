@@ -11,6 +11,11 @@ import com.example.electronicdiary.data_classes.Group;
 public class GroupEditingViewModel extends ViewModel {
     private final MutableLiveData<GroupFormState> groupFormState = new MutableLiveData<>();
     private final MutableLiveData<Group> group = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> answer = new MutableLiveData<>();
+
+    public LiveData<Boolean> getAnswer() {
+        return answer;
+    }
 
     LiveData<GroupFormState> getGroupFormState() {
         return groupFormState;
@@ -29,6 +34,6 @@ public class GroupEditingViewModel extends ViewModel {
     }
 
     public void editGroup(long groupId, String groupTitle) {
-        Repository.getInstance().editGroup(groupId, new Group(groupTitle));
+        Repository.getInstance().editGroup(groupId, new Group(groupTitle), answer);
     }
 }

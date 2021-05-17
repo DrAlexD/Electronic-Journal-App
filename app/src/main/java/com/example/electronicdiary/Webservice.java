@@ -67,8 +67,8 @@ public interface Webservice {
                                                                         @Query("professorId") long professorId, @Query("semesterId") long semesterId);
 
     @GET("available-student-subjects")
-    Call<List<Subject>> getAvailableStudentSubjects(@Header("Authorization") String authorization,
-                                                    @Query("studentId") long studentId, @Query("semesterId") long semesterId);
+    Call<List<StudentPerformanceInSubject>> getAvailableStudentSubjects(@Header("Authorization") String authorization,
+                                                                        @Query("studentId") long studentId, @Query("semesterId") long semesterId);
 
     @GET("modules")
     Call<Map<String, Module>> getModules(@Header("Authorization") String authorization, @Query("subjectInfoId") long subjectInfoId);
@@ -172,10 +172,10 @@ public interface Webservice {
     @POST("lessons")
     Call<Void> addLesson(@Header("Authorization") String authorization, @Body Lesson lesson);
 
-    @POST("studentEvents")
+    @POST("students-events")
     Call<Void> addStudentEvent(@Header("Authorization") String authorization, @Body StudentEvent studentEvent);
 
-    @POST("studentLessons")
+    @POST("students-lessons")
     Call<Void> addStudentLesson(@Header("Authorization") String authorization, @Body StudentLesson studentLesson);
 
     @PUT("students/{id}")

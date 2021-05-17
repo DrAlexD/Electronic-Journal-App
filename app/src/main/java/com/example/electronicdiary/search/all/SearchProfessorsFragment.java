@@ -38,14 +38,17 @@ public class SearchProfessorsFragment extends Fragment {
 
                     if (actionCode == 1) {
                         Bundle bundle = new Bundle();
-                        bundle.putLong("professorId", professors.get(position).getId());
+                        bundle.putLong("professorId", professorsAdapter.getProfessors().get(position).getId());
                         Navigation.findNavController(view).navigate(R.id.action_search_professors_to_dialog_professor_editing, bundle);
                     } else if (actionCode == 2) {
-                        searchProfessorsViewModel.deleteProfessor(professors.get(position).getId());
-
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("openPage", 2);
-                        Navigation.findNavController(view).navigate(R.id.action_search_professors_to_admin_actions, bundle);
+                        searchProfessorsViewModel.deleteProfessor(professorsAdapter.getProfessors().get(position).getId());
+                        searchProfessorsViewModel.getAnswer().observe(getViewLifecycleOwner(), answer -> {
+                            if (answer != null) {
+                                Bundle bundle = new Bundle();
+                                bundle.putInt("openPage", 2);
+                                Navigation.findNavController(view).navigate(R.id.action_search_professors_to_admin_actions, bundle);
+                            }
+                        });
                     }
                 };
 

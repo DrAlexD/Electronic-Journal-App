@@ -12,26 +12,35 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.electronicdiary.R;
+import com.example.electronicdiary.data_classes.Module;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class LessonAddingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
+    private View root;
+    private LessonAddingViewModel lessonAddingViewModel;
+    private LiveData<Module> moduleLiveData;
 
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_lesson_adding, null);
+        root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_lesson_adding, null);
 
         long moduleId = getArguments().getLong("moduleId");
 
-        LessonAddingViewModel lessonAddingViewModel = new ViewModelProvider(this).get(LessonAddingViewModel.class);
+        lessonAddingViewModel = new ViewModelProvider(this).get(LessonAddingViewModel.class);
 
         EditText dateAndTime = root.findViewById(R.id.lessonDateAndTimeAdding);
         CheckBox isLecture = root.findViewById(R.id.lessonIsLectureAdding);
@@ -70,34 +79,52 @@ public class LessonAddingDialogFragment extends DialogFragment {
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(lessonFormState.isDataValid());
         });
 
+        lessonAddingViewModel.downloadModuleById(moduleId);
+        moduleLiveData = lessonAddingViewModel.getModule();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
                 .setTitle("Введите данные занятия")
-                .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    lessonAddingViewModel.downloadModuleById(moduleId);
-
-                    lessonAddingViewModel.getModule().observe(this, module -> {
-                        if (module != null) {
-                            String date = dateAndTime.getText().toString().split(" ")[0];
-                            String time = dateAndTime.getText().toString().split(" ")[1];
-                            String[] splitedDate = date.split("\\.");
-                            String[] splitedTime = time.split(":");
-                            lessonAddingViewModel.addLesson(module,
-                                    new Date(Integer.parseInt(splitedDate[2]), Integer.parseInt(splitedDate[1]) - 1,
-                                            Integer.parseInt(splitedDate[0]), Integer.parseInt(splitedTime[0]), Integer.parseInt(splitedTime[1])),
-                                    isLecture.isChecked(), Integer.parseInt(pointsPerVisit.getText().toString()));
-
-                            Bundle bundle = new Bundle();
-                            bundle.putInt("openPage", module.getModuleNumber() - 1);
-                            bundle.putLong("subjectInfoId", module.getSubjectInfo().getId());
-
-                            Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_lesson_adding_to_group_performance, bundle);
-                        }
-                    });
-                }).create();
+                .setPositiveButton("Подтвердить", null).create();
 
         dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false));
 
         return dialog;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        EditText dateAndTime = root.findViewById(R.id.lessonDateAndTimeAdding);
+        CheckBox isLecture = root.findViewById(R.id.lessonIsLectureAdding);
+        EditText pointsPerVisit = root.findViewById(R.id.lessonPointsPerVisitAdding);
+
+        dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(view -> {
+            LiveData<Boolean> answerLiveData = Transformations.switchMap(moduleLiveData, module -> {
+                try {
+                    DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+                    Date dateAndTimeR = dateFormat.parse(dateAndTime.getText().toString());
+
+                    lessonAddingViewModel.addLesson(module,
+                            dateAndTimeR, isLecture.isChecked(), Integer.parseInt(pointsPerVisit.getText().toString()));
+
+                    return lessonAddingViewModel.getAnswer();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            });
+
+            answerLiveData.observe(getParentFragment().getViewLifecycleOwner(), answer -> {
+                if (answer != null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("openPage", lessonAddingViewModel.getModule().getValue().getModuleNumber() - 1);
+                    bundle.putLong("subjectInfoId", lessonAddingViewModel.getModule().getValue().getSubjectInfo().getId());
+
+                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_lesson_adding_to_group_performance, bundle);
+                }
+            });
+        });
     }
 }

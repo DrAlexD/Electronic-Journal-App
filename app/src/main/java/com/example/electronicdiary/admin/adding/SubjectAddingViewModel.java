@@ -10,6 +10,11 @@ import com.example.electronicdiary.data_classes.Subject;
 
 public class SubjectAddingViewModel extends ViewModel {
     private final MutableLiveData<SubjectFormState> subjectFormState = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> answer = new MutableLiveData<>();
+
+    public LiveData<Boolean> getAnswer() {
+        return answer;
+    }
 
     LiveData<SubjectFormState> getSubjectFormState() {
         return subjectFormState;
@@ -20,6 +25,6 @@ public class SubjectAddingViewModel extends ViewModel {
     }
 
     public void addSubject(String subjectTitle) {
-        Repository.getInstance().addSubject(new Subject(subjectTitle));
+        Repository.getInstance().addSubject(new Subject(subjectTitle), answer);
     }
 }

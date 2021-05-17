@@ -20,13 +20,15 @@ import org.jetbrains.annotations.NotNull;
 
 public class SemesterAddingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
+    private View root;
+    private SemesterAddingViewModel semesterAddingViewModel;
 
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_semester_adding, null);
+        root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_semester_adding, null);
 
-        SemesterAddingViewModel semesterAddingViewModel = new ViewModelProvider(this).get(SemesterAddingViewModel.class);
+        semesterAddingViewModel = new ViewModelProvider(this).get(SemesterAddingViewModel.class);
 
         EditText semesterYear = root.findViewById(R.id.semesterYearAdding);
         CheckBox isFirstHalf = root.findViewById(R.id.isSemesterFirstHalfAdding);
@@ -62,13 +64,26 @@ public class SemesterAddingDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
                 .setTitle("Введите данные семестра")
-                .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    semesterAddingViewModel.addSemester(Integer.parseInt(semesterYear.getText().toString()), isFirstHalf.isChecked());
-                    dismiss();
-                }).create();
+                .setPositiveButton("Подтвердить", null).create();
 
         dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false));
 
         return dialog;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        EditText semesterYear = root.findViewById(R.id.semesterYearAdding);
+        CheckBox isFirstHalf = root.findViewById(R.id.isSemesterFirstHalfAdding);
+
+        dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(view -> {
+            semesterAddingViewModel.addSemester(Integer.parseInt(semesterYear.getText().toString()), isFirstHalf.isChecked());
+            semesterAddingViewModel.getAnswer().observe(getParentFragment().getViewLifecycleOwner(), answer -> {
+                if (answer != null)
+                    dismiss();
+            });
+        });
     }
 }

@@ -9,6 +9,8 @@ import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.data_classes.SubjectInfo;
 import com.example.electronicdiary.search.SubjectsAdapter;
+
+import java.util.List;
+import java.util.Map;
 
 public class SearchAvailableSubjectsFragment extends Fragment {
     private SubjectsAdapter subjectsAdapter;
@@ -40,26 +45,30 @@ public class SearchAvailableSubjectsFragment extends Fragment {
                     if (actionCode == 11) {
                         Bundle bundle = new Bundle();
                         bundle.putInt("actionCode", 11);
-                        bundle.putLong("subjectId", availableSubjects.get(position).getId());
+                        bundle.putLong("subjectId", subjectsAdapter.getSubjects().get(position).getId());
                         bundle.putLong("professorId", getArguments().getLong("professorId"));
                         bundle.putLong("semesterId", getArguments().getLong("semesterId"));
 
                         Navigation.findNavController(view).navigate(R.id.action_search_available_subjects_to_search_all_groups, bundle);
                     } else if (actionCode == 12) {
                         searchAvailableSubjectsViewModel.downloadAvailableSubjectsWithGroups(getArguments().getLong("professorId"), getArguments().getLong("semesterId"));
+                        LiveData<Map<String, List<SubjectInfo>>> availableSubjectsWithGroupsLiveData = searchAvailableSubjectsViewModel.getAvailableSubjectsWithGroups();
+                        LiveData<Boolean> answerLiveData = Transformations.switchMap(availableSubjectsWithGroupsLiveData, availableSubjectsWithGroups -> {
+                            for (SubjectInfo s : availableSubjectsWithGroups.get(String.valueOf(subjectsAdapter.getSubjects().get(position).getId()))) {
+                                searchAvailableSubjectsViewModel.deleteAvailableSubject(s.getId(), getArguments().getLong("professorId"));
+                            }
 
-                        searchAvailableSubjectsViewModel.getAvailableSubjectsWithGroups().observe(getViewLifecycleOwner(), availableSubjectsWithGroups -> {
-                            if (availableSubjectsWithGroups != null) {
-                                for (SubjectInfo s : availableSubjectsWithGroups.get(String.valueOf(availableSubjects.get(position).getId()))) {
-                                    searchAvailableSubjectsViewModel.deleteAvailableSubject(s.getId(), getArguments().getLong("professorId"));
-                                }
+                            return searchAvailableSubjectsViewModel.getAnswer();
+                        });
 
+                        answerLiveData.observe(getViewLifecycleOwner(), answer -> {
+                            if (answer != null) {
                                 Navigation.findNavController(view).navigate(R.id.action_search_available_subjects_to_profile);
                             }
                         });
                     } else if (actionCode == 13) {
                         Bundle bundle = new Bundle();
-                        bundle.putLong("subjectId", availableSubjects.get(position).getId());
+                        bundle.putLong("subjectId", subjectsAdapter.getSubjects().get(position).getId());
                         bundle.putLong("professorId", getArguments().getLong("professorId"));
                         bundle.putLong("semesterId", getArguments().getLong("semesterId"));
 

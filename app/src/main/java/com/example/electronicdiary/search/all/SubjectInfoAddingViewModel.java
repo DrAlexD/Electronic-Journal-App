@@ -17,6 +17,11 @@ public class SubjectInfoAddingViewModel extends ViewModel {
     private final MutableLiveData<Subject> subject = new MutableLiveData<>();
     private final MutableLiveData<Result<Professor>> professor = new MutableLiveData<>();
     private final MutableLiveData<Semester> semester = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> answer = new MutableLiveData<>();
+
+    public LiveData<Boolean> getAnswer() {
+        return answer;
+    }
 
     public LiveData<Group> getGroup() {
         return group;
@@ -41,9 +46,9 @@ public class SubjectInfoAddingViewModel extends ViewModel {
         Repository.getInstance().getProfessorById(professorId, professor);
     }
 
-    public void addSubjectInfo(Group group, Subject subject, long lecturerId, Professor seminarian,
+    public void addSubjectInfo(Group group, Subject subject, Long lecturerId, Professor seminarian,
                                Semester semester, boolean isExam, boolean isDifferentiatedCredit) {
         Repository.getInstance().addSubjectInfo(new SubjectInfo(group, subject, lecturerId, seminarian,
-                semester, isExam, isDifferentiatedCredit));
+                semester, isExam, isDifferentiatedCredit), answer);
     }
 }

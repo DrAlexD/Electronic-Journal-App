@@ -20,14 +20,17 @@ import org.jetbrains.annotations.NotNull;
 
 public class GroupEditingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
+    private GroupEditingViewModel groupEditingViewModel;
+    private View root;
+    private long groupId;
 
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_group_editing, null);
+        root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_group_editing, null);
 
-        GroupEditingViewModel groupEditingViewModel = new ViewModelProvider(this).get(GroupEditingViewModel.class);
-        long groupId = getArguments().getLong("groupId");
+        groupEditingViewModel = new ViewModelProvider(this).get(GroupEditingViewModel.class);
+        groupId = getArguments().getLong("groupId");
         groupEditingViewModel.downloadGroupById(groupId);
 
         EditText groupTitle = root.findViewById(R.id.groupTitleEditing);
@@ -70,16 +73,29 @@ public class GroupEditingDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
                 .setTitle("Измените название группы")
-                .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    groupEditingViewModel.editGroup(groupId, groupTitle.getText().toString());
-
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("openPage", 1);
-                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_group_editing_to_admin_actions, bundle);
-                }).create();
+                .setPositiveButton("Подтвердить", null).create();
 
         dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true));
 
         return dialog;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        EditText groupTitle = root.findViewById(R.id.groupTitleEditing);
+
+        dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(view -> {
+            groupEditingViewModel.editGroup(groupId, groupTitle.getText().toString());
+
+            groupEditingViewModel.getAnswer().observe(getParentFragment().getViewLifecycleOwner(), answer -> {
+                if (answer != null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("openPage", 1);
+                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_group_editing_to_admin_actions, bundle);
+                }
+            });
+        });
     }
 }

@@ -6,26 +6,23 @@ public class User {
     final String role;
     final String username;
     final String password;
-    final boolean isProfessor;
     long id;
 
-    User(String firstName, String secondName, String username, String password, String role, boolean isProfessor) {
+    User(String firstName, String secondName, String username, String password, String role) {
         this.firstName = firstName;
         this.secondName = secondName;
         this.username = username;
         this.password = password;
         this.role = role;
-        this.isProfessor = isProfessor;
     }
 
-    User(long id, String firstName, String secondName, String username, String password, String role, boolean isProfessor) {
+    User(long id, String firstName, String secondName, String username, String password, String role) {
         this.id = id;
         this.firstName = firstName;
         this.secondName = secondName;
         this.username = username;
         this.password = password;
         this.role = role;
-        this.isProfessor = isProfessor;
     }
 
     public long getId() {
@@ -54,9 +51,5 @@ public class User {
 
     public String getRole() {
         return role;
-    }
-
-    public boolean isProfessor() {
-        return isProfessor;
     }
 }

@@ -12,7 +12,7 @@ public class LessonFormState {
     private final boolean isDataValid;
 
     public LessonFormState(String dateAndTime, String pointsPerVisit) {
-        boolean isDateAndTimeValid = dateAndTime.matches("[0-3][0-9]\\.[0-1][0-9]\\.20[2-9][0-9] [0-2][0-9]:[0-5][0-9]");
+        boolean isDateAndTimeValid = dateAndTime.matches("[0-3][0-9]\\.[0-1][0-9]\\.20[1-9][0-9] [0-2][0-9]:[0-5][0-9]");
         boolean isPointsPerVisitValid = !pointsPerVisit.trim().isEmpty();
 
         this.dateAndTimeError = !isDateAndTimeValid ? R.string.invalid_date_time_field : null;

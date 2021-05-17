@@ -1,10 +1,13 @@
 package com.example.electronicdiary.settings;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreferenceCompat;
 
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.data_classes.Semester;
@@ -17,6 +20,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         SettingsViewModel settingsViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
         settingsViewModel.downloadSemesters();
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        boolean isProfessor = sharedPreferences.getBoolean("isUserProfessor", true);
+
+        SwitchPreferenceCompat isProfessorRules = findPreference(getString(R.string.is_professor_rules));
+        isProfessorRules.setEnabled(isProfessor);
+
+        SwitchPreferenceCompat isAdminRules = findPreference(getString(R.string.is_admin_rules));
+        isAdminRules.setEnabled(isProfessor);
 
         ListPreference semesterChoose = findPreference(getString(R.string.current_semester));
         settingsViewModel.getSemesters().observe(this, semesters -> {

@@ -47,19 +47,30 @@ public class ProfessorEditingDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
                 .setTitle("Измените данные преподавателя")
-                .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    professorEditingViewModel.editProfessor(professorId, professorName.getText().toString(),
-                            professorSecondName.getText().toString(), professorLogin.getText().toString(),
-                            professorPassword.getText().toString(), "ROLE_PROFESSOR");
-
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("openPage", 1);
-                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_professor_editing_to_admin_actions, bundle);
-                }).create();
+                .setPositiveButton("Подтвердить", null).create();
 
         dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true));
 
         return dialog;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(view -> {
+            professorEditingViewModel.editProfessor(professorId, professorName.getText().toString(),
+                    professorSecondName.getText().toString(), professorLogin.getText().toString(),
+                    professorPassword.getText().toString(), "ROLE_PROFESSOR");
+
+            professorEditingViewModel.getAnswer().observe(getParentFragment().getViewLifecycleOwner(), answer -> {
+                if (answer != null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("openPage", 1);
+                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_professor_editing_to_admin_actions, bundle);
+                }
+            });
+        });
     }
 
     private void setupAutoGenerate(View root) {

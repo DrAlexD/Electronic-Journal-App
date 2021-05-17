@@ -4,11 +4,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class Professor extends User {
     public Professor(String firstName, String secondName, String username, String password, String role) {
-        super(firstName, secondName, username, password, role, true);
+        super(firstName, secondName, username, password, role);
     }
 
     public Professor(long id, String firstName, String secondName, String username, String password, String role) {
-        super(id, firstName, secondName, username, password, role, true);
+        super(id, firstName, secondName, username, password, role);
     }
 
     @NotNull

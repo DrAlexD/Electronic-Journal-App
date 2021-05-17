@@ -15,6 +15,11 @@ public class StudentLessonViewModel extends ViewModel {
     private final MutableLiveData<StudentLesson> studentLesson = new MutableLiveData<>();
     private final MutableLiveData<Lesson> lesson = new MutableLiveData<>();
     private final MutableLiveData<Map<String, StudentPerformanceInModule>> studentPerformanceInModules = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> answer = new MutableLiveData<>();
+
+    public LiveData<Boolean> getAnswer() {
+        return answer;
+    }
 
     public LiveData<StudentLesson> getStudentLesson() {
         return studentLesson;
@@ -41,14 +46,14 @@ public class StudentLessonViewModel extends ViewModel {
     }
 
     public void addStudentLesson(StudentPerformanceInModule studentPerformanceInModule, Lesson lesson, boolean isAttended) {
-        Repository.getInstance().addStudentLesson(new StudentLesson(studentPerformanceInModule, lesson, isAttended));
+        Repository.getInstance().addStudentLesson(new StudentLesson(studentPerformanceInModule, lesson, isAttended), answer);
     }
 
-    public void editStudentLesson(long studentLessonId, StudentPerformanceInModule studentPerformanceInModule, Lesson lesson, boolean isAttended, int bonusPoints) {
-        Repository.getInstance().editStudentLesson(studentLessonId, new StudentLesson(studentPerformanceInModule, lesson, isAttended, bonusPoints));
+    public void editStudentLesson(long studentLessonId, StudentPerformanceInModule studentPerformanceInModule, Lesson lesson, boolean isAttended, Integer bonusPoints) {
+        Repository.getInstance().editStudentLesson(studentLessonId, new StudentLesson(studentPerformanceInModule, lesson, isAttended, bonusPoints), answer);
     }
 
     public void deleteStudentLesson(long studentLessonId) {
-        Repository.getInstance().deleteStudentLesson(studentLessonId);
+        Repository.getInstance().deleteStudentLesson(studentLessonId, answer);
     }
 }

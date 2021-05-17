@@ -6,12 +6,12 @@ public class Student extends User {
     private final Group group;
 
     public Student(String firstName, String secondName, Group group, String username, String password, String role) {
-        super(firstName, secondName, username, password, role, false);
+        super(firstName, secondName, username, password, role);
         this.group = group;
     }
 
     public Student(long id, String firstName, String secondName, Group group, String username, String password, String role) {
-        super(id, firstName, secondName, username, password, role, false);
+        super(id, firstName, secondName, username, password, role);
         this.group = group;
     }
 

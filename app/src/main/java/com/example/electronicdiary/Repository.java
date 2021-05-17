@@ -33,7 +33,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Repository {
     private static volatile Repository repository;
-    private final Webservice webservice = new Retrofit.Builder().baseUrl("http://10.0.2.2:8080/api/").
+    // 10.0.2.2  192.168.0.47  192.168.43.173
+    private final Webservice webservice = new Retrofit.Builder().baseUrl("http://192.168.0.47:8080/api/").
             addConverterFactory(GsonConverterFactory.create()).build().create(Webservice.class);
     private String headerAuthorization;
     private User user = null;
@@ -70,6 +71,7 @@ public class Repository {
 
             @Override
             public void onFailure(@NotNull Call<JwtResponse> call, @NotNull Throwable t) {
+                result.postValue(new Result.Error("Error: " + t.getMessage()));
                 Log.e("ERROR", t.getMessage());
             }
         });
@@ -272,10 +274,10 @@ public class Repository {
                 });
     }
 
-    public void getAvailableStudentSubjects(long studentId, long semesterId, MutableLiveData<List<Subject>> availableStudentSubjects) {
-        webservice.getAvailableStudentSubjects(headerAuthorization, studentId, semesterId).enqueue(new Callback<List<Subject>>() {
+    public void getAvailableStudentSubjects(long studentId, long semesterId, MutableLiveData<List<StudentPerformanceInSubject>> availableStudentSubjects) {
+        webservice.getAvailableStudentSubjects(headerAuthorization, studentId, semesterId).enqueue(new Callback<List<StudentPerformanceInSubject>>() {
             @Override
-            public void onResponse(@NotNull Call<List<Subject>> call, @NotNull Response<List<Subject>> response) {
+            public void onResponse(@NotNull Call<List<StudentPerformanceInSubject>> call, @NotNull Response<List<StudentPerformanceInSubject>> response) {
                 if (response.isSuccessful()) {
                     availableStudentSubjects.postValue(response.body());
                 } else
@@ -283,7 +285,7 @@ public class Repository {
             }
 
             @Override
-            public void onFailure(@NotNull Call<List<Subject>> call, @NotNull Throwable t) {
+            public void onFailure(@NotNull Call<List<StudentPerformanceInSubject>> call, @NotNull Throwable t) {
                 Log.e("ERROR", t.getMessage());
             }
         });
@@ -617,13 +619,14 @@ public class Repository {
                 if (response.isSuccessful()) {
                     student.postValue(new Result.Success<>(response.body()));
                 } else {
-                    student.postValue(new Result.Error("Error: " + response.code()));
+                    student.postValue(new Result.Error("Error_code: " + response.code()));
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<Student> call, @NotNull Throwable t) {
+                student.postValue(new Result.Error("Error: " + t.getMessage()));
                 Log.e("ERROR", t.getMessage());
             }
         });
@@ -636,13 +639,14 @@ public class Repository {
                 if (response.isSuccessful()) {
                     professor.postValue(new Result.Success<>(response.body()));
                 } else {
-                    professor.postValue(new Result.Error("Error: " + response.code()));
+                    professor.postValue(new Result.Error("Error_code: " + response.code()));
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<Professor> call, @NotNull Throwable t) {
+                professor.postValue(new Result.Error("Error: " + t.getMessage()));
                 Log.e("ERROR", t.getMessage());
             }
         });
@@ -738,11 +742,13 @@ public class Repository {
                 });
     }
 
-    public void addStudent(Student student) {
+    public void addStudent(Student student, MutableLiveData<Boolean> answer) {
         webservice.addStudent(headerAuthorization, student).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -753,11 +759,13 @@ public class Repository {
         });
     }
 
-    public void addProfessor(Professor professor) {
+    public void addProfessor(Professor professor, MutableLiveData<Boolean> answer) {
         webservice.addProfessor(headerAuthorization, professor).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -768,12 +776,13 @@ public class Repository {
         });
     }
 
-
-    public void addGroup(Group group) {
+    public void addGroup(Group group, MutableLiveData<Boolean> answer) {
         webservice.addGroup(headerAuthorization, group).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -784,12 +793,13 @@ public class Repository {
         });
     }
 
-
-    public void addSubject(Subject subject) {
+    public void addSubject(Subject subject, MutableLiveData<Boolean> answer) {
         webservice.addSubject(headerAuthorization, subject).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -800,12 +810,13 @@ public class Repository {
         });
     }
 
-
-    public void addSemester(Semester semester) {
+    public void addSemester(Semester semester, MutableLiveData<Boolean> answer) {
         webservice.addSemester(headerAuthorization, semester).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -816,12 +827,13 @@ public class Repository {
         });
     }
 
-
-    public void addSubjectInfo(SubjectInfo subjectInfo) {
+    public void addSubjectInfo(SubjectInfo subjectInfo, MutableLiveData<Boolean> answer) {
         webservice.addSubjectInfo(headerAuthorization, subjectInfo).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -832,12 +844,13 @@ public class Repository {
         });
     }
 
-
-    public void addEvent(Event event) {
+    public void addEvent(Event event, MutableLiveData<Boolean> answer) {
         webservice.addEvent(headerAuthorization, event).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -852,7 +865,9 @@ public class Repository {
         webservice.getLastNumberOfEventType(headerAuthorization, subjectInfoId, type).enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(@NotNull Call<Integer> call, @NotNull Response<Integer> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    lastNumberOfEventType.postValue(response.body());
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -863,11 +878,13 @@ public class Repository {
         });
     }
 
-    public void addLesson(Lesson lesson) {
+    public void addLesson(Lesson lesson, MutableLiveData<Boolean> answer) {
         webservice.addLesson(headerAuthorization, lesson).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -878,12 +895,13 @@ public class Repository {
         });
     }
 
-
-    public void addStudentEvent(StudentEvent studentEvent) {
+    public void addStudentEvent(StudentEvent studentEvent, MutableLiveData<Boolean> answer) {
         webservice.addStudentEvent(headerAuthorization, studentEvent).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -894,11 +912,13 @@ public class Repository {
         });
     }
 
-    public void addStudentLesson(StudentLesson studentLesson) {
+    public void addStudentLesson(StudentLesson studentLesson, MutableLiveData<Boolean> answer) {
         webservice.addStudentLesson(headerAuthorization, studentLesson).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -909,11 +929,13 @@ public class Repository {
         });
     }
 
-    public void editStudent(long id, Student student) {
+    public void editStudent(long id, Student student, MutableLiveData<Boolean> answer) {
         webservice.editStudent(headerAuthorization, id, student).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -924,11 +946,13 @@ public class Repository {
         });
     }
 
-    public void editProfessor(long id, Professor professor) {
+    public void editProfessor(long id, Professor professor, MutableLiveData<Boolean> answer) {
         webservice.editProfessor(headerAuthorization, id, professor).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -939,12 +963,13 @@ public class Repository {
         });
     }
 
-
-    public void editGroup(long id, Group group) {
+    public void editGroup(long id, Group group, MutableLiveData<Boolean> answer) {
         webservice.editGroup(headerAuthorization, id, group).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -955,12 +980,13 @@ public class Repository {
         });
     }
 
-
-    public void editSubject(long id, Subject subject) {
+    public void editSubject(long id, Subject subject, MutableLiveData<Boolean> answer) {
         webservice.editSubject(headerAuthorization, id, subject).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -971,12 +997,13 @@ public class Repository {
         });
     }
 
-
-    public void editSemester(long id, Semester semester) {
+    public void editSemester(long id, Semester semester, MutableLiveData<Boolean> answer) {
         webservice.editSemester(headerAuthorization, id, semester).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -987,11 +1014,13 @@ public class Repository {
         });
     }
 
-    public void editSubjectInfo(long id, SubjectInfo subjectInfo) {
+    public void editSubjectInfo(long id, SubjectInfo subjectInfo, MutableLiveData<Boolean> answer) {
         webservice.editSubjectInfo(headerAuthorization, id, subjectInfo).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -1002,11 +1031,13 @@ public class Repository {
         });
     }
 
-    public void editModule(long id, Module module) {
+    public void editModule(long id, Module module, MutableLiveData<Boolean> answer) {
         webservice.editModule(headerAuthorization, id, module).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -1017,11 +1048,13 @@ public class Repository {
         });
     }
 
-    public void editEvent(long id, Event event) {
+    public void editEvent(long id, Event event, MutableLiveData<Boolean> answer) {
         webservice.editEvent(headerAuthorization, id, event).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -1032,11 +1065,13 @@ public class Repository {
         });
     }
 
-    public void editLesson(long id, Lesson lesson) {
+    public void editLesson(long id, Lesson lesson, MutableLiveData<Boolean> answer) {
         webservice.editLesson(headerAuthorization, id, lesson).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -1047,11 +1082,13 @@ public class Repository {
         });
     }
 
-    public void editStudentPerformanceInSubject(long id, StudentPerformanceInSubject studentPerformanceInSubject) {
+    public void editStudentPerformanceInSubject(long id, StudentPerformanceInSubject studentPerformanceInSubject, MutableLiveData<Boolean> answer) {
         webservice.editStudentPerformanceInSubject(headerAuthorization, id, studentPerformanceInSubject).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -1062,11 +1099,13 @@ public class Repository {
         });
     }
 
-    public void editStudentEvent(long id, StudentEvent studentEvent) {
+    public void editStudentEvent(long id, StudentEvent studentEvent, MutableLiveData<Boolean> answer) {
         webservice.editStudentEvent(headerAuthorization, id, studentEvent).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -1077,11 +1116,13 @@ public class Repository {
         });
     }
 
-    public void editStudentLesson(long id, StudentLesson studentLesson) {
+    public void editStudentLesson(long id, StudentLesson studentLesson, MutableLiveData<Boolean> answer) {
         webservice.editStudentLesson(headerAuthorization, id, studentLesson).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -1092,11 +1133,13 @@ public class Repository {
         });
     }
 
-    public void deleteStudent(long id) {
+    public void deleteStudent(long id, MutableLiveData<Boolean> answer) {
         webservice.deleteStudent(headerAuthorization, id).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -1107,11 +1150,13 @@ public class Repository {
         });
     }
 
-    public void deleteProfessor(long id) {
+    public void deleteProfessor(long id, MutableLiveData<Boolean> answer) {
         webservice.deleteProfessor(headerAuthorization, id).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -1122,12 +1167,13 @@ public class Repository {
         });
     }
 
-
-    public void deleteGroup(long id) {
+    public void deleteGroup(long id, MutableLiveData<Boolean> answer) {
         webservice.deleteGroup(headerAuthorization, id).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -1138,12 +1184,13 @@ public class Repository {
         });
     }
 
-
-    public void deleteSubject(long id) {
+    public void deleteSubject(long id, MutableLiveData<Boolean> answer) {
         webservice.deleteSubject(headerAuthorization, id).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -1154,12 +1201,13 @@ public class Repository {
         });
     }
 
-
-    public void deleteSemester(long id) {
+    public void deleteSemester(long id, MutableLiveData<Boolean> answer) {
         webservice.deleteSemester(headerAuthorization, id).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -1170,11 +1218,13 @@ public class Repository {
         });
     }
 
-    public void deleteSubjectInfo(long id, long professorId) {
+    public void deleteSubjectInfo(long id, long professorId, MutableLiveData<Boolean> answer) {
         webservice.deleteSubjectInfo(headerAuthorization, id, professorId).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -1185,11 +1235,13 @@ public class Repository {
         });
     }
 
-    public void deleteEvent(long id) {
+    public void deleteEvent(long id, MutableLiveData<Boolean> answer) {
         webservice.deleteEvent(headerAuthorization, id).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -1200,11 +1252,13 @@ public class Repository {
         });
     }
 
-    public void deleteLesson(long id) {
+    public void deleteLesson(long id, MutableLiveData<Boolean> answer) {
         webservice.deleteLesson(headerAuthorization, id).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -1215,11 +1269,13 @@ public class Repository {
         });
     }
 
-    public void deleteStudentEvent(long id) {
+    public void deleteStudentEvent(long id, MutableLiveData<Boolean> answer) {
         webservice.deleteStudentEvent(headerAuthorization, id).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 
@@ -1230,11 +1286,13 @@ public class Repository {
         });
     }
 
-    public void deleteStudentLesson(long id) {
+    public void deleteStudentLesson(long id, MutableLiveData<Boolean> answer) {
         webservice.deleteStudentLesson(headerAuthorization, id).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(@NotNull Call<Void> call, @NotNull Response<Void> response) {
-                if (!response.isSuccessful())
+                if (response.isSuccessful()) {
+                    answer.postValue(true);
+                } else
                     Log.e("ERROR_CODE", String.valueOf(response.code()));
             }
 

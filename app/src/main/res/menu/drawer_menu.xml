@@ -7,6 +7,10 @@
             android:icon="@drawable/outline_account_circle_black_18dp"
             android:title="@string/menu_profile" />
         <item
+            android:id="@+id/nav_student_profile"
+            android:icon="@drawable/outline_account_circle_black_18dp"
+            android:title="@string/menu_profile" />
+        <item
             android:id="@+id/nav_search_available_students"
             android:icon="@drawable/outline_search_black_18dp"
             android:title="@string/menu_search_students" />

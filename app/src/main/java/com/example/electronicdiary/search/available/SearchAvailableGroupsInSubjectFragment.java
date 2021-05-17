@@ -38,18 +38,30 @@ public class SearchAvailableGroupsInSubjectFragment extends Fragment {
         searchAvailableGroupsInSubjectViewModel.getAvailableGroupsInSubject().observe(getViewLifecycleOwner(),
                 availableGroupsInSubject -> {
                     if (availableGroupsInSubject != null) {
-                        View.OnClickListener onItemClickListener = view -> {
-                            RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
-                            int position = viewHolder.getAdapterPosition();
-
-                            searchAvailableGroupsInSubjectViewModel.deleteSubjectInfo(availableGroupsInSubject.get(position).getId(), getArguments().getLong("professorId"));
-                            Navigation.findNavController(view).navigate(R.id.action_search_available_groups_in_subject_to_profile);
-                        };
-
                         List<Group> groups = new ArrayList<>();
                         for (SubjectInfo subjectInfo : availableGroupsInSubject) {
                             groups.add(subjectInfo.getGroup());
                         }
+
+                        View.OnClickListener onItemClickListener = view -> {
+                            RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
+                            int position = viewHolder.getAdapterPosition();
+
+                            Long subjectInfoId = null;
+                            for (SubjectInfo si : availableGroupsInSubject) {
+                                if (si.getGroup().getId() == groupsAdapter.getGroups().get(position).getId()) {
+                                    subjectInfoId = si.getId();
+                                    break;
+                                }
+                            }
+
+                            searchAvailableGroupsInSubjectViewModel.deleteSubjectInfo(subjectInfoId, getArguments().getLong("professorId"));
+                            searchAvailableGroupsInSubjectViewModel.getAnswer().observe(getViewLifecycleOwner(), answer -> {
+                                if (answer != null) {
+                                    Navigation.findNavController(view).navigate(R.id.action_search_available_groups_in_subject_to_profile);
+                                }
+                            });
+                        };
 
                         groupsAdapter = new GroupsAdapter(getContext(), groups, onItemClickListener);
                         recyclerView.setAdapter(groupsAdapter);

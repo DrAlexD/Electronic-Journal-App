@@ -42,16 +42,26 @@ public class ProfessorAddingDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
                 .setTitle("Введите данные преподавателя")
-                .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    professorAddingViewModel.addProfessor(professorName.getText().toString(),
-                            professorSecondName.getText().toString(), professorLogin.getText().toString(),
-                            professorPassword.getText().toString(), "ROLE_PROFESSOR");
-                    dismiss();
-                }).create();
+                .setPositiveButton("Подтвердить", null).create();
 
         dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false));
 
         return dialog;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(view -> {
+            professorAddingViewModel.addProfessor(professorName.getText().toString(),
+                    professorSecondName.getText().toString(), professorLogin.getText().toString(),
+                    professorPassword.getText().toString(), "ROLE_PROFESSOR");
+            professorAddingViewModel.getAnswer().observe(getParentFragment().getViewLifecycleOwner(), answer -> {
+                if (answer != null)
+                    dismiss();
+            });
+        });
     }
 
     private void setupAutoGenerate(View root) {

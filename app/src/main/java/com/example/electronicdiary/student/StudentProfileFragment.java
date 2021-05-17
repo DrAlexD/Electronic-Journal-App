@@ -23,7 +23,11 @@ import com.example.electronicdiary.Repository;
 import com.example.electronicdiary.Result;
 import com.example.electronicdiary.data_classes.Group;
 import com.example.electronicdiary.data_classes.Student;
+import com.example.electronicdiary.data_classes.StudentPerformanceInSubject;
 import com.example.electronicdiary.data_classes.Subject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StudentProfileFragment extends Fragment {
     private long studentId;
@@ -82,14 +86,18 @@ public class StudentProfileFragment extends Fragment {
         final ListView listView = root.findViewById(R.id.studentSubjectsList);
         studentProfileViewModel.getAvailableStudentSubjects().observe(getViewLifecycleOwner(), availableStudentSubjects -> {
             if (availableStudentSubjects != null) {
-                ArrayAdapter<Subject> subjectsAdapter = new ArrayAdapter<>(getContext(), R.layout.holder_subject_with_group, R.id.subjectTitle, availableStudentSubjects);
+                List<Subject> subjects = new ArrayList<>();
+                for (StudentPerformanceInSubject availableStudentSubject : availableStudentSubjects) {
+                    subjects.add(availableStudentSubject.getSubjectInfo().getSubject());
+                }
+
+                ArrayAdapter<Subject> subjectsAdapter = new ArrayAdapter<>(getContext(), R.layout.holder_subject_with_group,
+                        R.id.subjectTitle, subjects);
                 listView.setAdapter(subjectsAdapter);
                 listView.setOnItemClickListener((parent, view, position, id) -> {
                     Bundle bundle = new Bundle();
                     bundle.putInt("openPage", 0);
-                    bundle.putLong("studentId", studentId);
-                    bundle.putLong("subjectId", availableStudentSubjects.get(position).getId());
-                    bundle.putLong("semesterId", semesterId);
+                    bundle.putLong("studentPerformanceInSubjectId", availableStudentSubjects.get(position).getId());
                     Navigation.findNavController(view).navigate(R.id.action_student_profile_to_student_performance, bundle);
                 });
             }

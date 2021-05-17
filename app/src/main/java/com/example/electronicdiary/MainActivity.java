@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
+import androidx.navigation.NavGraph;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -32,18 +33,42 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         setSupportActionBar(toolbar);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean isProfessor = sharedPreferences.getBoolean("isUserProfessor", true);
 
         //TODO разобраться как оставлять иконку Drawer постоянно
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_profile, R.id.nav_search_available_students, R.id.nav_admin_actions, R.id.nav_settings, R.id.nav_logout)
-                .setDrawerLayout(drawer)
-                .build();
+        if (isProfessor) {
+            mAppBarConfiguration = new AppBarConfiguration.Builder(
+                    R.id.nav_profile, R.id.nav_search_available_students, R.id.nav_admin_actions, R.id.nav_settings, R.id.nav_logout)
+                    .setDrawerLayout(drawer)
+                    .build();
+        } else {
+            mAppBarConfiguration = new AppBarConfiguration.Builder(
+                    R.id.nav_student_profile, R.id.nav_settings, R.id.nav_logout)
+                    .setDrawerLayout(drawer)
+                    .build();
+        }
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+
+        NavGraph navGraph = navController.getGraph();
+        navGraph.setStartDestination(isProfessor ? R.id.nav_profile : R.id.nav_student_profile);
+        navGraph.findNode(R.id.nav_student_profile).setLabel(getString(isProfessor ? R.string.menu_student_profile : R.string.menu_profile));
+        navController.setGraph(navGraph);
+
         NavigationView navigationView = findViewById(R.id.nav_view);
         Menu navMenu = navigationView.getMenu();
-        navMenu.findItem(R.id.nav_admin_actions).setVisible(
-                sharedPreferences.getBoolean(getString(R.string.is_admin_rules), false));
+        if (isProfessor) {
+            navMenu.removeItem(R.id.nav_student_profile);
+            navMenu.findItem(R.id.nav_admin_actions).setVisible(
+                    sharedPreferences.getBoolean(getString(R.string.is_admin_rules), false));
+        } else {
+            navMenu.removeItem(R.id.nav_profile);
+            navMenu.removeItem(R.id.nav_search_available_students);
+            navMenu.removeItem(R.id.nav_admin_actions);
+            sharedPreferences.edit().putBoolean(getString(R.string.is_admin_rules), false).apply();
+            sharedPreferences.edit().putBoolean(getString(R.string.is_professor_rules), false).apply();
+        }
 
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);

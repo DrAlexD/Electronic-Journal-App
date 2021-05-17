@@ -46,6 +46,10 @@ public class ProfessorsAdapter extends RecyclerView.Adapter<ProfessorsAdapter.Vi
         holder.professorNameView.setText(professor.getFullName());
     }
 
+    public List<Professor> getProfessors() {
+        return professors;
+    }
+
     @Override
     public int getItemCount() {
         return professors.size();

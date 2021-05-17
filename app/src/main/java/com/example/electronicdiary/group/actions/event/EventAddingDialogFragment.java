@@ -23,20 +23,26 @@ import com.example.electronicdiary.data_classes.Module;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
 public class EventAddingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
+    private EventAddingViewModel eventAddingViewModel;
+    private View root;
+    private LiveData<Map<String, Module>> modulesLiveData;
+    private long subjectInfoId;
 
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_event_adding, null);
+        root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_event_adding, null);
 
-        long subjectInfoId = getArguments().getLong("subjectInfoId");
+        subjectInfoId = getArguments().getLong("subjectInfoId");
 
-        EventAddingViewModel eventAddingViewModel = new ViewModelProvider(this).get(EventAddingViewModel.class);
+        eventAddingViewModel = new ViewModelProvider(this).get(EventAddingViewModel.class);
 
         Spinner module = root.findViewById(R.id.eventModuleAdding);
         Spinner eventType = root.findViewById(R.id.eventTypeAdding);
@@ -83,38 +89,63 @@ public class EventAddingDialogFragment extends DialogFragment {
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(eventFormState.isDataValid());
         });
 
+        eventAddingViewModel.downloadModules(subjectInfoId);
+        modulesLiveData = eventAddingViewModel.getModules();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
                 .setTitle("Введите данные мероприятия")
-                .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    eventAddingViewModel.downloadLastNumberOfEventType(subjectInfoId, Event.convertTypeToInt((String) eventType.getSelectedItem()));
-                    eventAddingViewModel.downloadModules(subjectInfoId);
-
-                    LiveData<Integer> lastNumberOfEventTypeLiveData = eventAddingViewModel.getLastNumberOfEventType();
-                    LiveData<Map<String, Module>> modulesLiveData = Transformations.switchMap(lastNumberOfEventTypeLiveData,
-                            g -> eventAddingViewModel.getModules());
-
-                    modulesLiveData.observe(this, modules -> {
-                        if (modules != null) {
-                            String[] splitedStartDate = startDate.getText().toString().split("\\.");
-                            String[] splitedDeadlineDate = deadlineDate.getText().toString().split("\\.");
-                            eventAddingViewModel.addEvent(modules.get(module.getSelectedItem()),
-                                    Event.convertTypeToInt((String) eventType.getSelectedItem()),
-                                    eventAddingViewModel.getLastNumberOfEventType().getValue() + 1,
-                                    new Date(Integer.parseInt(splitedStartDate[2]), Integer.parseInt(splitedStartDate[1]) - 1,
-                                            Integer.parseInt(splitedStartDate[0])), new Date(Integer.parseInt(splitedDeadlineDate[2]),
-                                            Integer.parseInt(splitedDeadlineDate[1]) - 1, Integer.parseInt(splitedDeadlineDate[0])),
-                                    Integer.parseInt(minPoints.getText().toString()), Integer.parseInt(maxPoints.getText().toString()));
-                            Bundle bundle = new Bundle();
-                            bundle.putLong("subjectInfoId", subjectInfoId);
-
-                            Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_event_adding_to_group_performance, bundle);
-                        }
-                    });
-                }).create();
+                .setPositiveButton("Подтвердить", null).create();
 
         dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false));
 
         return dialog;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        Spinner module = root.findViewById(R.id.eventModuleAdding);
+        Spinner eventType = root.findViewById(R.id.eventTypeAdding);
+        EditText startDate = root.findViewById(R.id.eventStartDateAdding);
+        EditText deadlineDate = root.findViewById(R.id.eventDeadlineDateAdding);
+        EditText minPoints = root.findViewById(R.id.eventMinPointsAdding);
+        EditText maxPoints = root.findViewById(R.id.eventMaxPointsAdding);
+
+        dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(view -> {
+            eventAddingViewModel.downloadLastNumberOfEventType(subjectInfoId, Event.convertTypeToInt((String) eventType.getSelectedItem()));
+            LiveData<Integer> lastNumberOfEventTypeLiveData = Transformations.switchMap(modulesLiveData,
+                    g -> eventAddingViewModel.getLastNumberOfEventType());
+
+            LiveData<Boolean> answerLiveData = Transformations.switchMap(lastNumberOfEventTypeLiveData, lastNumberOfEventType -> {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+                Date startDateR = null;
+                Date deadlineDateR = null;
+                try {
+                    startDateR = sdf.parse(startDate.getText().toString());
+                    deadlineDateR = sdf.parse(deadlineDate.getText().toString());
+
+                    eventAddingViewModel.addEvent(eventAddingViewModel.getModules().getValue().get(module.getSelectedItem()),
+                            Event.convertTypeToInt((String) eventType.getSelectedItem()),
+                            eventAddingViewModel.getLastNumberOfEventType().getValue() + 1,
+                            startDateR, deadlineDateR,
+                            Integer.parseInt(minPoints.getText().toString()), Integer.parseInt(maxPoints.getText().toString()));
+
+                    return eventAddingViewModel.getAnswer();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            });
+            answerLiveData.observe(getParentFragment().getViewLifecycleOwner(), answer -> {
+                if (answer != null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putLong("subjectInfoId", subjectInfoId);
+
+                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_event_adding_to_group_performance, bundle);
+                }
+            });
+        });
     }
 }

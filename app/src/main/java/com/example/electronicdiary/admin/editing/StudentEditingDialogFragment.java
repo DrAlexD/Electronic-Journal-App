@@ -49,19 +49,30 @@ public class StudentEditingDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
                 .setTitle("Измените данные студента")
-                .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    studentEditingViewModel.editStudent(studentId, studentName.getText().toString(),
-                            studentSecondName.getText().toString(), group, studentLogin.getText().toString(),
-                            studentPassword.getText().toString(), "ROLE_STUDENT");
-
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("openPage", 1);
-                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_editing_to_admin_actions, bundle);
-                }).create();
+                .setPositiveButton("Подтвердить", null).create();
 
         dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true));
 
         return dialog;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(view -> {
+            studentEditingViewModel.editStudent(studentId, studentName.getText().toString(),
+                    studentSecondName.getText().toString(), group, studentLogin.getText().toString(),
+                    studentPassword.getText().toString(), "ROLE_STUDENT");
+
+            studentEditingViewModel.getAnswer().observe(getParentFragment().getViewLifecycleOwner(), answer -> {
+                if (answer != null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("openPage", 1);
+                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_editing_to_admin_actions, bundle);
+                }
+            });
+        });
     }
 
     private void setupAutoGenerate(View root) {

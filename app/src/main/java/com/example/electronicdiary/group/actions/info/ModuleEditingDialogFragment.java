@@ -12,6 +12,7 @@ import android.widget.EditText;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.example.electronicdiary.R;
 import com.example.electronicdiary.data_classes.Module;
@@ -20,19 +21,24 @@ import org.jetbrains.annotations.NotNull;
 
 public class ModuleEditingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
+    private View root;
+    private ModuleEditingViewModel moduleEditingViewModel;
+    private long moduleId;
 
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_module_info_editing, null);
+        root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_module_info_editing, null);
 
-        long moduleId = getArguments().getLong("moduleId");
+        moduleId = getArguments().getLong("moduleId");
+        int moduleNumber = getArguments().getInt("moduleNumber");
 
-        ModuleEditingViewModel moduleEditingViewModel = new ViewModelProvider(this).get(ModuleEditingViewModel.class);
+        moduleEditingViewModel = new ViewModelProvider(this).get(ModuleEditingViewModel.class);
         moduleEditingViewModel.downloadModuleById(moduleId);
 
         EditText minPoints = root.findViewById(R.id.moduleMinPointsEditing);
         EditText maxPoints = root.findViewById(R.id.moduleMaxPointsEditing);
+
         moduleEditingViewModel.getModule().observe(this, module -> {
             if (module != null) {
                 minPoints.setText(String.valueOf(module.getMinPoints()));
@@ -74,17 +80,33 @@ public class ModuleEditingDialogFragment extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
-                .setTitle("Изменить успеваемость в " + moduleEditingViewModel.getModule().getValue().getModuleNumber() + " модуле")
-                .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    Module module = moduleEditingViewModel.getModule().getValue();
-                    moduleEditingViewModel.editModule(moduleId, module.getModuleNumber(), module.getSubjectInfo(),
-                            Integer.parseInt(minPoints.getText().toString()), Integer.parseInt(maxPoints.getText().toString()));
-
-                    dismiss();
-                }).create();
+                .setTitle("Изменить успеваемость в " + moduleNumber + " модуле")
+                .setPositiveButton("Подтвердить", null).create();
 
         dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true));
 
         return dialog;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        EditText minPoints = root.findViewById(R.id.moduleMinPointsEditing);
+        EditText maxPoints = root.findViewById(R.id.moduleMaxPointsEditing);
+
+        dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(view -> {
+            Module module = moduleEditingViewModel.getModule().getValue();
+            moduleEditingViewModel.editModule(moduleId, module.getModuleNumber(), module.getSubjectInfo(),
+                    Integer.parseInt(minPoints.getText().toString()), Integer.parseInt(maxPoints.getText().toString()));
+
+            moduleEditingViewModel.getAnswer().observe(getParentFragment().getViewLifecycleOwner(), answer -> {
+                if (answer != null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putLong("subjectInfoId", module.getSubjectInfo().getId());
+                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_module_info_editing_to_group_performance, bundle);
+                }
+            });
+        });
     }
 }

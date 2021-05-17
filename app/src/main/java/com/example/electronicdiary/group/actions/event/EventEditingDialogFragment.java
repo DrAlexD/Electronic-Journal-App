@@ -19,35 +19,39 @@ import com.example.electronicdiary.data_classes.Event;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class EventEditingDialogFragment extends DialogFragment {
     private AlertDialog dialog;
+    private View root;
+    private long eventId;
+    private EventEditingViewModel eventEditingViewModel;
 
     @NotNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_event_editing, null);
+        root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_event_editing, null);
 
-        long eventId = getArguments().getLong("eventId");
+        eventId = getArguments().getLong("eventId");
+        String eventTitle = getArguments().getString("eventTitle");
 
-        EventEditingViewModel eventEditingViewModel = new ViewModelProvider(this).get(EventEditingViewModel.class);
+        eventEditingViewModel = new ViewModelProvider(this).get(EventEditingViewModel.class);
         eventEditingViewModel.downloadEventById(eventId);
 
         EditText startDate = root.findViewById(R.id.eventStartDateEditing);
         EditText deadlineDate = root.findViewById(R.id.eventDeadlineDateEditing);
         EditText minPoints = root.findViewById(R.id.eventMinPointsEditing);
         EditText maxPoints = root.findViewById(R.id.eventMaxPointsEditing);
+
         eventEditingViewModel.getEvent().observe(this, event -> {
             if (event != null) {
-                startDate.setText(((event.getStartDate().getDate() + 1) < 10 ? "0" + (event.getStartDate().getDate() + 1) :
-                        (event.getStartDate().getDate() + 1)) + "." +
-                        ((event.getStartDate().getMonth() + 1) < 10 ? "0" + (event.getStartDate().getMonth() + 1) :
-                                (event.getStartDate().getMonth() + 1)) + "." + event.getStartDate().getYear());
-                deadlineDate.setText(((event.getDeadlineDate().getDate() + 1) < 10 ? "0" + (event.getDeadlineDate().getDate() + 1) :
-                        (event.getDeadlineDate().getDate() + 1)) + "." +
-                        ((event.getDeadlineDate().getMonth() + 1) < 10 ? "0" + (event.getDeadlineDate().getMonth() + 1) :
-                                (event.getDeadlineDate().getMonth() + 1)) + "." + event.getDeadlineDate().getYear());
+                DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
+                startDate.setText(dateFormat.format(event.getStartDate()));
+                deadlineDate.setText(dateFormat.format(event.getDeadlineDate()));
                 minPoints.setText(String.valueOf(event.getMinPoints()));
                 maxPoints.setText(String.valueOf(event.getMaxPoints()));
             }
@@ -94,29 +98,10 @@ public class EventEditingDialogFragment extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)
-                .setTitle("Изменить данные " + eventEditingViewModel.getEvent().getValue().getTitle())
-                .setPositiveButton("Подтвердить", (dialog, id) -> {
-                    String[] splitedStartDate = startDate.getText().toString().split("\\.");
-                    String[] splitedDeadlineDate = deadlineDate.getText().toString().split("\\.");
-                    Event event = eventEditingViewModel.getEvent().getValue();
-                    eventEditingViewModel.editEvent(eventId, event.getModule(), event.getTypeNumber(), event.getNumber(), new Date(Integer.parseInt(splitedStartDate[2]), Integer.parseInt(splitedStartDate[1]) - 1,
-                                    Integer.parseInt(splitedStartDate[0])), new Date(Integer.parseInt(splitedDeadlineDate[2]),
-                                    Integer.parseInt(splitedDeadlineDate[1]) - 1, Integer.parseInt(splitedDeadlineDate[0])),
-                            Integer.parseInt(minPoints.getText().toString()), Integer.parseInt(maxPoints.getText().toString()));
-
-                    dismiss();
-                })
-                .setNegativeButton("Отменить", (dialog, id) -> {
-                    dismiss();
-                })
-                .setNeutralButton("Удалить", (dialog, id) -> {
-                    eventEditingViewModel.deleteEvent(eventId);
-
-                    Bundle bundle = new Bundle();
-                    bundle.putLong("subjectInfoId", eventEditingViewModel.getEvent().getValue().getModule().getSubjectInfo().getId());
-
-                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_event_editing_to_group_performance, bundle);
-                }).create();
+                .setTitle("Изменить данные " + eventTitle)
+                .setPositiveButton("Подтвердить", null)
+                .setNegativeButton("Отменить", (dialog, id) -> dismiss())
+                .setNeutralButton("Удалить", null).create();
 
         dialog.setOnShowListener(dialog -> {
             ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.red));
@@ -124,5 +109,49 @@ public class EventEditingDialogFragment extends DialogFragment {
         });
 
         return dialog;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        EditText startDate = root.findViewById(R.id.eventStartDateEditing);
+        EditText deadlineDate = root.findViewById(R.id.eventDeadlineDateEditing);
+        EditText minPoints = root.findViewById(R.id.eventMinPointsEditing);
+        EditText maxPoints = root.findViewById(R.id.eventMaxPointsEditing);
+
+        dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(view -> {
+            try {
+                DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+                Date startDateR = dateFormat.parse(startDate.getText().toString());
+                Date deadlineDateR = dateFormat.parse(deadlineDate.getText().toString());
+
+                Event event = eventEditingViewModel.getEvent().getValue();
+                eventEditingViewModel.editEvent(eventId, event.getModule(), event.getTypeNumber(), event.getNumber(),
+                        startDateR, deadlineDateR,
+                        Integer.parseInt(minPoints.getText().toString()), Integer.parseInt(maxPoints.getText().toString()));
+
+                eventEditingViewModel.getAnswer().observe(getParentFragment().getViewLifecycleOwner(), answer -> {
+                    if (answer != null) {
+                        Bundle bundle = new Bundle();
+                        bundle.putLong("subjectInfoId", eventEditingViewModel.getEvent().getValue().getModule().getSubjectInfo().getId());
+                        Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_event_editing_to_group_performance, bundle);
+                    }
+                });
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        });
+
+        dialog.getButton(Dialog.BUTTON_NEUTRAL).setOnClickListener(view -> {
+            eventEditingViewModel.deleteEvent(eventId);
+            eventEditingViewModel.getAnswer().observe(getParentFragment().getViewLifecycleOwner(), answer -> {
+                if (answer != null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putLong("subjectInfoId", eventEditingViewModel.getEvent().getValue().getModule().getSubjectInfo().getId());
+                    Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_event_editing_to_group_performance, bundle);
+                }
+            });
+        });
     }
 }

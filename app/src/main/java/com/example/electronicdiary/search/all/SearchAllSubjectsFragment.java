@@ -43,18 +43,21 @@ public class SearchAllSubjectsFragment extends Fragment {
 
                     if (actionCode == 1) {
                         Bundle bundle = new Bundle();
-                        bundle.putLong("subjectId", allSubjects2.get(position).getId());
+                        bundle.putLong("subjectId", subjectsAdapter.getSubjects().get(position).getId());
                         Navigation.findNavController(view).navigate(R.id.action_search_all_subjects_to_dialog_subject_editing, bundle);
                     } else if (actionCode == 2) {
-                        searchAllSubjectsViewModel.deleteSubject(allSubjects2.get(position).getId());
-
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("openPage", 2);
-                        Navigation.findNavController(view).navigate(R.id.action_search_all_subjects_to_admin_actions, bundle);
+                        searchAllSubjectsViewModel.deleteSubject(subjectsAdapter.getSubjects().get(position).getId());
+                        searchAllSubjectsViewModel.getAnswer().observe(getViewLifecycleOwner(), answer -> {
+                            if (answer != null) {
+                                Bundle bundle = new Bundle();
+                                bundle.putInt("openPage", 2);
+                                Navigation.findNavController(view).navigate(R.id.action_search_all_subjects_to_admin_actions, bundle);
+                            }
+                        });
                     } else if (actionCode == 10) {
                         Bundle bundle = new Bundle();
                         bundle.putInt("actionCode", 10);
-                        bundle.putLong("subjectId", allSubjects2.get(position).getId());
+                        bundle.putLong("subjectId", subjectsAdapter.getSubjects().get(position).getId());
                         bundle.putLong("professorId", getArguments().getLong("professorId"));
                         bundle.putLong("semesterId", getArguments().getLong("semesterId"));
 

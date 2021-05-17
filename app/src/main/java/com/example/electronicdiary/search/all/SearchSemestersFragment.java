@@ -38,14 +38,18 @@ public class SearchSemestersFragment extends Fragment {
 
                     if (actionCode == 1) {
                         Bundle bundle = new Bundle();
-                        bundle.putLong("semesterId", semesters.get(position).getId());
+                        bundle.putLong("semesterId", semestersAdapter.getSemesters().get(position).getId());
                         Navigation.findNavController(view).navigate(R.id.action_search_semesters_to_dialog_semester_editing, bundle);
                     } else if (actionCode == 2) {
-                        searchSemestersViewModel.deleteSemester(semesters.get(position).getId());
+                        searchSemestersViewModel.deleteSemester(semestersAdapter.getSemesters().get(position).getId());
 
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("openPage", 2);
-                        Navigation.findNavController(view).navigate(R.id.action_search_semesters_to_admin_actions, bundle);
+                        searchSemestersViewModel.getAnswer().observe(getViewLifecycleOwner(), answer -> {
+                            if (answer != null) {
+                                Bundle bundle = new Bundle();
+                                bundle.putInt("openPage", 2);
+                                Navigation.findNavController(view).navigate(R.id.action_search_semesters_to_admin_actions, bundle);
+                            }
+                        });
                     }
                 };
 

@@ -12,6 +12,11 @@ import java.util.List;
 public class SearchAllSubjectsViewModel extends ViewModel {
     private final MutableLiveData<List<Subject>> allSubjects = new MutableLiveData<>();
     private final MutableLiveData<List<Subject>> availableSubjects = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> answer = new MutableLiveData<>();
+
+    public LiveData<Boolean> getAnswer() {
+        return answer;
+    }
 
     public LiveData<List<Subject>> getAllSubjects() {
         return allSubjects;
@@ -30,6 +35,6 @@ public class SearchAllSubjectsViewModel extends ViewModel {
     }
 
     public void deleteSubject(long subjectId) {
-        Repository.getInstance().deleteSubject(subjectId);
+        Repository.getInstance().deleteSubject(subjectId, answer);
     }
 }

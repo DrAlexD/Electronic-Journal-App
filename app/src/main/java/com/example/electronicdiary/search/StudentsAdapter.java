@@ -32,6 +32,10 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.ViewHo
         this.students = students;
     }
 
+    public List<Student> getStudents() {
+        return students;
+    }
+
     @Override
     @NotNull
     public StudentsAdapter.ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {

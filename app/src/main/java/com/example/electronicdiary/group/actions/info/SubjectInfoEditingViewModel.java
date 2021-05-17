@@ -13,6 +13,11 @@ import com.example.electronicdiary.data_classes.SubjectInfo;
 
 public class SubjectInfoEditingViewModel extends ViewModel {
     private final MutableLiveData<SubjectInfo> subjectInfo = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> answer = new MutableLiveData<>();
+
+    public LiveData<Boolean> getAnswer() {
+        return answer;
+    }
 
     public LiveData<SubjectInfo> getSubjectInfo() {
         return subjectInfo;
@@ -22,7 +27,7 @@ public class SubjectInfoEditingViewModel extends ViewModel {
         Repository.getInstance().getSubjectInfoById(subjectInfoId, subjectInfo);
     }
 
-    public void editSubjectInfo(long subjectInfoId, Group group, Subject subject, long lecturerId, Professor professor, Semester semester, boolean isExam, boolean isDifferentiatedCredit) {
-        Repository.getInstance().editSubjectInfo(subjectInfoId, new SubjectInfo(group, subject, lecturerId, professor, semester, isExam, isDifferentiatedCredit));
+    public void editSubjectInfo(long subjectInfoId, Group group, Subject subject, Long lecturerId, Professor professor, Semester semester, boolean isExam, boolean isDifferentiatedCredit) {
+        Repository.getInstance().editSubjectInfo(subjectInfoId, new SubjectInfo(group, subject, lecturerId, professor, semester, isExam, isDifferentiatedCredit), answer);
     }
 }
