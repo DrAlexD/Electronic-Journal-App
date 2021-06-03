@@ -6,38 +6,41 @@
     android:paddingLeft="32dp"
     android:paddingRight="32dp">
 
-<!--    <CheckBox
-        android:id="@+id/subjectInfoIsSwapLecturerAndSeminarianEditing"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/is_swap_lecturer_and_seminarian_text"
-        android:textSize="18sp" />-->
-
-    <CheckBox
-        android:id="@+id/subjectInfoIsExamEditing"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:gravity="center"
-        android:text="@string/is_exam_text"
+        android:layout_marginTop="4dp"
+        android:text="@string/your_subject_type"
+        android:textColor="@color/black"
         android:textSize="18sp" />
 
-    <CheckBox
-        android:id="@+id/subjectInfoIsDifferentiatedCreditEditing"
+    <RadioGroup
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:gravity="center"
-        android:text="@string/is_differentiated_credit_text"
-        android:textSize="18sp" />
+        android:layout_height="wrap_content">
 
-    <!--    <CheckBox
-            android:id="@+id/subjectInfoIsForAllGroupsEditing"
+        <RadioButton
+            android:id="@+id/subjectInfoIsExamEditing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
             android:gravity="center"
-            android:text="@string/is_for_all_groups_text"
-            android:textSize="18sp" />-->
+            android:text="@string/is_exam_text"
+            android:textSize="17sp" />
+
+        <RadioButton
+            android:id="@+id/subjectInfoIsDifferentiatedCreditEditing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/is_differentiated_credit_text"
+            android:textSize="17sp" />
+
+        <RadioButton
+            android:id="@+id/subjectInfoIsCreditEditing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/is_credit_text"
+            android:textSize="17sp" />
+    </RadioGroup>
+
 </LinearLayout>

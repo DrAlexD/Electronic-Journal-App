@@ -3,8 +3,14 @@
     <color name="black">#ff000000</color>
     <color name="white">#ffffffff</color>
     <color name="red">#ffdd0000</color>
+    <color name="grey">#ff9f9f9f</color>
+    <color name="very_light_red">#33dd0000</color>
+    <color name="very_light_green">#3300dd00</color>
     <color name="green">#ff00bb00</color>
+    <color name="light_green">#ff88dd00</color>
+    <color name="yellow">#ffeab309</color>
     <color name="primaryColor">#ff00429d</color>
+    <color name="very_light_blue">#3300429d</color>
     <color name="primaryLightColor">#ff506ccf</color>
     <color name="primaryDarkColor">#ff001d6e</color>
     <color name="secondaryColor">#ffeab309</color>

@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.ElectronicDiary" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.ElectronicJournal" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorOnPrimary">@color/white</item>
@@ -12,7 +12,7 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Theme.ElectronicDiary.NoActionBar">
+    <style name="Theme.ElectronicJournal.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

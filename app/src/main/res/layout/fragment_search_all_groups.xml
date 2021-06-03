@@ -14,9 +14,32 @@
         android:inputType="text"
         android:queryHint="@string/group_search_hint" />
 
+    <TextView
+        android:id="@+id/fromGroupTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/from_group_text"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/toGroupTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/to_group_text"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:visibility="gone" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchedAllGroupsList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="4dp"
         app:layoutManager="LinearLayoutManager" />
 </LinearLayout>

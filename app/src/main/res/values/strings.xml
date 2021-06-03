@@ -7,6 +7,7 @@
     <!-- Strings related to menu and navigation -->
     <string name="menu_profile">Мой Профиль</string>
     <string name="menu_search_students">Поиск студента</string>
+    <string name="menu_search_check_students_in_group">Выбор студентов из группы</string>
     <string name="menu_search_groups">Поиск группы</string>
     <string name="menu_search_subjects">Поиск предмета</string>
     <string name="menu_search_professors">Поиск преподавателя</string>
@@ -20,7 +21,7 @@
     <string name="general_header">Общие</string>
     <string name="is_remember_me">Запомнить меня</string>
     <string name="is_professor_rules">Режим преподавателя</string>
-    <string name="is_admin_rules">Режим админа</string>
+    <string name="is_admin_rules">Режим администратора</string>
     <string name="current_semester">Текущий семестр</string>
     <!-- Strings related to search -->
     <string name="student_search_hint">Поиск студента…</string>
@@ -29,7 +30,7 @@
     <string name="professor_search_hint">Поиск преподавателя…</string>
     <string name="semester_search_hint">Поиск семестра…</string>
     <!-- Strings related to admin actions -->
-    <string name="admin_actions">Действия админа</string>
+    <string name="admin_actions">Действия администратора</string>
     <string name="name_form">Имя</string>
     <string name="second_name_form">Фамилия</string>
     <string name="login_form">Логин</string>
@@ -37,45 +38,66 @@
     <string name="login_and_password_generate">Сгенерировать логин и пароль</string>
     <string name="group_title_form">Группа</string>
     <string name="subject_title_form">Предмет</string>
-    <string name="semester_year_form">Год</string>
-    <string name="semester_half_form">Первая половина года</string>
+    <string name="semester_year_form">Учебный год</string>
+    <string name="semester_first_half_form">Первый семестр</string>
+    <string name="semester_second_half_form">Второй семестр</string>
     <!-- Strings related to professor actions -->
     <string name="add_subject_button">Добавить предмет</string>
+    <string name="suggest_button">Подтвредить</string>
+    <string name="select_all_students_switch">Выбрать всех студентов</string>
+    <string name="show_events_switch">Показать мероприятия</string>
     <string name="add_group_button">Добавить группу</string>
     <string name="delete_subject_button">Удалить предмет</string>
     <string name="delete_group_button">Удалить группу</string>
     <string name="add_event_button">Добавить мероприятие</string>
     <string name="add_lesson_button">Добавить занятие</string>
     <!-- Strings related to actions in group performance -->
+    <string name="open_group_performance_lessons">Посещаемость</string>
     <string name="event_type_text">Тип</string>
+    <string name="lesson_type_text">Тип занятия:</string>
+    <string name="from_group_text">Перевести студентов ИЗ группы:</string>
+    <string name="to_group_text">Перевести студентов В группу:</string>
     <string name="module_text">Модуль</string>
-    <string name="is_lecturer_text">Лектор</string>
+    <string name="role_text">Роль</string>
+    <string name="is_lecturer_text">Лекции</string>
     <string name="is_lecture_text">Лекция</string>
-    <string name="is_seminarian_text">Семинарист</string>
-    <string name="is_swap_lecturer_and_seminarian_text">Поменять местами лектора и семинариста</string>
+    <string name="is_seminar_text">Семинар</string>
+    <string name="is_seminarian_text">Семинары</string>
     <string name="is_for_all_groups_text">Применить для всех групп</string>
     <string name="lesson_date_time_text">Дата и время занятия</string>
     <string name="event_start_date_text">Дата выдачи</string>
-    <string name="event_deadline_date_text">Дата дедлайна</string>
+    <string name="event_deadline_date_text">Срок сдачи</string>
     <string name="student_event_finish_date_text">Дата выполнения</string>
     <string name="is_attended_text">Посещено</string>
     <string name="student_event_variant_text">Вариант</string>
     <string name="min_points_text">Мин. баллов</string>
     <string name="max_points_text">Макс. баллов</string>
+    <string name="number_of_variants_text">Количество вариантов</string>
     <string name="lesson_attend_points_text">Баллов за посещение</string>
     <string name="earned_points_text">Получ. баллы</string>
     <string name="bonus_points_text">Бонусные баллы</string>
     <string name="exam_earned_points_text">Баллы за экзамен</string>
-    <string name="is_have_credit_text">Зачет</string>
+    <string name="is_credit_text">Зачет</string>
+    <string name="add_new_attempt_text">Добавить новую попытку</string>
     <string name="is_differentiated_credit_text">Дифферинцированный зачет</string>
     <string name="is_exam_text">Экзамен</string>
     <string name="mark_text">Оценка</string>
     <!-- Strings related to form valid -->
     <string name="invalid_empty_field">Пустое поле</string>
-    <string name="invalid_username">Неверный логин</string>
-    <string name="invalid_date_field">Формат даты dd.MM.yyyy</string>
-    <string name="invalid_date_time_field">Формат времени dd.MM.yyyy hh:mm</string>
+    <string name="invalid_name_field">Формат имени: Иван</string>
+    <string name="invalid_second_name_field">Формат фамилии: Иванов</string>
+    <string name="invalid_max_exam_points_field">Макс. баллов за экзамен 30</string>
+    <string name="invalid_mark_field">Оценка: 2–5</string>
+    <string name="invalid_date_field">Формат даты: 01.01.2020</string>
+    <string name="invalid_date_time_field">Формат времени: 01.01.2020 01:01</string>
     <string name="invalid_password">Пароль должен содежать >5 символов</string>
-    <string name="invalid_group_title">Группа должна содежать >4 символов</string>
-    <string name="invalid_semester_year">Год должен содержать =4 символа</string>
+    <string name="invalid_group_title">Формат группы: ИУ9–11(Б|М)</string>
+    <string name="invalid_points_range">Мин. баллы больше макс</string>
+    <string name="invalid_earned_points_range">Получ. баллы больше макс</string>
+    <string name="invalid_date_range">Дата выдачи позже срока сдачи</string>
+    <string name="invalid_date_in_semester_range">Дата не в диапозоне текущего семестра</string>
+    <string name="invalid_finish_date_range">Дата сдачи раньше даты выдачи</string>
+    <string name="invalid_semester_year">Год из 2020–2039</string>
+    <string name="your_type_of_professor_in_subject">Вы ведете в данной группе:</string>
+    <string name="your_subject_type">Выберите форму зачета:</string>
 </resources>

@@ -98,4 +98,15 @@
         android:inputType="number"
         android:maxLength="2"
         android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/eventNumberOfVariantsAdding"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:hint="@string/number_of_variants_text"
+        android:inputType="number"
+        android:maxLength="2"
+        android:textSize="20sp" />
 </LinearLayout>
