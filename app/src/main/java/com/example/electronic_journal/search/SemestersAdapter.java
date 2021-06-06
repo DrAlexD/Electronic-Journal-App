@@ -43,7 +43,7 @@ public class SemestersAdapter extends RecyclerView.Adapter<SemestersAdapter.View
     public void onBindViewHolder(@NotNull SemestersAdapter.ViewHolder holder, int position) {
         Semester semester = semesters.get(position);
 
-        holder.semesterYearAndHalfView.setText(semester.getFirstHalf() + " половина " + semester.getYear());
+        holder.semesterYearAndHalfView.setText(semester.toString());
     }
 
     public List<Semester> getSemesters() {

@@ -10,7 +10,7 @@ public class SemesterFormState {
     private final boolean isDataValid;
 
     public SemesterFormState(String semesterYear, Boolean isFirstHalf, Boolean isSecondHalf) {
-        boolean isSemesterYearValid = semesterYear.trim().matches("20[2-3][0-9]");
+        boolean isSemesterYearValid = semesterYear.trim().matches("20[2-5][0-9]");
         boolean isHalfValid = isFirstHalf || isSecondHalf;
 
         this.semesterYearError = !isSemesterYearValid ? R.string.invalid_semester_year : null;

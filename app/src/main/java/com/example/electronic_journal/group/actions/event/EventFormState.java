@@ -24,8 +24,8 @@ public class EventFormState {
 
     public EventFormState(String startDate, String deadlineDate, String minPoints, String maxPoints, String numberOfVariants, Semester semester) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-        boolean isStartDateValid = startDate.trim().matches("(0[1-9]|[1-2][0-9]|3[0-1])\\.(0[1-9]|1[0-2])\\.20[2-3][0-9]");
-        boolean isDeadlineDateValid = deadlineDate.trim().matches("(0[1-9]|[1-2][0-9]|3[0-1])\\.(0[1-9]|1[0-2])\\.20[2-3][0-9]");
+        boolean isStartDateValid = startDate.trim().matches("(0[1-9]|[1-2][0-9]|3[0-1])\\.(0[1-9]|1[0-2])\\.20[2-5][0-9]");
+        boolean isDeadlineDateValid = deadlineDate.trim().matches("(0[1-9]|[1-2][0-9]|3[0-1])\\.(0[1-9]|1[0-2])\\.20[2-5][0-9]");
         boolean isMinPointsValid = !minPoints.trim().isEmpty();
         boolean isMaxPointsValid = !maxPoints.trim().isEmpty();
         boolean isNumberOfVariantsValid = !numberOfVariants.trim().isEmpty();
@@ -50,8 +50,8 @@ public class EventFormState {
 
             if (semester != null) {
                 if (isStartDateValid && isDeadlineDateValid) {
-                    String semesterStartString = (semester.isFirstHalf() ? "01.02." : "31.08.") + semester.getYear();
-                    String semesterEndString = (semester.isFirstHalf() ? "01.06." : "31.12.") + semester.getYear();
+                    String semesterStartString = (semester.isFirstHalf() ? "31.08." : "01.02.") + semester.getYear();
+                    String semesterEndString = (semester.isFirstHalf() ? "31.12." : "01.07.") + semester.getYear();
 
                     Date semesterStartDate = sdf.parse(semesterStartString);
                     Date semesterEndDate = sdf.parse(semesterEndString);

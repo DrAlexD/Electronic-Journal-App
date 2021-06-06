@@ -97,7 +97,7 @@
     <string name="invalid_date_range">Дата выдачи позже срока сдачи</string>
     <string name="invalid_date_in_semester_range">Дата не в диапозоне текущего семестра</string>
     <string name="invalid_finish_date_range">Дата сдачи раньше даты выдачи</string>
-    <string name="invalid_semester_year">Год из 2020–2039</string>
+    <string name="invalid_semester_year">Год из 2020–2059</string>
     <string name="your_type_of_professor_in_subject">Вы ведете в данной группе:</string>
     <string name="your_subject_type">Выберите форму зачета:</string>
 </resources>

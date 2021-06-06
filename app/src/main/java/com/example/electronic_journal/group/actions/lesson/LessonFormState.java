@@ -18,7 +18,7 @@ public class LessonFormState {
 
     public LessonFormState(String dateAndTime, String pointsPerVisit, Semester semester) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-        boolean isDateAndTimeValid = dateAndTime.matches("(0[1-9]|[1-2][0-9]|3[0-1])\\.(0[1-9]|1[0-2])\\.20[2-3][0-9] (0[1-9]|1[0-9]|2[0-3]):[0-5][0-9]");
+        boolean isDateAndTimeValid = dateAndTime.matches("(0[1-9]|[1-2][0-9]|3[0-1])\\.(0[1-9]|1[0-2])\\.20[2-5][0-9] (0[1-9]|1[0-9]|2[0-3]):[0-5][0-9]");
         boolean isPointsPerVisitValid = !pointsPerVisit.trim().isEmpty();
 
         this.dateAndTimeError = !isDateAndTimeValid ? R.string.invalid_date_time_field : null;
@@ -31,8 +31,8 @@ public class LessonFormState {
                 if (isDateAndTimeValid) {
                     SimpleDateFormat sdf2 = new SimpleDateFormat("dd.MM.yyyy");
 
-                    String semesterStartString = (semester.isFirstHalf() ? "01.02." : "31.08.") + semester.getYear();
-                    String semesterEndString = (semester.isFirstHalf() ? "01.06." : "31.12.") + semester.getYear();
+                    String semesterStartString = (semester.isFirstHalf() ? "31.08." : "01.02.") + semester.getYear();
+                    String semesterEndString = (semester.isFirstHalf() ? "31.12." : "01.07.") + semester.getYear();
 
                     Date semesterStartDate = sdf2.parse(semesterStartString);
                     Date semesterEndDate = sdf2.parse(semesterEndString);

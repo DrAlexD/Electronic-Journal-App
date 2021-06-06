@@ -58,9 +58,12 @@ public class LessonEditingDialogFragment extends DialogFragment {
                         isLecture.setEnabled(false);
                         isSeminar.setEnabled(false);
                         pointsPerVisit.setEnabled(false);
-                        ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEUTRAL).setEnabled(false);
-                        ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
-                        ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.grey));
+                        dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setEnabled(false);
+                        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+                        dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.grey));
+                    } else if (professorType == 2) {
+                        isLecture.setEnabled(false);
+                        isSeminar.setEnabled(false);
                     }
                 } else {
                     isSeminar.setChecked(true);
@@ -69,9 +72,12 @@ public class LessonEditingDialogFragment extends DialogFragment {
                         isLecture.setEnabled(false);
                         isSeminar.setEnabled(false);
                         pointsPerVisit.setEnabled(false);
-                        ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEUTRAL).setEnabled(false);
-                        ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
-                        ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.grey));
+                        dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setEnabled(false);
+                        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
+                        dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setTextColor(getResources().getColor(R.color.grey));
+                    } else if (professorType == 1) {
+                        isLecture.setEnabled(false);
+                        isSeminar.setEnabled(false);
                     }
                 }
                 pointsPerVisit.setText(String.valueOf(lesson.getPointsPerVisit()));

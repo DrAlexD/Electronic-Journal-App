@@ -64,7 +64,7 @@ public class ProfessorEditingDialogFragment extends DialogFragment {
 
         dialog.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(view -> {
             String role;
-            if (((String) roleSpinner.getSelectedItem()).equals("Преподаватель"))
+            if (roleSpinner.getSelectedItem().equals("Преподаватель"))
                 role = "ROLE_PROFESSOR";
             else
                 role = "ROLE_ADMIN";
@@ -108,6 +108,10 @@ public class ProfessorEditingDialogFragment extends DialogFragment {
                     professorLogin.setText(professorData.getUsername());
                     //professorPassword.setText(professorData.getPassword());
                     generateCheckBox.setEnabled(true);
+                    if (professorData.getRole().equals("ROLE_PROFESSOR"))
+                        roleSpinner.setSelection(0);
+                    else
+                        roleSpinner.setSelection(1);
                 }
             }
         });

@@ -44,8 +44,8 @@ public class StudentEventFormState {
                 Date finishDateR = sdf.parse(finishDate);
 
                 if (semester != null) {
-                    String semesterStartString = (semester.isFirstHalf() ? "01.02." : "31.08.") + semester.getYear();
-                    String semesterEndString = (semester.isFirstHalf() ? "01.06." : "31.12.") + semester.getYear();
+                    String semesterStartString = (semester.isFirstHalf() ? "31.08." : "01.02.") + semester.getYear();
+                    String semesterEndString = (semester.isFirstHalf() ? "31.12." : "01.07.") + semester.getYear();
 
                     Date semesterStartDate = sdf.parse(semesterStartString);
                     Date semesterEndDate = sdf.parse(semesterEndString);
