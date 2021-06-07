@@ -46,19 +46,16 @@ public class EventAddingDialogFragment extends DialogFragment {
 
         eventAddingViewModel = new ViewModelProvider(this).get(EventAddingViewModel.class);
 
-        Spinner module = root.findViewById(R.id.eventModuleAdding);
-        Spinner eventType = root.findViewById(R.id.eventTypeAdding);
         EditText startDate = root.findViewById(R.id.eventStartDateAdding);
         EditText deadlineDate = root.findViewById(R.id.eventDeadlineDateAdding);
         EditText minPoints = root.findViewById(R.id.eventMinPointsAdding);
         EditText maxPoints = root.findViewById(R.id.eventMaxPointsAdding);
-        EditText numberOfVariants = root.findViewById(R.id.eventNumberOfVariantsAdding);
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                 eventAddingViewModel.eventAddingDataChanged(startDate.getText().toString(), deadlineDate.getText().toString(),
-                        minPoints.getText().toString(), maxPoints.getText().toString(), numberOfVariants.getText().toString(),
+                        minPoints.getText().toString(), maxPoints.getText().toString(),
                         eventAddingViewModel.getModules().getValue() != null ?
                                 eventAddingViewModel.getModules().getValue().get("1").getSubjectInfo().getSemester() : null);
             }
@@ -77,7 +74,6 @@ public class EventAddingDialogFragment extends DialogFragment {
         deadlineDate.addTextChangedListener(afterTextChangedListener);
         minPoints.addTextChangedListener(afterTextChangedListener);
         maxPoints.addTextChangedListener(afterTextChangedListener);
-        numberOfVariants.addTextChangedListener(afterTextChangedListener);
 
         eventAddingViewModel.getEventFormState().observe(this, eventFormState -> {
             if (eventFormState == null) {
@@ -92,8 +88,6 @@ public class EventAddingDialogFragment extends DialogFragment {
                     getString(eventFormState.getMinPointsError()) : null);
             maxPoints.setError(eventFormState.getMaxPointsError() != null ?
                     getString(eventFormState.getMaxPointsError()) : null);
-            numberOfVariants.setError(eventFormState.getNumberOfVariantsError() != null ?
-                    getString(eventFormState.getNumberOfVariantsError()) : null);
 
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(eventFormState.isDataValid());
         });
@@ -142,7 +136,7 @@ public class EventAddingDialogFragment extends DialogFragment {
                             eventAddingViewModel.getLastNumberOfEventType().getValue() + 1,
                             startDateR, deadlineDateR,
                             Integer.parseInt(minPoints.getText().toString()), Integer.parseInt(maxPoints.getText().toString()),
-                            Integer.parseInt(numberOfVariants.getText().toString()));
+                            numberOfVariants.getText().toString().isEmpty() ? null : Integer.parseInt(numberOfVariants.getText().toString()));
 
                     return eventAddingViewModel.getAnswer();
                 } catch (ParseException e) {

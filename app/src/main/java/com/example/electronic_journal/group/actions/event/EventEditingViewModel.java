@@ -38,14 +38,14 @@ public class EventEditingViewModel extends ViewModel {
     }
 
     public void eventEditingDataChanged(String startDate, String deadlineDate, String minPoints, String maxPoints, String numberOfVariants, Semester semester) {
-        eventFormState.setValue(new EventFormState(startDate, deadlineDate, minPoints, maxPoints, numberOfVariants, semester));
+        eventFormState.setValue(new EventFormState(startDate, deadlineDate, minPoints, maxPoints, semester));
     }
 
     public void downloadEventById(long eventId) {
         Repository.getInstance().getEventById(eventId, event);
     }
 
-    public void editEvent(long eventId, Module module, int type, int number, Date startDate, Date deadlineDate, int minPoints, int maxPoints, int numberOfVariants) {
+    public void editEvent(long eventId, Module module, int type, int number, Date startDate, Date deadlineDate, int minPoints, int maxPoints, Integer numberOfVariants) {
         Repository.getInstance().editEvent(eventId, new Event(module, type, number, startDate, deadlineDate, minPoints, maxPoints, numberOfVariants), answer);
     }
 

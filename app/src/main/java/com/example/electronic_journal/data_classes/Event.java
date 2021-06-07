@@ -12,11 +12,34 @@ public class Event {
     private final Date deadlineDate;
     private final int minPoints;
     private final int maxPoints;
-    private final int numberOfVariants;
+    private Integer numberOfVariants = null;
     private long id;
 
     public Event(Module module, int type, int number, Date startDate, Date deadlineDate,
-                 int minPoints, int maxPoints, int numberOfVariants) {
+                 int minPoints, int maxPoints) {
+        this.module = module;
+        this.type = type;
+        this.number = number;
+        this.startDate = startDate;
+        this.deadlineDate = deadlineDate;
+        this.minPoints = minPoints;
+        this.maxPoints = maxPoints;
+    }
+
+    public Event(long id, Module module, int type, int number, Date startDate, Date deadlineDate,
+                 int minPoints, int maxPoints) {
+        this.id = id;
+        this.module = module;
+        this.type = type;
+        this.number = number;
+        this.startDate = startDate;
+        this.deadlineDate = deadlineDate;
+        this.minPoints = minPoints;
+        this.maxPoints = maxPoints;
+    }
+
+    public Event(Module module, int type, int number, Date startDate, Date deadlineDate,
+                 int minPoints, int maxPoints, Integer numberOfVariants) {
         this.module = module;
         this.type = type;
         this.number = number;
@@ -28,7 +51,7 @@ public class Event {
     }
 
     public Event(long id, Module module, int type, int number, Date startDate, Date deadlineDate,
-                 int minPoints, int maxPoints, int numberOfVariants) {
+                 int minPoints, int maxPoints, Integer numberOfVariants) {
         this.id = id;
         this.module = module;
         this.type = type;
@@ -113,7 +136,7 @@ public class Event {
         return maxPoints;
     }
 
-    public int getNumberOfVariants() {
+    public Integer getNumberOfVariants() {
         return numberOfVariants;
     }
 }

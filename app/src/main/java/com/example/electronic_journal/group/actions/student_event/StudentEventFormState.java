@@ -10,26 +10,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class StudentEventFormState {
-    @Nullable
-    private final Integer variantNumberError;
     private final boolean isDataValid;
     @Nullable
-    private Integer earnedPointsError;
+    private final Integer earnedPointsError;
     @Nullable
     private Integer finishDateError;
 
-    public StudentEventFormState(String variantNumber) {
-        boolean isVariantNumberValid = !variantNumber.trim().isEmpty();
-
-        this.variantNumberError = !isVariantNumberValid ? R.string.invalid_empty_field : null;
-        this.isDataValid = isVariantNumberValid;
-    }
-
-    public StudentEventFormState(String variantNumber, String earnedPoints, Integer eventMaxPoints, String finishDate, Semester semester, Date startDate) {
-        boolean isVariantNumberValid = !variantNumber.trim().isEmpty();
-
-        this.variantNumberError = !isVariantNumberValid ? R.string.invalid_empty_field : null;
-
+    public StudentEventFormState(String earnedPoints, Integer eventMaxPoints, String finishDate, Semester semester, Date startDate) {
         boolean isEarnedPointsValid = true;
         if (!earnedPoints.isEmpty()) {
             isEarnedPointsValid = Integer.parseInt(earnedPoints) <= eventMaxPoints;
@@ -66,12 +53,7 @@ public class StudentEventFormState {
             }
         }
 
-        this.isDataValid = isVariantNumberValid && isEarnedPointsValid && isFinishDateValid;
-    }
-
-    @Nullable
-    public Integer getVariantNumberError() {
-        return variantNumberError;
+        this.isDataValid = isEarnedPointsValid && isFinishDateValid;
     }
 
     @Nullable

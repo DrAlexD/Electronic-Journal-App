@@ -8,37 +8,34 @@ public class StudentEvent {
     private final StudentPerformanceInModule studentPerformanceInModule;
     private final int attemptNumber;
     private final Event event;
+    private final boolean isAttended;
     private long id;
 
-    private final boolean isAttended;
-    private final int variantNumber;
-
+    private Integer variantNumber = null;
     private Date finishDate = null;
     private Integer earnedPoints = null;
     private Integer bonusPoints = null;
     private Boolean isHasCredit = null;
 
     public StudentEvent(int attemptNumber, StudentPerformanceInModule studentPerformanceInModule,
-                        Event event, boolean isAttended, int variantNumber) {
+                        Event event, boolean isAttended) {
         this.attemptNumber = attemptNumber;
         this.studentPerformanceInModule = studentPerformanceInModule;
         this.event = event;
         this.isAttended = isAttended;
-        this.variantNumber = variantNumber;
     }
 
     public StudentEvent(long id, int attemptNumber, StudentPerformanceInModule studentPerformanceInModule,
-                        Event event, boolean isAttended, int variantNumber) {
+                        Event event, boolean isAttended) {
         this.id = id;
         this.attemptNumber = attemptNumber;
         this.studentPerformanceInModule = studentPerformanceInModule;
         this.event = event;
         this.isAttended = isAttended;
-        this.variantNumber = variantNumber;
     }
 
     public StudentEvent(int attemptNumber, StudentPerformanceInModule studentPerformanceInModule,
-                        Event event, boolean isAttended, int variantNumber, Date finishDate, Integer earnedPoints,
+                        Event event, boolean isAttended, Integer variantNumber, Date finishDate, Integer earnedPoints,
                         Integer bonusPoints, Boolean isHasCredit) {
         this.attemptNumber = attemptNumber;
         this.studentPerformanceInModule = studentPerformanceInModule;
@@ -52,7 +49,7 @@ public class StudentEvent {
     }
 
     public StudentEvent(long id, int attemptNumber, StudentPerformanceInModule studentPerformanceInModule,
-                        Event event, boolean isAttended, int variantNumber, Date finishDate, Integer earnedPoints,
+                        Event event, boolean isAttended, Integer variantNumber, Date finishDate, Integer earnedPoints,
                         Integer bonusPoints, Boolean isHasCredit) {
         this.id = id;
         this.attemptNumber = attemptNumber;
@@ -95,7 +92,7 @@ public class StudentEvent {
         return isAttended;
     }
 
-    public int getVariantNumber() {
+    public Integer getVariantNumber() {
         return variantNumber;
     }
 

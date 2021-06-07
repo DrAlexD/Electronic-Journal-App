@@ -111,6 +111,9 @@
             app:destination="@id/nav_group_performance_events"
             app:popUpTo="@id/nav_group_performance_events"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_dialog_event_editing_to_search_check_students_in_group"
+            app:destination="@id/nav_search_check_students_in_group" />
     </dialog>
 
     <dialog
@@ -227,6 +230,9 @@
             app:destination="@id/nav_group_performance_lessons"
             app:popUpTo="@id/nav_group_performance_lessons"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_dialog_lesson_editing_to_search_check_students_in_group"
+            app:destination="@id/nav_search_check_students_in_group" />
     </dialog>
 
     <dialog
@@ -473,9 +479,27 @@
             app:popUpTo="@id/nav_search_all_groups"
             app:popUpToInclusive="true" />
         <action
+            android:id="@+id/pop_out_search_check_students_in_group_to_dialog_event_editing"
+            app:popUpTo="@id/nav_dialog_event_editing"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/pop_out_search_check_students_in_group_to_dialog_lesson_editing"
+            app:popUpTo="@id/nav_dialog_lesson_editing"
+            app:popUpToInclusive="true" />
+        <action
             android:id="@+id/action_search_check_students_in_group_to_admin_actions"
             app:destination="@id/nav_admin_actions"
             app:popUpTo="@id/nav_admin_actions"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_search_check_students_in_group_to_group_performance_events"
+            app:destination="@id/nav_group_performance_events"
+            app:popUpTo="@id/nav_group_performance_events"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_search_check_students_in_group_to_group_performance_lessons"
+            app:destination="@id/nav_group_performance_lessons"
+            app:popUpTo="@id/nav_group_performance_lessons"
             app:popUpToInclusive="true" />
     </fragment>
 

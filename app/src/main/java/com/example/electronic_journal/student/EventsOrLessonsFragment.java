@@ -158,14 +158,17 @@ public class EventsOrLessonsFragment extends Fragment {
                 }
 
                 int numberOfStudents = studentPerformanceViewModel.getStudentsInGroup().getValue().size();
-                if (event.getNumberOfVariants() > numberOfStudents)
-                    bundle.putInt("variantNumber", positionInList);
-                else {
-                    if (positionInList % event.getNumberOfVariants() != 0)
-                        bundle.putInt("variantNumber", positionInList % event.getNumberOfVariants());
-                    else
-                        bundle.putInt("variantNumber", event.getNumberOfVariants());
-                }
+                if (event.getNumberOfVariants() != null) {
+                    if (event.getNumberOfVariants() > numberOfStudents)
+                        bundle.putInt("variantNumber", positionInList);
+                    else {
+                        if (positionInList % event.getNumberOfVariants() != 0)
+                            bundle.putInt("variantNumber", positionInList % event.getNumberOfVariants());
+                        else
+                            bundle.putInt("variantNumber", event.getNumberOfVariants());
+                    }
+                } else
+                    bundle.putInt("variantNumber", -1);
                 bundle.putInt("eventMaxPoints", event.getMaxPoints());
                 bundle.putInt("eventType", event.getTypeNumber());
                 bundle.putBoolean("isHasData", finalLastAttempt != 0);

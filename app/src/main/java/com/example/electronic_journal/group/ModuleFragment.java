@@ -160,6 +160,32 @@ public class ModuleFragment extends Fragment {
                 }
                 bundle.putInt("professorType", professorType);
 
+                bundle.putLong("groupId", groupPerformanceLessonsViewModel.getSubjectInfo().getValue().getGroup().getId());
+
+                boolean isHasStudentLesson = false;
+                for (Student student : groupPerformanceLessonsViewModel.getStudentsInGroup().getValue()) {
+                    List<StudentLesson> studentLessons = null;
+                    if (groupPerformanceLessonsViewModel.getStudentsLessons().getValue() != null &&
+                            groupPerformanceLessonsViewModel.getStudentsLessons().getValue()
+                                    .get(String.valueOf(modulesNumbers.get(moduleNumber - 1))) != null) {
+                        studentLessons = groupPerformanceLessonsViewModel.getStudentsLessons().getValue()
+                                .get(String.valueOf(modulesNumbers.get(moduleNumber - 1))).get(String.valueOf(student.getId()));
+                    }
+
+                    if (studentLessons != null) {
+                        for (StudentLesson studentLesson : studentLessons) {
+                            if (studentLesson.getLesson().getId() == lesson.getId()) {
+                                isHasStudentLesson = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (isHasStudentLesson)
+                        break;
+                }
+
+                bundle.putBoolean("isHasStudentLesson", isHasStudentLesson);
                 bundle.putLong("lessonId", lesson.getId());
                 Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_lesson_editing, bundle);
             });

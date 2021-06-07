@@ -85,14 +85,19 @@ public class StudentEventDialogFragment extends DialogFragment {
             studentEventViewModel.getStudentEvent().observe(this, studentEvent -> {
                 if (studentEvent != null) {
                     isAttended.setChecked(studentEvent.isAttended());
-                    variantNumber.setText(String.valueOf(studentEvent.getVariantNumber()));
 
                     if (!studentEvent.isAttended()) {
+                        variantNumber.setEnabled(false);
                         finishDate.setEnabled(false);
                         earnedPoints.setEnabled(false);
                         bonusPoints.setEnabled(false);
                         isHaveCredit.setEnabled(false);
                     }
+
+                    if (studentEvent.getVariantNumber() != null)
+                        variantNumber.setText(String.valueOf(studentEvent.getVariantNumber()));
+                    else if (studentEvent.isAttended() && variant != -1)
+                        variantNumber.setText(String.valueOf(variant));
 
                     if (studentEvent.getFinishDate() != null) {
                         DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
@@ -142,17 +147,20 @@ public class StudentEventDialogFragment extends DialogFragment {
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("isFromGroupPerformance", true);
                 bundle.putInt("attemptNumber", attemptNumber);
-                bundle.putBoolean("isHasData", false);
+                bundle.putBoolean("i]sHasData", false);
                 bundle.putLong("eventId", eventId);
                 bundle.putString("eventTitle", eventTitle);
-                bundle.putInt("variantNumber", variant + 1);
+                if (variant != -1)
+                    bundle.putInt("variantNumber", variant + 1);
+                else
+                    bundle.putInt("variantNumber", -1);
                 bundle.putInt("eventMaxPoints", eventMaxPoints);
                 bundle.putLong("studentPerformanceInSubjectId", studentPerformanceInSubjectId);
                 bundle.putLong("subjectInfoId", subjectInfoId);
                 Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_student_event_to_dialog_student_event, bundle);
             });
         } else {
-            variantNumber.setText(String.valueOf(variant));
+            variantNumber.setVisibility(View.GONE);
             finishDate.setVisibility(View.GONE);
             earnedPoints.setVisibility(View.GONE);
             bonusPoints.setVisibility(View.GONE);
@@ -162,11 +170,14 @@ public class StudentEventDialogFragment extends DialogFragment {
         if (isProfessor) {
             isAttended.setOnClickListener(view -> {
                 if (isAttended.isChecked()) {
+                    variantNumber.setEnabled(isProfessor);
                     finishDate.setEnabled(isProfessor);
                     earnedPoints.setEnabled(isProfessor);
                     bonusPoints.setEnabled(isProfessor);
                     isHaveCredit.setEnabled(isProfessor);
                 } else {
+                    variantNumber.setEnabled(false);
+                    variantNumber.setText("");
                     finishDate.setEnabled(false);
                     finishDate.setText("");
                     earnedPoints.setEnabled(false);
@@ -188,14 +199,12 @@ public class StudentEventDialogFragment extends DialogFragment {
             @Override
             public void afterTextChanged(Editable s) {
                 if (isHasData)
-                    studentEventViewModel.eventPerformanceDataChanged(variantNumber.getText().toString(),
-                            earnedPoints.getText().toString(), eventMaxPoints, finishDate.getText().toString(),
+                    studentEventViewModel.eventPerformanceDataChanged(earnedPoints.getText().toString(),
+                            eventMaxPoints, finishDate.getText().toString(),
                             studentEventViewModel.getEvent().getValue() != null ?
                                     studentEventViewModel.getEvent().getValue().getModule().getSubjectInfo().getSemester() : null,
                             studentEventViewModel.getEvent().getValue() != null ?
                                     studentEventViewModel.getEvent().getValue().getStartDate() : null);
-                else
-                    studentEventViewModel.eventPerformanceDataChanged(variantNumber.getText().toString());
             }
 
             @Override
@@ -208,7 +217,6 @@ public class StudentEventDialogFragment extends DialogFragment {
                 // ignore
             }
         };
-        variantNumber.addTextChangedListener(afterTextChangedListener);
         if (isHasData) {
             earnedPoints.addTextChangedListener(afterTextChangedListener);
             finishDate.addTextChangedListener(afterTextChangedListener);
@@ -218,9 +226,6 @@ public class StudentEventDialogFragment extends DialogFragment {
                 return;
             }
 
-            variantNumber.setError(studentEventFormState.getVariantNumberError() != null ?
-                    getString(studentEventFormState.getVariantNumberError()) : null);
-
             if (isHasData) {
                 earnedPoints.setError(studentEventFormState.getEarnedPointsError() != null ?
                         getString(studentEventFormState.getEarnedPointsError()) : null);
@@ -228,6 +233,7 @@ public class StudentEventDialogFragment extends DialogFragment {
                 finishDate.setError(studentEventFormState.getFinishDateError() != null ?
                         getString(studentEventFormState.getFinishDateError()) : null);
             }
+
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(studentEventFormState.isDataValid());
         });
 
@@ -289,15 +295,14 @@ public class StudentEventDialogFragment extends DialogFragment {
                                 studentEventViewModel.editStudentEvent(getArguments().getLong("studentEventId"), attemptNumber,
                                         studentEventViewModel.getStudentEvent().getValue().getStudentPerformanceInModule(),
                                         studentEventViewModel.getStudentEvent().getValue().getEvent(), isAttended.isChecked(),
-                                        Integer.parseInt(variantNumber.getText().toString()), date,
+                                        variantNumber.getText().toString().isEmpty() ? null : Integer.parseInt(variantNumber.getText().toString()), date,
                                         earnedPoints.getText().toString().isEmpty() ? null : Integer.parseInt(earnedPoints.getText().toString()),
                                         bonusPoints.getText().toString().isEmpty() ? null : Integer.parseInt(bonusPoints.getText().toString()),
                                         isHaveCredit.isChecked());
                             else
                                 studentEventViewModel.addStudentEvent(attemptNumber + 1,
                                         studentPerformanceInModule.get(String.valueOf(event.getModule().getModuleNumber())), event,
-                                        isAttended.isChecked(),
-                                        Integer.parseInt(variantNumber.getText().toString()));
+                                        isAttended.isChecked());
 
                             return studentEventViewModel.getAnswer();
                         });

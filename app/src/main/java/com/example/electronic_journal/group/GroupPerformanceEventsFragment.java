@@ -170,6 +170,7 @@ public class GroupPerformanceEventsFragment extends Fragment {
                     eventView.setOnClickListener(view -> {
                         Bundle bundle = new Bundle();
                         bundle.putLong("eventId", event.getId());
+                        bundle.putLong("groupId", groupPerformanceEventsViewModel.getSubjectInfo().getValue().getGroup().getId());
                         bundle.putString("eventTitle", event.getTitle());
                         Navigation.findNavController(view).navigate(R.id.action_group_performance_to_dialog_event_editing, bundle);
                     });
@@ -345,14 +346,17 @@ public class GroupPerformanceEventsFragment extends Fragment {
                             bundle.putLong("eventId", event.getId());
                             bundle.putString("eventTitle", event.getTitle());
                             int numberOfStudents = groupPerformanceEventsViewModel.getStudentsInGroup().getValue().size();
-                            if (event.getNumberOfVariants() > numberOfStudents)
-                                bundle.putInt("variantNumber", positionInList);
-                            else {
-                                if (positionInList % event.getNumberOfVariants() != 0)
-                                    bundle.putInt("variantNumber", positionInList % event.getNumberOfVariants());
-                                else
-                                    bundle.putInt("variantNumber", event.getNumberOfVariants());
-                            }
+                            if (event.getNumberOfVariants() != null) {
+                                if (event.getNumberOfVariants() > numberOfStudents)
+                                    bundle.putInt("variantNumber", positionInList);
+                                else {
+                                    if (positionInList % event.getNumberOfVariants() != 0)
+                                        bundle.putInt("variantNumber", positionInList % event.getNumberOfVariants());
+                                    else
+                                        bundle.putInt("variantNumber", event.getNumberOfVariants());
+                                }
+                            } else
+                                bundle.putInt("variantNumber", -1);
                             bundle.putInt("eventMaxPoints", event.getMaxPoints());
                             bundle.putInt("eventType", event.getTypeNumber());
                             bundle.putLong("studentPerformanceInSubjectId", finalStudentPerformanceInSubjectId);

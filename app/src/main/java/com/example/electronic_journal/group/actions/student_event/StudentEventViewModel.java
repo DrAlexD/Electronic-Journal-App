@@ -40,12 +40,8 @@ public class StudentEventViewModel extends ViewModel {
         return studentPerformanceInModules;
     }
 
-    public void eventPerformanceDataChanged(String variantNumber) {
-        studentEventFormState.setValue(new StudentEventFormState(variantNumber));
-    }
-
-    public void eventPerformanceDataChanged(String variantNumber, String earnedPoints, Integer eventMaxPoints, String finishDate, Semester semester, Date startDate) {
-        studentEventFormState.setValue(new StudentEventFormState(variantNumber, earnedPoints, eventMaxPoints, finishDate, semester, startDate));
+    public void eventPerformanceDataChanged(String earnedPoints, Integer eventMaxPoints, String finishDate, Semester semester, Date startDate) {
+        studentEventFormState.setValue(new StudentEventFormState(earnedPoints, eventMaxPoints, finishDate, semester, startDate));
     }
 
     public void downloadEventById(long eventId) {
@@ -60,11 +56,11 @@ public class StudentEventViewModel extends ViewModel {
         Repository.getInstance().getStudentEventById(studentEventId, studentEvent);
     }
 
-    public void addStudentEvent(int attemptNumber, StudentPerformanceInModule studentPerformanceInModule, Event event, boolean isAttended, int variantNumber) {
-        Repository.getInstance().addStudentEvent(new StudentEvent(attemptNumber, studentPerformanceInModule, event, isAttended, variantNumber), answer);
+    public void addStudentEvent(int attemptNumber, StudentPerformanceInModule studentPerformanceInModule, Event event, boolean isAttended) {
+        Repository.getInstance().addStudentEvent(new StudentEvent(attemptNumber, studentPerformanceInModule, event, isAttended), answer);
     }
 
-    public void editStudentEvent(long studentEventId, int attemptNumber, StudentPerformanceInModule studentPerformanceInModule, Event event, boolean isAttended, int variantNumber,
+    public void editStudentEvent(long studentEventId, int attemptNumber, StudentPerformanceInModule studentPerformanceInModule, Event event, boolean isAttended, Integer variantNumber,
                                  Date finishDate, Integer earnedPoints, Integer bonusPoints, Boolean isHaveCredit) {
         Repository.getInstance().editStudentEvent(studentEventId, new StudentEvent(attemptNumber, studentPerformanceInModule, event, isAttended, variantNumber,
                 finishDate, earnedPoints, bonusPoints, isHaveCredit), answer);

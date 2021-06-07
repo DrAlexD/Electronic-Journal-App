@@ -38,8 +38,8 @@ public class EventAddingViewModel extends ViewModel {
         return lastNumberOfEventType;
     }
 
-    public void eventAddingDataChanged(String startDate, String deadlineDate, String minPoints, String maxPoints, String numberOfVariants, Semester semester) {
-        eventFormState.setValue(new EventFormState(startDate, deadlineDate, minPoints, maxPoints, numberOfVariants, semester));
+    public void eventAddingDataChanged(String startDate, String deadlineDate, String minPoints, String maxPoints, Semester semester) {
+        eventFormState.setValue(new EventFormState(startDate, deadlineDate, minPoints, maxPoints, semester));
     }
 
     public void downloadModules(long subjectInfoId) {
@@ -50,7 +50,7 @@ public class EventAddingViewModel extends ViewModel {
         Repository.getInstance().getLastNumberOfEventType(subjectInfoId, type, lastNumberOfEventType);
     }
 
-    public void addEvent(Module module, int type, int number, Date startDate, Date deadlineDate, int minPoints, int maxPoints, int numberOfVariants) {
+    public void addEvent(Module module, int type, int number, Date startDate, Date deadlineDate, int minPoints, int maxPoints, Integer numberOfVariants) {
         Repository.getInstance().addEvent(new Event(module, type, number, startDate, deadlineDate, minPoints, maxPoints, numberOfVariants), answer);
     }
 }

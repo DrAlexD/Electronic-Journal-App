@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ public class EventEditingDialogFragment extends DialogFragment {
         root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_event_editing, null);
 
         eventId = getArguments().getLong("eventId");
+        long groupId = getArguments().getLong("groupId");
         String eventTitle = getArguments().getString("eventTitle");
 
         eventEditingViewModel = new ViewModelProvider(this).get(EventEditingViewModel.class);
@@ -57,7 +59,8 @@ public class EventEditingDialogFragment extends DialogFragment {
                 deadlineDate.setText(dateFormat.format(event.getDeadlineDate()));
                 minPoints.setText(String.valueOf(event.getMinPoints()));
                 maxPoints.setText(String.valueOf(event.getMaxPoints()));
-                numberOfVariants.setText(String.valueOf(event.getNumberOfVariants()));
+                if (event.getNumberOfVariants() != null)
+                    numberOfVariants.setText(String.valueOf(event.getNumberOfVariants()));
             }
         });
 
@@ -84,7 +87,6 @@ public class EventEditingDialogFragment extends DialogFragment {
         deadlineDate.addTextChangedListener(afterTextChangedListener);
         minPoints.addTextChangedListener(afterTextChangedListener);
         maxPoints.addTextChangedListener(afterTextChangedListener);
-        numberOfVariants.addTextChangedListener(afterTextChangedListener);
 
         eventEditingViewModel.getEventFormState().observe(this, eventFormState -> {
             if (eventFormState == null) {
@@ -99,10 +101,17 @@ public class EventEditingDialogFragment extends DialogFragment {
                     getString(eventFormState.getMinPointsError()) : null);
             maxPoints.setError(eventFormState.getMaxPointsError() != null ?
                     getString(eventFormState.getMaxPointsError()) : null);
-            numberOfVariants.setError(eventFormState.getNumberOfVariantsError() != null ?
-                    getString(eventFormState.getNumberOfVariantsError()) : null);
 
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(eventFormState.isDataValid());
+        });
+
+        Button addVisitsForStudentsButton = root.findViewById(R.id.eventAddVisitsForStudents);
+        addVisitsForStudentsButton.setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            bundle.putInt("actionCode", 4);
+            bundle.putLong("fromGroupId", groupId);
+            bundle.putLong("eventId", eventId);
+            Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_event_editing_to_search_check_students_in_group, bundle);
         });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -140,7 +149,7 @@ public class EventEditingDialogFragment extends DialogFragment {
                 eventEditingViewModel.editEvent(eventId, event.getModule(), event.getTypeNumber(), event.getNumber(),
                         startDateR, deadlineDateR,
                         Integer.parseInt(minPoints.getText().toString()), Integer.parseInt(maxPoints.getText().toString()),
-                        Integer.parseInt(numberOfVariants.getText().toString()));
+                        numberOfVariants.getText().toString().isEmpty() ? null : Integer.parseInt(numberOfVariants.getText().toString()));
 
                 eventEditingViewModel.getAnswer().observe(getParentFragment().getViewLifecycleOwner(), answer -> {
                     if (answer != null && answer != -2) {

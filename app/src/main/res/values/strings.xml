@@ -79,6 +79,7 @@
     <string name="exam_earned_points_text">Баллы за экзамен</string>
     <string name="is_credit_text">Зачет</string>
     <string name="add_new_attempt_text">Добавить новую попытку</string>
+    <string name="add_visits_for_students_text">Проставить посещаемость студентам</string>
     <string name="is_differentiated_credit_text">Дифферинцированный зачет</string>
     <string name="is_exam_text">Экзамен</string>
     <string name="mark_text">Оценка</string>

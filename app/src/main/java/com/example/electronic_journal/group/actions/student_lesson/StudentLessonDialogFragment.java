@@ -74,6 +74,8 @@ public class StudentLessonDialogFragment extends DialogFragment {
             studentLessonViewModel.getStudentLesson().observe(this, studentLesson -> {
                 if (studentLesson != null) {
                     isAttended.setChecked(studentLesson.isAttended());
+                    if (!studentLesson.isAttended())
+                        bonusPoints.setEnabled(false);
                     if (studentLesson.getBonusPoints() != null)
                         bonusPoints.setText(String.valueOf(studentLesson.getBonusPoints()));
                 }

@@ -12,8 +12,6 @@ import java.util.Date;
 public class EventFormState {
     private final boolean isDataValid;
     @Nullable
-    private final Integer numberOfVariantsError;
-    @Nullable
     private Integer startDateError;
     @Nullable
     private Integer deadlineDateError;
@@ -22,19 +20,17 @@ public class EventFormState {
     @Nullable
     private Integer maxPointsError;
 
-    public EventFormState(String startDate, String deadlineDate, String minPoints, String maxPoints, String numberOfVariants, Semester semester) {
+    public EventFormState(String startDate, String deadlineDate, String minPoints, String maxPoints, Semester semester) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
         boolean isStartDateValid = startDate.trim().matches("(0[1-9]|[1-2][0-9]|3[0-1])\\.(0[1-9]|1[0-2])\\.20[2-5][0-9]");
         boolean isDeadlineDateValid = deadlineDate.trim().matches("(0[1-9]|[1-2][0-9]|3[0-1])\\.(0[1-9]|1[0-2])\\.20[2-5][0-9]");
         boolean isMinPointsValid = !minPoints.trim().isEmpty();
         boolean isMaxPointsValid = !maxPoints.trim().isEmpty();
-        boolean isNumberOfVariantsValid = !numberOfVariants.trim().isEmpty();
 
         this.startDateError = !isStartDateValid ? R.string.invalid_date_field : null;
         this.deadlineDateError = !isDeadlineDateValid ? R.string.invalid_date_field : null;
         this.minPointsError = !isMinPointsValid ? R.string.invalid_empty_field : null;
         this.maxPointsError = !isMaxPointsValid ? R.string.invalid_empty_field : null;
-        this.numberOfVariantsError = !isNumberOfVariantsValid ? R.string.invalid_empty_field : null;
 
         boolean isPointsRangeValid = true;
         if (isMinPointsValid && isMaxPointsValid && Integer.parseInt(minPoints) > Integer.parseInt(maxPoints)) {
@@ -79,7 +75,7 @@ public class EventFormState {
         }
 
         this.isDataValid = isStartDateValid && isDeadlineDateValid && isMinPointsValid &&
-                isMaxPointsValid && isPointsRangeValid && isDateRangeValid && isNumberOfVariantsValid;
+                isMaxPointsValid && isPointsRangeValid && isDateRangeValid;
     }
 
     @Nullable
@@ -100,11 +96,6 @@ public class EventFormState {
     @Nullable
     public Integer getMaxPointsError() {
         return maxPointsError;
-    }
-
-    @Nullable
-    public Integer getNumberOfVariantsError() {
-        return numberOfVariantsError;
     }
 
     public boolean isDataValid() {

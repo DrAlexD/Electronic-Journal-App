@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
@@ -37,6 +38,8 @@ public class LessonEditingDialogFragment extends DialogFragment {
         root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_fragment_lesson_editing, null);
 
         lessonId = getArguments().getLong("lessonId");
+        long groupId = getArguments().getLong("groupId");
+        boolean isHasStudentLesson = getArguments().getBoolean("isHasStudentLesson");
         int professorType = getArguments().getInt("professorType");
 
         lessonEditingViewModel = new ViewModelProvider(this).get(LessonEditingViewModel.class);
@@ -119,6 +122,17 @@ public class LessonEditingDialogFragment extends DialogFragment {
             if (dateAndTime.isEnabled())
                 dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(lessonFormState.isDataValid());
         });
+
+        Button addVisitsForStudentsButton = root.findViewById(R.id.lessonAddVisitsForStudents);
+        addVisitsForStudentsButton.setVisibility(!isHasStudentLesson ? View.VISIBLE : View.GONE);
+        addVisitsForStudentsButton.setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            bundle.putInt("actionCode", 5);
+            bundle.putLong("fromGroupId", groupId);
+            bundle.putLong("lessonId", lessonId);
+            Navigation.findNavController(getParentFragment().getView()).navigate(R.id.action_dialog_lesson_editing_to_search_check_students_in_group, bundle);
+        });
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         dialog = builder.setView(root)

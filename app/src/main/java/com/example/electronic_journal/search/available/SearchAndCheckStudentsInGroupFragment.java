@@ -19,8 +19,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.electronic_journal.R;
 import com.example.electronic_journal.Result;
+import com.example.electronic_journal.data_classes.Event;
 import com.example.electronic_journal.data_classes.Group;
+import com.example.electronic_journal.data_classes.Lesson;
+import com.example.electronic_journal.data_classes.StudentEvent;
+import com.example.electronic_journal.data_classes.StudentPerformanceInModule;
 import com.example.electronic_journal.search.StudentsAdapter;
+
+import java.util.List;
+import java.util.Map;
 
 public class SearchAndCheckStudentsInGroupFragment extends Fragment {
     private StudentsAdapter studentsAdapter;
@@ -61,47 +68,148 @@ public class SearchAndCheckStudentsInGroupFragment extends Fragment {
 
                 Button suggestButton = root.findViewById(R.id.suggest_students);
                 suggestButton.setOnClickListener(view -> {
-                    searchAndCheckStudentsInGroupViewModel.changeGroupInSubjectsInfo(getArguments().getLong("fromGroupId"), getArguments().getLong("toGroupId"));
-                    searchAndCheckStudentsInGroupViewModel.downloadGroup(getArguments().getLong("toGroupId"));
-                    LiveData<Boolean> firstAnswerLiveData = searchAndCheckStudentsInGroupViewModel.getFirstAnswer();
-                    LiveData<Group> groupLiveData = Transformations.switchMap(firstAnswerLiveData, firstAnswer -> searchAndCheckStudentsInGroupViewModel.getGroup());
-                    LiveData<Result<Boolean>> secondAnswerLiveData = Transformations.switchMap(groupLiveData, group -> {
-                        for (int i = 0; i < studentsInGroup.size(); i++) {
-                            if (checkedStudents[i]) {
-                                searchAndCheckStudentsInGroupViewModel.changeStudentGroup(studentsInGroup.get(i), group);
+                    if (actionCode == 3) {
+                        searchAndCheckStudentsInGroupViewModel.changeGroupInSubjectsInfo(getArguments().getLong("fromGroupId"), getArguments().getLong("toGroupId"));
+                        searchAndCheckStudentsInGroupViewModel.downloadGroup(getArguments().getLong("toGroupId"));
+                        LiveData<Boolean> firstAnswerLiveData = searchAndCheckStudentsInGroupViewModel.getFirstAnswer();
+                        LiveData<Group> groupLiveData = Transformations.switchMap(firstAnswerLiveData, firstAnswer -> searchAndCheckStudentsInGroupViewModel.getGroup());
+                        LiveData<Result<Boolean>> secondAnswerLiveData = Transformations.switchMap(groupLiveData, group -> {
+                            for (int i = 0; i < studentsInGroup.size(); i++) {
+                                if (checkedStudents[i]) {
+                                    searchAndCheckStudentsInGroupViewModel.changeStudentGroup(studentsInGroup.get(i), group);
+                                }
+                                if (i == studentsInGroup.size() - 1)
+                                    return searchAndCheckStudentsInGroupViewModel.getSecondAnswer();
                             }
-                        }
 
-                        return searchAndCheckStudentsInGroupViewModel.getSecondAnswer();
-                    });
+                            return null;
+                        });
 
-                    secondAnswerLiveData.observe(getViewLifecycleOwner(), answer -> {
-                        if (answer != null) {
-                            if (answer instanceof Result.Success) {
-                                Toast.makeText(getContext(), "Успешная смена группы у студентов", Toast.LENGTH_SHORT).show();
+                        secondAnswerLiveData.observe(getViewLifecycleOwner(), answer -> {
+                            if (answer != null) {
+                                if (answer instanceof Result.Success) {
+                                    Toast.makeText(getContext(), "Успешная смена группы у студентов", Toast.LENGTH_SHORT).show();
+
+                                    Bundle bundle = new Bundle();
+                                    bundle.putInt("openPage", 1);
+                                    Navigation.findNavController(view).navigate(R.id.action_search_check_students_in_group_to_admin_actions, bundle);
+                                }
+                            }
+                        });
+                    } else if (actionCode == 4) {
+                        searchAndCheckStudentsInGroupViewModel.downloadEvent(getArguments().getLong("eventId"));
+
+                        LiveData<Event> eventLiveData = searchAndCheckStudentsInGroupViewModel.getEvent();
+                        LiveData<Map<String, Map<String, List<StudentEvent>>>> studentsEventsLiveData = Transformations.switchMap(eventLiveData, event -> {
+                            searchAndCheckStudentsInGroupViewModel.downloadStudentsEvents(event.getModule().getSubjectInfo().getId());
+                            searchAndCheckStudentsInGroupViewModel.downloadStudentsPerformancesInModules(event.getModule().getSubjectInfo().getId());
+                            return searchAndCheckStudentsInGroupViewModel.getStudentsEvents();
+                        });
+                        LiveData<Map<String, List<StudentPerformanceInModule>>> studentsModulesLiveData = Transformations.switchMap(studentsEventsLiveData, studentsEvents ->
+                                searchAndCheckStudentsInGroupViewModel.getStudentsPerformancesInModules());
+
+                        LiveData<Boolean> answerLiveData = Transformations.switchMap(studentsModulesLiveData, studentsModules -> {
+                            Event event = searchAndCheckStudentsInGroupViewModel.getEvent().getValue();
+
+                            for (int i = 0; i < studentsInGroup.size(); i++) {
+                                int moduleNumber = event.getModule().getModuleNumber();
+                                List<StudentPerformanceInModule> studentPerformanceInModules = studentsModules.get(String.valueOf(moduleNumber));
+                                StudentPerformanceInModule studentPerformanceInModule = null;
+                                for (int j = 0; j < studentPerformanceInModules.size(); j++) {
+                                    if (studentsInGroup.get(i).getId() == studentPerformanceInModules.get(j).getStudentPerformanceInSubject().getStudent().getId()) {
+                                        studentPerformanceInModule = studentPerformanceInModules.get(j);
+                                        break;
+                                    }
+                                }
+                                Map<String, Map<String, List<StudentEvent>>> studentsEvents = searchAndCheckStudentsInGroupViewModel.getStudentsEvents().getValue();
+
+                                int lastAttempt = 0;
+                                if (studentsEvents != null && studentsEvents.get(String.valueOf(moduleNumber)) != null &&
+                                        studentsEvents.get(String.valueOf(moduleNumber)).get(String.valueOf(studentsInGroup.get(i).getId())) != null) {
+                                    for (StudentEvent studentEvent : studentsEvents.get(String.valueOf(moduleNumber)).get(String.valueOf(studentsInGroup.get(i).getId()))) {
+                                        if (studentEvent.getEvent().getId() == event.getId()
+                                                && studentEvent.getAttemptNumber() > lastAttempt) {
+                                            lastAttempt = studentEvent.getAttemptNumber();
+                                        }
+                                    }
+                                }
+
+                                searchAndCheckStudentsInGroupViewModel.addStudentEvent(lastAttempt + 1,
+                                        studentPerformanceInModule, event, checkedStudents[i]);
+                                if (i == studentsInGroup.size() - 1)
+                                    return searchAndCheckStudentsInGroupViewModel.getFirstAnswer();
+                            }
+
+                            return null;
+                        });
+
+                        answerLiveData.observe(getViewLifecycleOwner(), answer -> {
+                            if (answer != null) {
+                                Toast.makeText(getContext(), "Успешный учет посещаемости", Toast.LENGTH_SHORT).show();
 
                                 Bundle bundle = new Bundle();
-                                bundle.putInt("openPage", 1);
-                                Navigation.findNavController(view).navigate(R.id.action_search_check_students_in_group_to_admin_actions, bundle);
+                                bundle.putLong("subjectInfoId", searchAndCheckStudentsInGroupViewModel.getEvent().getValue().getModule().getSubjectInfo().getId());
+
+                                Navigation.findNavController(view).navigate(R.id.action_search_check_students_in_group_to_group_performance_events, bundle);
                             }
-                        }
-                    });
+                        });
+                    } else if (actionCode == 5) {
+                        searchAndCheckStudentsInGroupViewModel.downloadLesson(getArguments().getLong("lessonId"));
+
+                        LiveData<Lesson> lessonLiveData = searchAndCheckStudentsInGroupViewModel.getLesson();
+                        LiveData<Map<String, List<StudentPerformanceInModule>>> studentsModulesLiveData = Transformations.switchMap(lessonLiveData, lesson -> {
+                            searchAndCheckStudentsInGroupViewModel.downloadStudentsPerformancesInModules(lesson.getModule().getSubjectInfo().getId());
+                            return searchAndCheckStudentsInGroupViewModel.getStudentsPerformancesInModules();
+                        });
+
+                        LiveData<Boolean> answerLiveData = Transformations.switchMap(studentsModulesLiveData, studentsModules -> {
+                            Lesson lesson = searchAndCheckStudentsInGroupViewModel.getLesson().getValue();
+
+                            for (int i = 0; i < studentsInGroup.size(); i++) {
+                                int moduleNumber = lesson.getModule().getModuleNumber();
+                                List<StudentPerformanceInModule> studentPerformanceInModules = studentsModules.get(String.valueOf(moduleNumber));
+                                StudentPerformanceInModule studentPerformanceInModule = null;
+                                for (int j = 0; j < studentPerformanceInModules.size(); j++) {
+                                    if (studentsInGroup.get(i).getId() == studentPerformanceInModules.get(j).getStudentPerformanceInSubject().getStudent().getId()) {
+                                        studentPerformanceInModule = studentPerformanceInModules.get(j);
+                                        break;
+                                    }
+                                }
+
+                                searchAndCheckStudentsInGroupViewModel.addStudentLesson(studentPerformanceInModule, lesson, checkedStudents[i]);
+                                if (i == studentsInGroup.size() - 1)
+                                    return searchAndCheckStudentsInGroupViewModel.getFirstAnswer();
+                            }
+
+                            return null;
+                        });
+
+                        answerLiveData.observe(getViewLifecycleOwner(), answer -> {
+                            if (answer != null) {
+                                Toast.makeText(getContext(), "Успешный учет посещаемости", Toast.LENGTH_SHORT).show();
+
+                                Bundle bundle = new Bundle();
+                                bundle.putInt("openPage", searchAndCheckStudentsInGroupViewModel.getLesson().getValue().getModule().getModuleNumber() - 1);
+                                bundle.putLong("subjectInfoId", searchAndCheckStudentsInGroupViewModel.getLesson().getValue().getModule().getSubjectInfo().getId());
+
+                                Navigation.findNavController(view).navigate(R.id.action_search_check_students_in_group_to_group_performance_lessons, bundle);
+                            }
+                        });
+                    }
                 });
 
                 View.OnClickListener onItemClickListener = view -> {
                     RecyclerView.ViewHolder viewHolder = (RecyclerView.ViewHolder) view.getTag();
                     int position = viewHolder.getAdapterPosition();
 
-                    if (actionCode == 3) {
-                        for (int i = 0; i < studentsInGroup.size(); i++) {
-                            if (studentsAdapter.getStudents().get(position).getId() == studentsInGroup.get(i).getId()) {
-                                checkedStudents[i] = !checkedStudents[i];
-                                if (checkedStudents[i])
-                                    view.setBackgroundColor(getResources().getColor(R.color.very_light_green));
-                                else
-                                    view.setBackgroundColor(getResources().getColor(R.color.white));
-                                break;
-                            }
+                    for (int i = 0; i < studentsInGroup.size(); i++) {
+                        if (studentsAdapter.getStudents().get(position).getId() == studentsInGroup.get(i).getId()) {
+                            checkedStudents[i] = !checkedStudents[i];
+                            if (checkedStudents[i])
+                                view.setBackgroundColor(getResources().getColor(R.color.very_light_green));
+                            else
+                                view.setBackgroundColor(getResources().getColor(R.color.white));
+                            break;
                         }
                     }
                 };
