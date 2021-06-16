@@ -38,7 +38,7 @@ public class Repository {
        192.168.0.47 - кабельный интернет
        192.168.43.173 - сеть телефона на домашнем
        192.168.43.109 - сеть телефона на рабочем */
-    private final String ip = "192.168.0.47";
+    private final String ip = "192.168.43.173";
 
     private static volatile Repository repository;
 

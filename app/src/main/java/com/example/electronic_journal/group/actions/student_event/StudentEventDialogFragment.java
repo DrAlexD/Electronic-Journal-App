@@ -147,7 +147,7 @@ public class StudentEventDialogFragment extends DialogFragment {
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("isFromGroupPerformance", true);
                 bundle.putInt("attemptNumber", attemptNumber);
-                bundle.putBoolean("i]sHasData", false);
+                bundle.putBoolean("isHasData", false);
                 bundle.putLong("eventId", eventId);
                 bundle.putString("eventTitle", eventTitle);
                 if (variant != -1)

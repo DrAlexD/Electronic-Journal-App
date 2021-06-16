@@ -107,11 +107,13 @@ public class GroupPerformanceEventsFragment extends Fragment {
         List<Student> students = groupPerformanceEventsViewModel.getStudentsInGroup().getValue();
 
         int positionInList = 1;
-        for (Student student : students) {
-            TableRow pointsRow = generatePointsRow(padding2inDp, padding5inDp, student, positionInList);
-            if (pointsRow != null)
-                studentsInModuleEventsTable.addView(pointsRow);
-            positionInList++;
+        if (students != null) {
+            for (Student student : students) {
+                TableRow pointsRow = generatePointsRow(padding2inDp, padding5inDp, student, positionInList);
+                if (pointsRow != null)
+                    studentsInModuleEventsTable.addView(pointsRow);
+                positionInList++;
+            }
         }
 
         showEventsSwitch.setOnClickListener(view -> {
