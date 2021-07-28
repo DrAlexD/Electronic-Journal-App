@@ -87,8 +87,12 @@ class LessonsAdapter extends BaseExpandableListAdapter {
         StudentPerformanceInModule studentPerformanceInModule = studentPerformanceByModules.get(String.valueOf(modules.get(groupPosition)));
 
         TextView moduleTitleWithPointsView = view.findViewById(R.id.moduleTitleWithPoints);
-        moduleTitleWithPointsView.setText(moduleTitle + " (" + module.getMinPoints() +
-                "-" + module.getMaxAvailablePoints() + ")");
+        if (module.getMaxAvailablePoints() != 0) {
+            moduleTitleWithPointsView.setText(moduleTitle + " (" + module.getMinPoints() +
+                    "-" + module.getMaxAvailablePoints() + ")");
+        } else {
+            moduleTitleWithPointsView.setText(moduleTitle);
+        }
         if (studentPerformanceInModule.getEarnedPoints() != null) {
             moduleTitleWithPointsView.setTextColor(studentPerformanceInModule.getEarnedPoints() > module.getMinPoints() ?
                     inflater.getContext().getColor(R.color.green) : inflater.getContext().getColor(R.color.red));
