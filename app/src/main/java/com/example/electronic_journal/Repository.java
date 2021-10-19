@@ -34,10 +34,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Repository {
-    /* 10.0.2.2  - эмулятор
-       192.168.0.47 - кабельный интернет
-       192.168.43.173 - сеть телефона на домашнем
-       192.168.43.109 - сеть телефона на рабочем */
     private final String ip = "10.0.2.2";
 
     private static volatile Repository repository;
